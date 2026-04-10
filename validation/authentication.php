@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['logged_in'] = true;
     $_SESSION['id'] = $id;
 
-    header("Location: ../forms/home.php");
+    header("Location: ../pages/dashboard.php");
     exit;
 }
 ?>

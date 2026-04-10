@@ -1,6 +1,6 @@
 * {
     font-size: 16px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', 'Roboto', sans-serif;
 }
 
 body {
@@ -22,7 +22,7 @@ body {
     width: 100%;
     max-width: 350px;
     height: auto;
-    padding: 30px;
+    padding: 40px 30px;
 
 }
 
@@ -35,14 +35,13 @@ body {
 }
 
 .logo img {
-    width: 80%;
+    width: 35%;
     height: auto;
     display: block;
 }
 
 .logo p {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #000;
     font-size: 35px;
     letter-spacing: 1px;
@@ -103,7 +102,7 @@ body {
 
 .toggle-password:hover {
     color: #1c5515;
-    
+
 }
 
 .container form .input input:focus {

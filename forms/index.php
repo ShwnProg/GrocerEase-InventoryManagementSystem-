@@ -6,7 +6,7 @@ if (isset($_SESSION['error']) || isset($_SESSION['old'])) {
     $old = $_SESSION['old'] ?? [];
 }
 
-session_unset();
+unset($_SESSION['error'],$_SESSION['old']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
