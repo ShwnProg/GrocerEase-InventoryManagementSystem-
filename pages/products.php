@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once "../models/product.php";
+require_once "../models/categories.php";
 
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
     header("Location: ../forms/index.php");
@@ -11,6 +12,9 @@ $_SESSION['page_title'] = "PRODUCTS";
 
 $product = new Product();
 $products = $product->GetAllProducts();
+
+$category = new Category();
+$categories = $category->GetAllCategories();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,12 +40,12 @@ $products = $product->GetAllProducts();
                 <div class="search-area">
                     <form action="">
                         <i class="fas fa-search"></i>
-                        <input type="text" name="search" id = "search" placeholder="Search a product">
+                        <input type="text" name="search" id="search" placeholder="Search a product">
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
-                <div class="add-product">
-                    <a href="add_product.php">Add Product</a>
+                <div class="add">
+                    <button id="addbtn">Add Product</button>
                 </div>
             </div>
 
@@ -63,7 +67,8 @@ $products = $product->GetAllProducts();
                     <tbody>
                         <?php $no = 1; ?>
                         <?php foreach ($products as $prod): ?>
-                            <?php if($prod['is_deleted'] == 1) continue; ?>
+                            <?php if ($prod['is_deleted'] == 1)
+                                continue; ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($prod['product_name']) ?></td>
@@ -84,10 +89,18 @@ $products = $product->GetAllProducts();
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                         </form>
+
                                         <form action="delete_product.php" method="POST">
                                             <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
                                             <button type="submit" class="edit-btn">
                                                 <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+
+                                        <form action="manage_suppliers.php" method="POST">
+                                            <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
+                                            <button type="submit" class="manage-btn">
+                                                <i class="fa-solid fa-truck"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -97,8 +110,63 @@ $products = $product->GetAllProducts();
                     </tbody>
                 </table>
             </div>
+            <div class="add-modal" id="add-modal">
+
+                <form action="../validation/products/add_product_process.php" method="POST">
+                    <div class="header">
+
+                        <i class="fas fa-plus"></i>
+                        <p>Add Product</p>
+                        <span id="close-modal">&times;</span>
+                        
+                    </div>
+                    <div class="body">
+
+                        <div class="input">
+                            <label for="">Product Name</label>
+                            <i class="fas fa-box"></i>
+                            <input type="text" name="product_name" placeholder="Product Name">
+                        </div>
+
+
+                        <div class="input">
+                            <label for="">Category</label>
+                            <select name="category" id="">
+                                <option value="">Select a category</option>
+                                <?php foreach ($categories as $cat): ?>
+                                    <option value="<?= $cat['category_id_pk'] ?>">
+                                        <?= htmlspecialchars($cat['category_name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="input">
+                            <label for="">Selling Price</label>
+                            <i class="fas fa-tag"></i>
+                            <input type="text" name="selling_price" placeholder="Selling Price">
+                        </div>
+
+                        <div class="input">
+                            <label for="">Description</label>
+                            <i class="fas fa-align-left"></i>
+                            <textarea name="product_description" placeholder="Product Description"></textarea>
+                        </div>
+
+                        <div class="input">
+                            <label for="">Status</label>
+                            <select name="status" id="">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+
+                        <button type="submit">Add Product</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </body>
 <script src="../scripts/pages.js"></script>
+
 </html>

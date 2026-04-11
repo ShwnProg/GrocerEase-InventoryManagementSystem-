@@ -30,6 +30,7 @@ $categories = $category->GetAllCategories();
     <?php include '../includes/sidebar.php'; ?>
     <div class="main-content">
         <?php include '../includes/topbar.php'; ?>
+
         <div class="page-content">
 
             <div class="toolbar">
@@ -40,8 +41,8 @@ $categories = $category->GetAllCategories();
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
-                <div class="add-product">
-                    <a href="add_category.php">Add Category</a>
+                <div class="add">
+                    <button id = "addbtn">Add Category</button>
                 </div>
             </div>
 
@@ -84,8 +85,37 @@ $categories = $category->GetAllCategories();
                     </tbody>
                 </table>
             </div>
+            <div class="add-modal" id="add-modal">
+
+                <form action="../validation/categories/add_category.php" method="POST">
+                    <div class="header">
+
+                        <i class="fas fa-plus"></i>
+                        <p>Add Category</p>
+                        <span id="close-modal">&times;</span>
+
+                    </div>
+                    <div class="body">
+
+                        <div class="input">
+                            <label for="">Category Name</label>
+                            <i class="fas fa-tag"></i>
+                            <input type="text" name="category_name" placeholder="Category Name">
+                        </div>
+
+                        <div class="input">
+                            <label for="">Description</label>
+                            <i class="fas fa-align-left"></i>
+                            <textarea name="category_description" placeholder="Category Description"></textarea>
+                        </div>
+
+                        <button type="submit">Add Category</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </body>
 <script src="../scripts/pages.js"></script>
+
 </html>

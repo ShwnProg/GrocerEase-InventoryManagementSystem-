@@ -1,6 +1,7 @@
-*{
+* {
     font-family: 'Inter', 'Roboto', sans-serif;
 }
+
 body {
     margin: 0;
     padding: 0;
@@ -239,6 +240,7 @@ body {
     background: rgba(220, 50, 50, 0.05);
     color: #c82828;
 }
+
 /* PRODUCT */
 /* ── PRODUCTS PAGE ─────────────────────────── */
 .page-content {
@@ -257,7 +259,7 @@ body {
     display: flex;
     align-items: center;
     background: #fff;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 0 12px;
     gap: 8px;
@@ -289,25 +291,27 @@ body {
     letter-spacing: 0.4px;
 }
 
-.add-product a {
+.add button {
     display: inline-flex;
     align-items: center;
     gap: 7px;
     background: #1c5515;
     color: #fff;
+    border: none;
     padding: 9px 16px;
     border-radius: 8px;
     font-size: 13px;
     font-weight: 500;
     text-decoration: none;
-    transition: background 0.2s;
+    transition: 0.3s ease;
+    
 }
 
-.add-product a:hover {
-    background: #174a11;
+.add button:hover {
+    background: #32702b;
 }
 
-.add-product a::before {
+.add button::before {
     content: '+';
     font-size: 16px;
     font-weight: 400;
@@ -317,12 +321,12 @@ body {
 .menu-table {
     background: #fff;
     border-radius: 5px;
-    border: 1px solid rgba(0,0,0,0.07);
+    border: 1px solid rgba(0, 0, 0, 0.07);
     overflow: hidden;
     box-shadow: 0 0 3px #0000001a;
     /* overflow-y: auto;
     max-height: 500px; */
-    
+
 }
 
 .menu-table table {
@@ -343,11 +347,11 @@ body {
     color: #000000;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    border-bottom: 1px solid rgba(0,0,0,0.07);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
 }
 
 .menu-table tbody tr {
-    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: background 0.15s;
 }
 
@@ -365,6 +369,19 @@ body {
     vertical-align: middle;
 }
 
+.menu-table th:last-child,
+.menu-table td:last-child {
+    text-align: center;
+}
+
+/* IMPORTANT: center flex content inside actions */
+.menu-table .actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
 /* STATUS BADGE */
 .badge {
     display: inline-block;
@@ -375,12 +392,12 @@ body {
 }
 
 .badge.active {
-    background: rgba(28,85,21,0.1);
+    background: rgba(28, 85, 21, 0.1);
     color: #1c5515;
 }
 
 .badge.inactive {
-    background: rgba(200,40,40,0.08);
+    background: rgba(200, 40, 40, 0.08);
     color: #c82828;
 }
 
@@ -405,14 +422,219 @@ body {
 }
 
 .edit-btn:hover {
-    background: rgba(28,85,21,0.08);
+    background: rgba(28, 85, 21, 0.08);
     color: #1c5515;
 }
 
 .edit-btn .fa-trash {
-    color: rgba(200,40,40,0.7);
+    color: rgba(200, 40, 40, 0.7);
 }
 
 .edit-btn:hover .fa-trash {
     color: #c82828;
+}
+
+.manage-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background 0.15s;
+    font-size: 14px;
+}
+
+.manage-btn:hover {
+    background: rgba(28, 85, 21, 0.08);
+    color: #1c5515;
+}
+
+.manage-btn .fa-truck {
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.manage-btn:hover .fa-truck {
+    color: #1c5515;
+}
+
+/* ADD MODAL */
+.add-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-modal.active {
+    display: flex;
+}
+
+.add-modal form {
+    background: #fff;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+    from {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* HEADER */
+.add-modal .header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: #fff;
+}
+
+.add-modal .header i {
+    font-size: 13px;
+    color: #1c5515;
+    background: rgba(28, 85, 21, 0.08);
+    padding: 7px;
+    border-radius: 8px;
+}
+
+.add-modal .header p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    flex: 1;
+}
+
+.add-modal .header span {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #aaa;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+}
+
+.add-modal .header span:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #333;
+}
+
+.add-modal .body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.add-modal .input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+}
+
+.add-modal .input label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.add-modal .input i {
+    position: absolute;
+    left: 11px;
+    bottom: 10px;
+    font-size: 12px;
+    color: #ccc;
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+.add-modal .input input {
+    padding: 9px 12px 9px 33px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #222;
+    background: #fafafa;
+    outline: none;
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.add-modal .input select,
+.add-modal .input textarea {
+    padding: 9px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #222;
+    background: #fafafa;
+    outline: none;
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.add-modal .input input:focus,
+.add-modal .input select:focus,
+.add-modal .input textarea:focus {
+    border-color: #1c5515;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(28, 85, 21, 0.08);
+}
+
+.add-modal .input:focus-within i {
+    color: #1c5515;
+}
+
+.add-modal .input textarea {
+    resize: none;
+    height: 75px;
+}
+
+/* MODAL SUBMIT BOTTOM */
+.add-modal .body>button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background: #1c5515;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-top: 2px;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+}
+
+.add-modal .body>button[type="submit"]:hover {
+    background: #32702b;
+    box-shadow: 0 4px 12px rgba(28, 85, 21, 0.2);
 }
