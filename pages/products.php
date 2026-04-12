@@ -15,6 +15,13 @@ $products = $product->GetAllProducts();
 
 $category = new Category();
 $categories = $category->GetAllCategories();
+
+
+$open_modal = isset($_SESSION['errors']) || isset($_SESSION['success']);
+$errors = $_SESSION['errors'] ?? [];
+$old = $_SESSION['old'] ?? [];
+
+unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -110,7 +117,7 @@ $categories = $category->GetAllCategories();
                     </tbody>
                 </table>
             </div>
-            <div class="add-modal" id="add-modal">
+            <div class="add-modal <?= $open_modal ? 'active' : '' ?>" id="add-modal">
 
                 <form action="../validation/products/add_product_process.php" method="POST">
                     <div class="header">
@@ -118,47 +125,84 @@ $categories = $category->GetAllCategories();
                         <i class="fas fa-plus"></i>
                         <p>Add Product</p>
                         <span id="close-modal">&times;</span>
-                        
+
                     </div>
                     <div class="body">
 
+                        <!-- SUCCESS MESSAGE -->
+                        <?php if (!empty($_SESSION['success'])): ?>
+                            <div class="success-message">
+                                <?= $_SESSION['success'] ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- PRODUCT NAME -->
                         <div class="input">
                             <label for="">Product Name</label>
                             <i class="fas fa-box"></i>
                             <input type="text" name="product_name" placeholder="Product Name">
                         </div>
 
+                        <!-- ERROR MESSAGE FOR PRODUCT NAME -->
+                        <?php if (!empty($errors['product_name'])): ?>
+                            <div class="error-message"><?= $errors['product_name'] ?></div>
+                        <?php endif; ?>
 
+                        <!-- CATEGORY -->
                         <div class="input">
                             <label for="">Category</label>
                             <select name="category" id="">
                                 <option value="">Select a category</option>
                                 <?php foreach ($categories as $cat): ?>
                                     <option value="<?= $cat['category_id_pk'] ?>">
-                                        <?= htmlspecialchars($cat['category_name']) ?></option>
+                                        <?= htmlspecialchars($cat['category_name']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        <!-- ERROR MESSAGE FOR CATEGORY -->
+                        <?php if (!empty($errors['category'])): ?>
+                            <div class="error-message">
+                                <?= $errors['category'] ?>
+                            </div>
+                        <?php endif; ?>
 
+                        <!-- SELLING PRICE -->
                         <div class="input">
                             <label for="">Selling Price</label>
                             <i class="fas fa-tag"></i>
                             <input type="text" name="selling_price" placeholder="Selling Price">
                         </div>
 
+                        <!-- ERROR MESSAGE FOR SELLING PRICE -->
+                        <?php if (!empty($errors['selling_price'])): ?>
+                            <div class="error-message">
+                                <?= $errors['selling_price'] ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- DESCRIPTION -->
                         <div class="input">
-                            <label for="">Description</label>
+                            <label for="">Description (Optional)</label>
                             <i class="fas fa-align-left"></i>
                             <textarea name="product_description" placeholder="Product Description"></textarea>
                         </div>
 
+                        <!-- STATUS -->
                         <div class="input">
                             <label for="">Status</label>
                             <select name="status" id="">
+                                <option value="">Select a status</option>
                                 <option value="1">Active</option>
                                 <option value="0">Inactive</option>
                             </select>
                         </div>
+                        <!-- ERROR MESSAGE FOR STATUS -->
+                        <?php if (!empty($errors['status'])): ?>
+                            <div class="error-message">
+                                <?= $errors['status'] ?>
+                            </div>
+                        <?php endif; ?>
 
                         <button type="submit">Add Product</button>
                     </div>

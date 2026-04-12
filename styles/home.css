@@ -638,3 +638,15 @@ body {
     background: #32702b;
     box-shadow: 0 4px 12px rgba(28, 85, 21, 0.2);
 }
+.success-message{
+    color: #1c5515;
+    font-size: 11px;
+    margin-bottom: 8px;
+
+}
+.error-message{
+    color: #c82828;
+    font-size: 11px;
+    margin-top: 4px;
+
+}
