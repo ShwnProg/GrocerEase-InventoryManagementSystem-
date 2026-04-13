@@ -20,8 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($category))
         $errors['category'] = "Category is required.";
     if (empty($selling_price))
-        $errors['selling_price'] = "Selling price is required.";
-    if (empty($status))
+        $errors['selling_price'] = "Selling price is required.";    
+    if (!isset($status))
         $errors['status'] = "Status is required.";
 
     //VALIDATE INPUTS
@@ -40,7 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         elseif ($selling_price < 0)
             $errors['selling_price'] = "Selling price must be a positive number.";
     }
-
     if (!empty($errors)) {
         $_SESSION['errors'] = $errors;
         $_SESSION['old'] = $_POST;
@@ -57,12 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $product->AddProduct($product_name, $category, $selling_price, $description, $status);
 
     if ($result) {
-        $_SESSION['success'] = "Product added successfully.";
+        $_SESSION['success'] = ["success_add" => "Product added successfully."];
 
     } else {
         $_SESSION['errors'] = ["Failed to add product. Please try again."];
         $_SESSION['old'] = $_POST;
     }
+
+    var_dump($_SESSION['success']);
     header("Location: ../../pages/products.php");
     exit;
 
