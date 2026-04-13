@@ -28,3 +28,35 @@ modal.addEventListener('click', (e) => {
         modal.classList.remove('active');
     }
 });
+
+// DELETE MODAL
+const confirmModal = document.getElementById('confirm-modal');
+const cancelDelete = document.getElementById('cancel-delete');
+const confirmDelete = document.getElementById('confirm-delete');
+
+let deleteForm = null; 
+
+
+document.querySelectorAll('.delete-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        deleteForm = this; 
+        confirmModal.classList.add('active');
+    });
+});
+
+confirmDelete.addEventListener('click', () => {
+    if (deleteForm) deleteForm.submit();
+});
+
+cancelDelete.addEventListener('click', () => {
+    confirmModal.classList.remove('active');
+    deleteForm = null;
+});
+
+confirmModal.addEventListener('click', (e) => {
+    if (e.target === confirmModal) {
+        confirmModal.classList.remove('active');
+        deleteForm = null;
+    }
+});

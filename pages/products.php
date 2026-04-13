@@ -17,9 +17,20 @@ $category = new Category();
 $categories = $category->GetAllCategories();
 
 
-$open_modal = isset($_SESSION['errors']) || isset($_SESSION['success']);
+$open_modal = isset($_POST['add_product_btn']) && (isset($_SESSION['errors']) || isset($_SESSION['success']));
 $errors = $_SESSION['errors'] ?? [];
 $old = $_SESSION['old'] ?? [];
+$success = $_SESSION['success'] ?? '';
+
+$confirm_delete = false;
+$delete_product_id = '';
+$delete_product_name = '';
+
+if (isset($_POST['delete_btn'])) {
+    $delete_product_id = $_POST['product_id'] ?? '';
+    $delete_product_name = $product->GetProductNameById($delete_product_id);
+    $confirm_delete = true;
+}
 
 unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 ?>
@@ -96,10 +107,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                         </form>
-
-                                        <form action="delete_product.php" method="POST">
+                                        <!-- DELETE ACTION -->
+                                        <form method="POST">
                                             <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                            <button type="submit" class="edit-btn">
+                                            <button type="submit" name="delete_btn" class="edit-btn">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -130,9 +141,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     <div class="body">
 
                         <!-- SUCCESS MESSAGE -->
-                        <?php if (!empty($_SESSION['success'])): ?>
+                        <?php if (!empty($success['success_add'])): ?>
                             <div class="success-message">
-                                <?= $_SESSION['success'] ?>
+                                <?= $success['success_add'] ?>
                             </div>
                         <?php endif; ?>
 
@@ -204,9 +215,27 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             </div>
                         <?php endif; ?>
 
-                        <button type="submit">Add Product</button>
+                        <button type="submit" name="add_product_btn">Add Product</button>
                     </div>
                 </form>
+            </div>
+            <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
+                <div class="modal-content">
+                    <div class="modal-icon">
+                        <i class="fa-solid fa-trash"></i>
+                    </div>
+                    <p>Delete <b><?= htmlspecialchars($delete_product_name) ?></b>?</p>
+
+                    <div class="modal-actions">
+
+                        <button id = "cancel-delete"class="cancel-btn">Cancel</button>
+                        <!-- CONFIRM DELETE -->
+                        <form action="../validation/products/delete_product.php" method="POST">
+                            <input type="hidden" name="product_id" value="<?= $delete_product_id ?>">
+                            <button type="submit" id="confirm-delete">Yes, Delete</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
