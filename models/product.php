@@ -53,5 +53,37 @@ class Product
         ]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function SoftDeleteProduct($id){
+        $stmt = $this->conn->prepare("UPDATE products SET is_deleted = 1 WHERE product_id_pk = :id");
+        $stmt->execute([':id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public function GetProductNameById($id){
+        $stmt = $this->conn->prepare("SELECT product_name FROM products WHERE product_id_pk = :id");
+        $stmt->execute([':id' => $id]);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $product['product_name'] ?? '';
+    }
+    public function GetDeletedProducts(){
+        $stmt = $this->conn->prepare("SELECT p.product_id_pk,
+                                             p.product_name,
+                                             c.category_name,
+                                             MIN(ps.cost_price) AS cost_price,
+                                             p.selling_price,
+                                             p.product_description,
+                                             p.status,
+                                             p.is_deleted
+                                             FROM products p
+                                             JOIN categories c ON c.category_id_pk = p.category_id_fk
+                                             LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk
+                                             WHERE p.is_deleted = 1
+                                             GROUP BY p.product_id_pk
+                                             ORDER BY p.product_name ASC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
