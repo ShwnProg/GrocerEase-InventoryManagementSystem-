@@ -1,14 +1,15 @@
 // search functionality
-document.getElementById('search').addEventListener('keyup', function () {
-    let value = this.value.toLowerCase();
-    let rows = document.querySelectorAll('.menu-table tbody tr');
-
-    rows.forEach(row => {
-        let text = row.textContent.toLowerCase();
-        row.style.display = text.includes(value) ? '' : 'none';
+const searchInput = document.getElementById('search');
+if (searchInput) {
+    searchInput.addEventListener('keyup', function () {
+        let value = this.value.toLowerCase();
+        let rows = document.querySelectorAll('.menu-table tbody tr');
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(value) ? '' : 'none';
+        });
     });
-});
-
+}
 // modal functionality
 const modal = document.getElementById('add-modal');
 const addBtn = document.getElementById('addbtn');

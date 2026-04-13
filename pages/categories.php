@@ -42,7 +42,7 @@ $categories = $category->GetAllCategories();
                     </form>
                 </div>
                 <div class="add">
-                    <button id = "addbtn">Add Category</button>
+                    <button id="addbtn">Add Category</button>
                 </div>
             </div>
 
@@ -58,10 +58,9 @@ $categories = $category->GetAllCategories();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 1; ?>
-                        <?php foreach ($categories as $categ): ?>
+                        <?php foreach ($categories as $index => $categ): ?>
                             <tr>
-                                <td><?= $no++ ?></td>
+                                <td><?= $index + 1 ?></td>
                                 <td><?= htmlspecialchars($categ['category_name']) ?></td>
                                 <td><?= htmlspecialchars($categ['category_description']) ?></td>
                                 <td>

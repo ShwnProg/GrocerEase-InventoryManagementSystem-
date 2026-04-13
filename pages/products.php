@@ -75,7 +75,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <th>No.</th>
                             <th>Product Name</th>
                             <th>Category</th>
-                            <th>Cost Price</th>
                             <th>Selling Price</th>
                             <th>Description</th>
                             <th>Status</th>
@@ -83,15 +82,13 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 1; ?>
-                        <?php foreach ($products as $prod): ?>
+                        <?php foreach ($products as $index => $prod): ?>
                             <?php if ($prod['is_deleted'] == 1)
                                 continue; ?>
                             <tr>
-                                <td><?= $no++ ?></td>
+                                <td><?= $index + 1 ?></td>
                                 <td><?= htmlspecialchars($prod['product_name']) ?></td>
                                 <td><?= htmlspecialchars($prod['category_name']) ?></td>
-                                <td>₱<?= number_format($prod['cost_price'], 2) ?></td>
                                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
                                 <td><?= htmlspecialchars($prod['product_description']) ?></td>
                                 <td>

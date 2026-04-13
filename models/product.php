@@ -85,5 +85,20 @@ class Product
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function GetSupplier($id){
+        $stmt = $this->conn->prepare("SELECT s.supplier_name,
+                                             s.contact_person,
+                                             cost_price,
+                                             s.phone_number,
+                                             s.email,
+                                             s.company_name,
+                                             p.product_id_pk
+                                             FROM suppliers as s
+                                             INNER JOIN product_supplier as ps on s.supplier_id_pk = ps.supplier_id_fk
+                                             INNER JOIN products as p on p.product_id_pk = ps.product_id_fk
+                                             WHERE ps.product_id_fk = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
