@@ -3,8 +3,8 @@ class DB
 {
     private $host = "localhost";
     private $user = "root";
-    private $pass = "shawnmarlogaldo@1122";
-    private $dbname = "grocer_easedb";
+    private $pass = "";
+    private $dbname = "";
 
     public $conn = null;
     public function __construct()
