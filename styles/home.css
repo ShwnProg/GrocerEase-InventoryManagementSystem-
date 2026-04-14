@@ -304,7 +304,7 @@ body {
     font-weight: 500;
     text-decoration: none;
     transition: 0.3s ease;
-    
+
 }
 
 .add button:hover {
@@ -323,7 +323,7 @@ body {
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.07);
     overflow: hidden;
-    box-shadow: 0 0 3px #0000001a;
+    box-shadow: 0 0 5px #0000001a;
     /* overflow-y: auto;
     max-height: 500px; */
 
@@ -427,11 +427,19 @@ body {
 }
 
 .edit-btn .fa-trash {
-    color: rgba(200, 40, 40, 0.7);
+    color: #c82828b3;
 }
 
 .edit-btn:hover .fa-trash {
     color: #c82828;
+}
+
+.edit-btn .fa-user-minus {
+    color: #f39c12;
+}
+
+.edit-btn:hover .fa-user-minus {
+    color: #e67e22;
 }
 
 .manage-btn {
@@ -638,19 +646,23 @@ body {
     background: #32702b;
     box-shadow: 0 4px 12px rgba(28, 85, 21, 0.2);
 }
-.success-message{
+
+.success-message {
     color: #1c5515;
     font-size: 13px;
     margin-bottom: 8px;
-    text-align: center  ;
+    text-align: center;
 
 }
-.error-message{
+
+.error-message {
     color: #c82828;
     font-size: 11px;
     margin-top: 4px;
 
 }
+
+/* DELETE MODAL */
 .confirm-modal {
     display: none;
     position: fixed;
@@ -719,6 +731,23 @@ body {
     margin: 0;
 }
 
+.confirm-modal.warning-orange .modal-icon i {
+    color: orange;
+}
+
+.confirm-modal.warning-orange .modal-icon {
+    background-color: #ffa50026;
+}
+
+.confirm-modal.warning-orange #confirm-delete {
+    background-color: orange;
+    color: white;
+}
+
+.confirm-modal.warning-orange #confirm-delete:hover {
+    background-color: #e67e22;
+}
+
 .cancel-btn {
     flex: 1;
     padding: 9px;
@@ -745,7 +774,7 @@ body {
 }
 
 #confirm-delete {
-    width: 100%;      
+    width: 100%;
     padding: 9px;
     border-radius: 8px;
     font-size: 13px;
@@ -760,4 +789,77 @@ body {
 
 #confirm-delete:hover {
     background: #a32020;
+}
+
+/* BACK BUTTON */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1c5515;
+    transition: 0.2s ease;
+}
+
+.back-btn i {
+    font-size: 13px;
+    color: #1c5515;
+    transition: 0.2s ease;
+}
+
+.back-btn:hover {
+    color: #74be6c;
+}
+
+.back-btn:hover i {
+    color: #74be6c;
+}
+
+/* click effect */
+.back-btn:active {
+    transform: scale(0.97);
+}
+
+/* PREFERRED BUTTON */
+
+.preferred-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background 0.15s ease, transform 0.15s ease;
+    font-size: 15px;
+}
+
+/* default icon */
+.preferred-btn i {
+    color: rgba(0, 0, 0, 0.4);
+    transition: color 0.15s ease;
+}
+
+/* ACTIVE (preferred) */
+.preferred-btn i.active {
+    color: #1c5515;
+}
+
+.preferred-btn:hover {
+    background: rgba(28, 85, 21, 0.08);
+}
+
+.preferred-btn:hover i {
+    color: #1c5515;
+}
+
+.preferred-btn:active {
+    transform: scale(0.95);
+}
+
+.preferred-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }

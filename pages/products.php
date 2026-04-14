@@ -17,7 +17,7 @@ $category = new Category();
 $categories = $category->GetAllCategories();
 
 
-$open_modal = isset($_POST['add_product_btn']) && (isset($_SESSION['errors']) || isset($_SESSION['success']));
+$open_modal = isset($_SESSION['errors']) || isset($_SESSION['success']);
 $errors = $_SESSION['errors'] ?? [];
 $old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success'] ?? '';
@@ -27,9 +27,21 @@ $delete_product_id = '';
 $delete_product_name = '';
 
 if (isset($_POST['delete_btn'])) {
-    $delete_product_id = $_POST['product_id'] ?? '';
+    $_SESSION['delete_product_id'] = $_POST['product_id'];
+    header("Location: products.php");
+    exit;
+}
+
+if (isset($_SESSION['delete_product_id'])) {
+    $delete_product_id = $_SESSION['delete_product_id'];
     $delete_product_name = $product->GetProductNameById($delete_product_id);
     $confirm_delete = true;
+}
+
+if (isset($_GET['cancel_delete'])) {
+    unset($_SESSION['delete_product_id']);
+    header("Location: products.php");
+    exit;
 }
 
 unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
@@ -49,10 +61,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 <body>
 
     <?php include '../includes/sidebar.php'; ?>
-    <div class="main-content">
+    <main class="main-content">
         <?php include '../includes/topbar.php'; ?>
 
-        <div class="page-content">
+        <section class="page-content">
 
             <div class="toolbar">
                 <div class="search-area">
@@ -77,26 +89,32 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <th>Category</th>
                             <th>Selling Price</th>
                             <th>Description</th>
+                            <th>Preferred Supplier</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($products as $index => $prod): ?>
+                        <?php $count = 1; ?>
+                        <?php foreach ($products as $prod): ?>
                             <?php if ($prod['is_deleted'] == 1)
                                 continue; ?>
                             <tr>
-                                <td><?= $index + 1 ?></td>
+                                <td><?= $count++ ?></td>
                                 <td><?= htmlspecialchars($prod['product_name']) ?></td>
                                 <td><?= htmlspecialchars($prod['category_name']) ?></td>
                                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
                                 <td><?= htmlspecialchars($prod['product_description']) ?></td>
+                                <td style="color:#6b7280;">
+                                    <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
+                                </td>
                                 <td>
                                     <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
                                         <?= $prod['status'] == 1 ? 'Active' : 'Inactive' ?>
                                     </span>
                                 </td>
                                 <td>
+                                    <!-- EDIT ACTION -->
                                     <div class="actions">
                                         <form action="edit_product.php" method="POST">
                                             <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
@@ -111,13 +129,18 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
-
-                                        <form action="manage_suppliers.php" method="POST">
-                                            <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                            <button type="submit" class="manage-btn">
+                                        <?php if ($prod['status'] == 1): ?>
+                                            <form action="manage_suppliers.php" method="POST">
+                                                <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
+                                                <button type="submit" class="manage-btn">
+                                                    <i class="fa-solid fa-truck"></i>
+                                                </button>
+                                            </form>
+                                        <?php elseif ($prod['status'] == 0): ?>
+                                            <button class="manage-btn" disabled style="opacity:0.5; cursor:not-allowed;">
                                                 <i class="fa-solid fa-truck"></i>
                                             </button>
-                                        </form>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
@@ -125,8 +148,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </tbody>
                 </table>
             </div>
-            <div class="add-modal <?= $open_modal ? 'active' : '' ?>" id="add-modal">
-
+            
+            <!-- ADD MODAL -->
+            <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
                 <form action="../validation/products/add_product_process.php" method="POST">
                     <div class="header">
 
@@ -140,20 +164,21 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         <!-- SUCCESS MESSAGE -->
                         <?php if (!empty($success['success_add'])): ?>
                             <div class="success-message">
-                                <?= $success['success_add'] ?>
+                                <?= htmlspecialchars($success['success_add']) ?>
                             </div>
                         <?php endif; ?>
 
                         <!-- PRODUCT NAME -->
                         <div class="input">
-                            <label for="">Product Name</label>
+                            <label for="product name">Product Name</label>
                             <i class="fas fa-box"></i>
-                            <input type="text" name="product_name" placeholder="Product Name">
+                            <input type="text" name="product_name" placeholder="Product Name"
+                                value="<?= htmlspecialchars($old['product_name'] ?? '') ?>">
                         </div>
 
                         <!-- ERROR MESSAGE FOR PRODUCT NAME -->
                         <?php if (!empty($errors['product_name'])): ?>
-                            <div class="error-message"><?= $errors['product_name'] ?></div>
+                            <div class="error-message"><?= htmlspecialchars($errors['product_name']) ?></div>
                         <?php endif; ?>
 
                         <!-- CATEGORY -->
@@ -162,7 +187,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <select name="category" id="">
                                 <option value="">Select a category</option>
                                 <?php foreach ($categories as $cat): ?>
-                                    <option value="<?= $cat['category_id_pk'] ?>">
+                                    <option value="<?= $cat['category_id_pk'] ?>" <?= (isset($old['category']) && $old['category'] == $cat['category_id_pk']) ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($cat['category_name']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -171,44 +196,53 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         <!-- ERROR MESSAGE FOR CATEGORY -->
                         <?php if (!empty($errors['category'])): ?>
                             <div class="error-message">
-                                <?= $errors['category'] ?>
+                                <?= htmlspecialchars($errors['category']) ?>
                             </div>
                         <?php endif; ?>
 
                         <!-- SELLING PRICE -->
                         <div class="input">
-                            <label for="">Selling Price</label>
+                            <label for="selling price">Selling Price</label>
                             <i class="fas fa-tag"></i>
-                            <input type="text" name="selling_price" placeholder="Selling Price">
+                            <input type="text" name="selling_price" placeholder="Selling Price"
+                                value="<?= htmlspecialchars($old['selling_price'] ?? '') ?>">
                         </div>
 
                         <!-- ERROR MESSAGE FOR SELLING PRICE -->
                         <?php if (!empty($errors['selling_price'])): ?>
                             <div class="error-message">
-                                <?= $errors['selling_price'] ?>
+                                <?= htmlspecialchars($errors['selling_price']) ?>
                             </div>
                         <?php endif; ?>
 
                         <!-- DESCRIPTION -->
                         <div class="input">
-                            <label for="">Description (Optional)</label>
+                            <label for="description">Description (Optional)</label>
                             <i class="fas fa-align-left"></i>
-                            <textarea name="product_description" placeholder="Product Description"></textarea>
+                            <textarea name="product_description" placeholder="Product Description"
+                                value="<?php htmlspecialchars($old['description'] ?? '') ?>"></textarea>
                         </div>
 
                         <!-- STATUS -->
                         <div class="input">
-                            <label for="">Status</label>
-                            <select name="status" id="">
+                            <label for="status">Status</label>
+                            <select name="status" id="status">
                                 <option value="">Select a status</option>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
+
+                                <option value="1" <?= isset($old['status']) && $old['status'] == 1 ? 'selected' : '' ?>>
+                                    Active
+                                </option>
+
+                                <option value="0" <?= isset($old['status']) && $old['status'] == 0 ? 'selected' : '' ?>>
+                                    Inactive
+                                </option>
+
                             </select>
                         </div>
                         <!-- ERROR MESSAGE FOR STATUS -->
                         <?php if (!empty($errors['status'])): ?>
                             <div class="error-message">
-                                <?= $errors['status'] ?>
+                                <?= htmlspecialchars($errors['status']) ?>
                             </div>
                         <?php endif; ?>
 
@@ -216,16 +250,17 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </div>
                 </form>
             </div>
+
             <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
                 <div class="modal-content">
                     <div class="modal-icon">
                         <i class="fa-solid fa-trash"></i>
                     </div>
-                    <p>Delete <b><?= htmlspecialchars($delete_product_name) ?></b>?</p>
+                    <p>Delete <b><?= htmlspecialchars($delete_product_name ?? '') ?></b>?</p>
 
                     <div class="modal-actions">
 
-                        <button id = "cancel-delete"class="cancel-btn">Cancel</button>
+                        <button id="cancel-delete" class="cancel-btn">Cancel</button>
                         <!-- CONFIRM DELETE -->
                         <form action="../validation/products/delete_product.php" method="POST">
                             <input type="hidden" name="product_id" value="<?= $delete_product_id ?>">
@@ -234,8 +269,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+
+        </section>
+    </main>
 </body>
 <script src="../scripts/pages.js"></script>
 

@@ -37,27 +37,29 @@ const confirmDelete = document.getElementById('confirm-delete');
 
 let deleteForm = null; 
 
-
-document.querySelectorAll('.delete-form').forEach(form => {
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        deleteForm = this; 
-        confirmModal.classList.add('active');
+if (confirmModal) {
+    confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+            window.location.href = "products.php?cancel_delete=1";
+        }
     });
-});
+}
 
 confirmDelete.addEventListener('click', () => {
     if (deleteForm) deleteForm.submit();
 });
 
-cancelDelete.addEventListener('click', () => {
-    confirmModal.classList.remove('active');
-    deleteForm = null;
-});
+// cancelDelete.addEventListener('click', () => {
+//     confirmModal.classList.remove('active');
+//     deleteForm = null;
+// });
 
 confirmModal.addEventListener('click', (e) => {
     if (e.target === confirmModal) {
         confirmModal.classList.remove('active');
         deleteForm = null;
     }
+});
+cancelDelete.addEventListener('click', () => {
+    window.location.href = "products.php?cancel_delete=1";
 });
