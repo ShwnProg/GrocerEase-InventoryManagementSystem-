@@ -224,7 +224,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <label for="description">Description (Optional)</label>
                             <i class="fas fa-align-left"></i>
                             <textarea name="product_description" placeholder="Product Description"
-                                value="<?php htmlspecialchars($old['description'] ?? '') ?>"></textarea>
+                              ><?=htmlspecialchars($old['description'] ?? '') ?></textarea>
                         </div>
 
                         <!-- STATUS -->

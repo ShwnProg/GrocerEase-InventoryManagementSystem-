@@ -95,6 +95,32 @@ class Product
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function GetProductInfoById($product_id){
+        $stmt = $this->conn->prepare("SELECT p.product_name,p.category_id_fk,c.category_name,c.category_id_pk,p.selling_price,p.product_description,p.status
+                                      FROM products as p INNER JOIN categories as c on c.category_id_pk = p.category_id_fk 
+                                      WHERE product_id_pk = :product_id");
 
+        $stmt->execute([':product_id'=>$product_id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    public function UpdateProductInfo($product_id,$name,$category,$selling_price,$description,$status){
+        $stmt = $this->conn->prepare("UPDATE products set 
+                                      product_name = :name,
+                                      category_id_fk = :category,
+                                      selling_price = :selling_price,
+                                      product_description = :description,
+                                      status = :status WHERE product_id_fk = :product_id");
+
+        $stmt->execute([':name'=>$name,
+                        ':category_id_fk'=>$category,
+                        ':selling_price'=>$selling_price,
+                        ':description'=>$description,
+                        ':status'=>$status,
+                        ':product_id_fk'=>$product_id]);
+
+
+        return $stmt->rowCount()>0;
+    }
 }
 ?>

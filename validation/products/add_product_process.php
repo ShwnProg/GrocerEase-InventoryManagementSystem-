@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (!empty($errors)) {
-        $_SESSION['errors'] = ['add' => $errors]; 
+        $_SESSION['errors'] = ['add' => $errors];
         $_SESSION['old'] = $_POST;
         header("Location: ../../pages/products.php");
         exit;
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $product->AddProduct($product_name, $category, $selling_price, $description, $status);
 
     if ($result) {
-        $_SESSION['success'] = ['add' => "Product added successfully."]; 
+        $_SESSION['success'] = ['add' => "Product added successfully."];
     } else {
         $_SESSION['errors'] = ['add' => ['form' => "Failed to add product. Please try again."]];
         $_SESSION['old'] = $_POST;
