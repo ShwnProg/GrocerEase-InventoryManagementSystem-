@@ -66,15 +66,8 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Suppliers</title>
-    <link rel="stylesheet" href="../styles/home.css">
-    <link rel="icon" type="image/png" href="../images/icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<?php include "../includes/head.php"?>
 
-</head>
 
 <body>
     <?php include '../includes/sidebar.php'; ?>
