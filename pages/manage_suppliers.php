@@ -5,10 +5,8 @@ require_once "../models/supplier.php";
 require_once "../models/product_suppliers.php";
 
 
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: ../forms/index.php");
-    exit;
-}
+include "../includes/auth_check.php";
+
 
 if (isset($_POST["product_id"])) {
     $product_id = $_POST["product_id"];
@@ -36,21 +34,21 @@ $success = $_SESSION["success"] ?? null;
 $old = $_SESSION["old"] ?? null;
 
 $confirm_delete = false;
-$delete_supplier_id = '';  
+$delete_supplier_id = '';
 $delete_supplier_name = '';
 
 if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_product_id']     = $product_id;
-    $_SESSION['delete_supplier_id']    = $_POST['supplier_id'];
-    $_SESSION['delete_supplier_name']  = $_POST['supplier_name'];
+    $_SESSION['delete_product_id'] = $product_id;
+    $_SESSION['delete_supplier_id'] = $_POST['supplier_id'];
+    $_SESSION['delete_supplier_name'] = $_POST['supplier_name'];
     header("Location: manage_suppliers.php?product_id=" . $product_id);
     exit;
 }
 
 if (isset($_SESSION['delete_supplier_id'])) {
-    $delete_product_id    = $_SESSION['delete_product_id'];
-    $delete_supplier_id   = $_SESSION['delete_supplier_id'];
-    $delete_supplier_name = $_SESSION['delete_supplier_name']; 
+    $delete_product_id = $_SESSION['delete_product_id'];
+    $delete_supplier_id = $_SESSION['delete_supplier_id'];
+    $delete_supplier_name = $_SESSION['delete_supplier_name'];
     $confirm_delete = true;
 }
 
@@ -59,6 +57,9 @@ if (isset($_GET['cancel_delete'])) {
     header("Location: manage_suppliers.php?product_id=" . $product_id);
     exit;
 }
+
+$delete_success = $_SESSION['success']['remove_supplier'] ?? '';
+$delete_error = $_SESSION['errors']['remove_supplier'] ?? '';
 
 unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
 ?>
@@ -81,6 +82,8 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
         <?php include '../includes/topbar.php'; ?>
 
         <section class="page-content">
+            <?php include '../includes/delete_message.php' ?>
+
             <div class="toolbar">
                 <a href="products.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>
                 <div class="add">
@@ -115,8 +118,7 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                                 <td>
                                     <div class="actions">
                                         <!-- PREFERRED BUTTON -->
-                                        <form action="../validation/product_suppliers/preferred_supplier.php"
-                                            method="POST">
+                                        <form action="../validation/product_suppliers/preferred_supplier.php" method="POST">
                                             <input type="hidden" name="product_id" value="<?= $product_id ?>">
                                             <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
                                             <input type="hidden" name="is_preferred" value="<?= $sup['preferred'] ?>">
@@ -142,10 +144,11 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                                             </button>
                                         </form>
                                         <!-- DELETE BUTTON -->
-                                        <form method="POST">    
-                                            <input type="hidden" name="product_id"    value="<?= $product_id ?>">
-                                            <input type="hidden" name="supplier_id"   value="<?= $sup['supplier_id_pk'] ?>">
-                                            <input type="hidden" name="supplier_name" value="<?= htmlspecialchars($sup['supplier_name']) ?>">
+                                        <form method="POST">
+                                            <input type="hidden" name="product_id" value="<?= $product_id ?>">
+                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
+                                            <input type="hidden" name="supplier_name"
+                                                value="<?= htmlspecialchars($sup['supplier_name']) ?>">
 
                                             <button type="submit" name="delete_btn" class="edit-btn">
                                                 <i class="fa-solid fa-user-minus"></i>
@@ -197,7 +200,8 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                         <div class="input">
                             <label for="cost_price">Cost Price</label>
                             <i class="fas fa-tag"></i>
-                            <input type="text" name="cost_price" value="<?= htmlspecialchars($old['cost_price'] ?? '') ?>">
+                            <input type="text" name="cost_price"
+                                value="<?= htmlspecialchars($old['cost_price'] ?? '') ?>">
                         </div>
 
                         <?php if (!empty($error['cost_price'])): ?>
@@ -221,10 +225,10 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
 
                     <div class="modal-actions">
                         <a href="manage_suppliers.php?product_id=<?= $product_id ?>&cancel_delete=1"
-                           class="cancel-btn">Cancel</a>
+                            class="cancel-btn">Cancel</a>
 
                         <form action="../validation/product_suppliers/remove_suppliers.php" method="POST">
-                            <input type="hidden" name="product_id"  value="<?= $delete_product_id ?>">
+                            <input type="hidden" name="product_id" value="<?= $delete_product_id ?>">
                             <input type="hidden" name="supplier_id" value="<?= $delete_supplier_id ?>">
                             <button type="submit" id="confirm-delete">Yes, Remove</button>
                         </form>

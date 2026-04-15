@@ -2,10 +2,8 @@
 session_start();
 require_once '../models/categories.php';
 
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: ../forms/index.php");
-    exit;
-}
+include "../includes/auth_check.php";
+
 $_SESSION['page_title'] = "CATEGORIES";
 
 $category = new Category();

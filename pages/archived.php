@@ -4,10 +4,8 @@ require_once '../models/product.php';
 require_once '../models/categories.php';
 require_once '../models/supplier.php';
 
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: ../forms/index.php");
-    exit;
-}
+include "../includes/auth_check.php";
+
 $_SESSION['page_title'] = "ARCHIVED";
 
 $product = new Product();

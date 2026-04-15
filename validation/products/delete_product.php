@@ -1,18 +1,22 @@
 <?php
-    session_start();
-    require_once '../../models/product.php';
+require_once '../../models/product.php';
+session_start();
 
-    $id = $_POST['product_id'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = $_POST['product_id'] ?? '';
+
     $product = new Product();
+    $result = $product->SoftDeleteProduct($product_id);
 
-    $result = $product->SoftDeleteProduct($id);
+    unset($_SESSION['delete_product_id']);
 
-    if($result){
-        $_SESSION['success'] = ["success_deleted" => "Product deleted successfully."];
+    if ($result) {
+        $_SESSION['success'] = ['delete' => "Product deleted successfully."];
     } else {
-        $_SESSION['errors'] = ['delete_error' => "Failed to delete the product. Please try again."];
+        $_SESSION['errors'] = ['delete' => "Failed to delete product. Please try again."];
     }
 
     header("Location: ../../pages/products.php");
     exit;
+}
 ?>

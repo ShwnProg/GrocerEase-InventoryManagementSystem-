@@ -16,7 +16,7 @@ class Product
         $stmt = $this->conn->prepare("SELECT p.product_id_pk,
                                              p.product_name,
                                              c.category_name,
-                                             MIN(ps.cost_price) AS cost_price,
+                                             ps.cost_price,
                                              p.selling_price,
                                              p.product_description,
                                              p.status,
@@ -26,7 +26,6 @@ class Product
                                              JOIN categories c ON c.category_id_pk = p.category_id_fk
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
                                              LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
-                                             GROUP BY p.product_id_pk,s.supplier_name
                                              ORDER BY p.product_name ASC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -50,12 +49,16 @@ class Product
 
     public function CheckDuplicateProduct($name, $category)
     {
-        $stmt = $this->conn->prepare("SELECT product_name FROM products WHERE product_name = :name AND category_id_fk = :category");
+        $stmt = $this->conn->prepare("SELECT product_name FROM products 
+                                      WHERE product_name = :name 
+                                      AND category_id_fk = :category 
+                                      AND is_deleted = 0");
         $stmt->execute([
             ':name' => $name,
             ':category' => $category
         ]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        
+         return $stmt->rowCount() > 0;
     }
 
     public function SoftDeleteProduct($id)
@@ -85,7 +88,7 @@ class Product
                                              p.is_deleted
                                              FROM products p
                                              JOIN categories c ON c.category_id_pk = p.category_id_fk
-                                             LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk
+                                             LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
                                              WHERE p.is_deleted = 1
                                              GROUP BY p.product_id_pk
                                              ORDER BY p.product_name ASC");

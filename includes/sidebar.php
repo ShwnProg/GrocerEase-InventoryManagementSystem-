@@ -1,4 +1,9 @@
-<?php $current = basename($_SERVER['PHP_SELF']); ?>
+<?php 
+
+$current = basename($_SERVER['PHP_SELF']);
+$products_active = in_array($current, ['products.php', 'manage_suppliers.php', 'edit_product.php']);
+
+?>
 
 <div class="side-bar">
     <div class="logo">
@@ -14,7 +19,7 @@
             <span>Dashboard</span>
         </a>
 
-        <a href="products.php" class="menu-btn <?= $current == 'products.php' ? 'active' : '' ?>">
+        <a href="products.php" class="menu-btn <?= $products_active ? 'active' : '' ?>">
             <i class="fa-solid fa-boxes-stacked"></i>
             <span>Products</span>
         </a>

@@ -3,10 +3,8 @@ session_start();
 require_once "../models/product.php";
 require_once "../models/categories.php";
 
-if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    header("Location: ../forms/index.php");
-    exit;
-}
+include "../includes/auth_check.php";
+
 $_SESSION['page_title'] = "PRODUCTS";
 
 
@@ -17,10 +15,10 @@ $category = new Category();
 $categories = $category->GetAllCategories();
 
 
-$open_modal = isset($_SESSION['errors']) || isset($_SESSION['success']);
-$errors = $_SESSION['errors'] ?? [];
+$open_modal = isset($_SESSION['errors']['add']) || isset($_SESSION['success']['add']);
+$errors = $_SESSION['errors']['add'] ?? [];
 $old = $_SESSION['old'] ?? [];
-$success = $_SESSION['success'] ?? '';
+$success = $_SESSION['success']['add'] ?? '';
 
 $confirm_delete = false;
 $delete_product_id = '';
@@ -44,6 +42,9 @@ if (isset($_GET['cancel_delete'])) {
     exit;
 }
 
+$delete_success = $_SESSION['success']['delete'] ?? '';
+$delete_error = $_SESSION['errors']['delete'] ?? '';
+
 unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 ?>
 <!DOCTYPE html>
@@ -53,7 +54,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocer Ease</title>
-    <link rel="stylesheet" href="../styles/home.css">
+    <link rel="stylesheet" href="../../styles/home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="icon" type="image/png" href="../images/icon.png">
 </head>
@@ -65,8 +66,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
         <?php include '../includes/topbar.php'; ?>
 
         <section class="page-content">
-
+            <?php include '../includes/delete_message.php' ?>
             <div class="toolbar">
+
                 <div class="search-area">
                     <form action="">
                         <i class="fas fa-search"></i>
@@ -87,6 +89,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <th>No.</th>
                             <th>Product Name</th>
                             <th>Category</th>
+                            <th>Cost Price</th>
                             <th>Selling Price</th>
                             <th>Description</th>
                             <th>Preferred Supplier</th>
@@ -103,6 +106,11 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                 <td><?= $count++ ?></td>
                                 <td><?= htmlspecialchars($prod['product_name']) ?></td>
                                 <td><?= htmlspecialchars($prod['category_name']) ?></td>
+                                <td>
+                                    <?= $prod['cost_price']
+                                        ? '₱' . number_format($prod['cost_price'], 2)
+                                        : '<span style="color:#6b7280;">No cost price</span>' ?>
+                                </td>
                                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
                                 <td><?= htmlspecialchars($prod['product_description']) ?></td>
                                 <td style="color:#6b7280;">
@@ -148,7 +156,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </tbody>
                 </table>
             </div>
-            
+
             <!-- ADD MODAL -->
             <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
                 <form action="../validation/products/add_product_process.php" method="POST">
@@ -162,10 +170,14 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     <div class="body">
 
                         <!-- SUCCESS MESSAGE -->
-                        <?php if (!empty($success['success_add'])): ?>
+                        <?php if (!empty($success)): ?>
                             <div class="success-message">
-                                <?= htmlspecialchars($success['success_add']) ?>
+                                <?= htmlspecialchars($success) ?>
                             </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($errors['form'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['form']) ?></div>
                         <?php endif; ?>
 
                         <!-- PRODUCT NAME -->

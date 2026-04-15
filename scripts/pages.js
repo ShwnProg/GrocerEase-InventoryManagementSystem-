@@ -1,65 +1,36 @@
-// search functionality
+// SEARCH
 const searchInput = document.getElementById('search');
 if (searchInput) {
     searchInput.addEventListener('keyup', function () {
-        let value = this.value.toLowerCase();
-        let rows = document.querySelectorAll('.menu-table tbody tr');
-        rows.forEach(row => {
-            let text = row.textContent.toLowerCase();
-            row.style.display = text.includes(value) ? '' : 'none';
+        const value = this.value.toLowerCase();
+        document.querySelectorAll('.menu-table tbody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(value) ? '' : 'none';
         });
     });
 }
-// modal functionality
+
+// ADD MODAL
 const modal = document.getElementById('add-modal');
 const addBtn = document.getElementById('addbtn');
 const closeBtn = document.getElementById('close-modal');
 
-addBtn.addEventListener('click', () => {
-    modal.classList.add('active');
-});
-
-closeBtn.addEventListener('click', () => {
-    modal.classList.remove('active');
-});
-
-// click outside to close
+addBtn.addEventListener('click', () => modal.classList.add('active'));
+closeBtn.addEventListener('click', () => modal.classList.remove('active'));
 modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-        modal.classList.remove('active');
-    }
+    if (e.target === modal) modal.classList.remove('active');
 });
 
-// DELETE MODAL
+// DELETE CONFIRM MODAL
 const confirmModal = document.getElementById('confirm-modal');
 const cancelDelete = document.getElementById('cancel-delete');
-const confirmDelete = document.getElementById('confirm-delete');
 
-let deleteForm = null; 
-
-if (confirmModal) {
-    confirmModal.addEventListener('click', (e) => {
-        if (e.target === confirmModal) {
-            window.location.href = "products.php?cancel_delete=1";
-        }
-    });
-}
-
-confirmDelete.addEventListener('click', () => {
-    if (deleteForm) deleteForm.submit();
-});
-
-// cancelDelete.addEventListener('click', () => {
-//     confirmModal.classList.remove('active');
-//     deleteForm = null;
-// });
-
-confirmModal.addEventListener('click', (e) => {
-    if (e.target === confirmModal) {
-        confirmModal.classList.remove('active');
-        deleteForm = null;
-    }
-});
 cancelDelete.addEventListener('click', () => {
     window.location.href = "products.php?cancel_delete=1";
+});
+
+// Click outside modal to cancel
+confirmModal.addEventListener('click', (e) => {
+    if (e.target === confirmModal) {
+        window.location.href = "products.php?cancel_delete=1";
+    }
 });
