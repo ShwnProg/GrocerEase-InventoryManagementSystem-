@@ -23,8 +23,9 @@ $_SESSION['product_id'] = $product_id;
 
 $error = $_SESSION['error'] ?? '';
 $old = $_SESSION['old'] ?? '';
+$success = $_SESSION['success'] ?? '';
 
-unset($_SESSION['error'], $_SESSION['old']);
+unset($_SESSION['error'], $_SESSION['old'],$_SESSION['success']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,13 +37,6 @@ unset($_SESSION['error'], $_SESSION['old']);
     <main class='main-content'>
         <?php include '../includes/topbar.php'; ?>
         <section class="page-content">
-
-            <?php if (!empty($_SESSION['success'])): ?>
-                <div class="success-message">
-                    <?= htmlspecialchars($_SESSION['success']) ?>
-                </div>
-            <?php endif; ?>
-
             <div class="tool-bar">
                 <a href="products.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>
             </div>
@@ -52,7 +46,20 @@ unset($_SESSION['error'], $_SESSION['old']);
 
 
                     <i class="fa-solid fa-pen-to-square"></i>
-                    <p><?= htmlspecialchars($product_name) ?></p>
+                    <p> EDIT PRODUCT </p>
+
+                    <?php if (!empty($success)): ?>
+                        <div class="success-message">
+                            <?= htmlspecialchars($success) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($error['no_changes'])): ?>
+                        <div class="no-changes">
+                            <?= htmlspecialchars($error['no_changes']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- PRODUCT NAME -->
                     <div class="input">
                         <label for="product_name">Product Name</label>

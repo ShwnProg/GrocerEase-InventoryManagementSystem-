@@ -68,6 +68,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     // var_dump($is_true);
 
+    $product_name = htmlspecialchars($product_name);
+    $description = htmlspecialchars($description);
+    $selling_price = filter_var($selling_price, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+
+    $result = $product->UpdateProductInfo($product_id, $product_name, $category, $selling_price, $description, $status);
+
+    if ($result) {
+        $_SESSION['success'] = "Product updated successfully";
+    } else {
+        $_SESSION['error'] = "Something went wrong";
+    }
+    header("Location: ../../pages/edit_product.php?product_id=$product_id");
+    exit;   
 
 }
 function IsSameData($original, $product_name, $category, $selling_price, $description, $status)

@@ -867,3 +867,147 @@ body {
 }
 
 /* EDIT */
+/* ── Edit Product Page ──────────────────────────── */
+
+.edit-content {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px;
+}
+
+.edit-content form {
+    padding: 28px 28px 24px;
+    width: 100%;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* ── Form Header ────────────────────────────────── */
+
+.edit-content form > i {
+    font-size: 13px;
+    color: #1c5515;
+    background: rgba(28, 85, 21, 0.08);
+    padding: 7px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+.edit-content form > p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+}
+
+/* ── Input Groups ───────────────────────────────── */
+
+.edit-content .input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+}
+
+.edit-content .input label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edit-content .input i {
+    position: absolute;
+    left: 11px;
+    bottom: 10px;
+    font-size: 12px;
+    color: #ccc;
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+/* ── Text Inputs ────────────────────────────────── */
+
+.edit-content .input input {
+    padding: 9px 12px 9px 33px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #222;
+    background: #fafafa;
+    outline: none;
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+/* ── Selects & Textarea ─────────────────────────── */
+
+.edit-content .input select,
+.edit-content .input textarea {
+    padding: 9px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #222;
+    background: #fafafa;
+    outline: none;
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.edit-content .input textarea {
+    resize: vertical;
+    min-height: 90px;
+    line-height: 1.5;
+}
+
+/* ── Focus States ───────────────────────────────── */
+
+.edit-content .input input:focus,
+.edit-content .input select:focus,
+.edit-content .input textarea:focus {
+    border-color: #1c5515;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(28, 85, 21, 0.08);
+}
+
+.edit-content .input:focus-within i {
+    color: #1c5515;
+}
+
+
+.edit-content form button[name="edit_btn"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 2px;
+    background: #1c5515;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.edit-content form button[name="edit_btn"]:hover {
+    background: #32702b;
+    box-shadow: 0 4px 12px rgba(28, 85, 21, 0.2);
+}
+
+.edit-content form button[name="edit_btn"]:active {
+    transform: scale(0.99);
+}
+.no-changes{
+    color: orangered;
+    font-size: 13px;
+    text-align: center;
+}

@@ -43,9 +43,6 @@ $supplier = $suppliers->GetDeletedSuppliers();
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
-                <div class="add">
-                    <button id="addbtn">Add Product</button>
-                </div>
             </div>
 
             <!-- table -->

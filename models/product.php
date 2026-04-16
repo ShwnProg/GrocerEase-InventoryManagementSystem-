@@ -110,14 +110,14 @@ class Product
                                       category_id_fk = :category,
                                       selling_price = :selling_price,
                                       product_description = :description,
-                                      status = :status WHERE product_id_fk = :product_id");
+                                      status = :status WHERE product_id_pk = :product_id");
 
         $stmt->execute([':name'=>$name,
-                        ':category_id_fk'=>$category,
+                        ':category'=>$category,
                         ':selling_price'=>$selling_price,
                         ':description'=>$description,
                         ':status'=>$status,
-                        ':product_id_fk'=>$product_id]);
+                        ':product_id'=>$product_id]);
 
 
         return $stmt->rowCount()>0;
