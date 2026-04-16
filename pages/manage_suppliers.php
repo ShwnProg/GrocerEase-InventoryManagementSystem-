@@ -208,6 +208,8 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                 </form>
             </div>
 
+
+
             <!-- REMOVE MODAL -->
             <div class="confirm-modal warning-orange <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
                 <div class="modal-content">
