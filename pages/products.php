@@ -192,6 +192,8 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <select name="category" id="">
                                 <option value="">Select a category</option>
                                 <?php foreach ($categories as $cat): ?>
+                                    <?php if ($cat['is_deleted'] == 1)
+                                        continue; ?>
                                     <option value="<?= $cat['category_id_pk'] ?>" <?= (isset($old['category']) && $old['category'] == $cat['category_id_pk']) ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($cat['category_name']) ?>
                                     </option>
