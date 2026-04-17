@@ -24,13 +24,17 @@ modal.addEventListener('click', (e) => {
 const confirmModal = document.getElementById('confirm-modal');
 const cancelDelete = document.getElementById('cancel-delete');
 
-cancelDelete.addEventListener('click', () => {
-    window.location.href = "products.php?cancel_delete=1";
-});
+if (cancelDelete && confirmModal) {
+    
+    const currentPage = window.location.pathname.split('/').pop();
 
-// Click outside modal to cancel
-confirmModal.addEventListener('click', (e) => {
-    if (e.target === confirmModal) {
-        window.location.href = "products.php?cancel_delete=1";
-    }
-});
+    cancelDelete.addEventListener('click', () => {
+        window.location.href = `${currentPage}?cancel_delete=1`;
+    });
+
+    confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+            window.location.href = `${currentPage}?cancel_delete=1`;
+        }
+    });
+}

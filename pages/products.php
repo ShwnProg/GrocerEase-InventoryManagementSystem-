@@ -50,7 +50,8 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php"?>
+<?php include "../includes/head.php" ?>
+
 <body>
 
     <?php include '../includes/sidebar.php'; ?>
@@ -223,8 +224,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         <div class="input">
                             <label for="description">Description (Optional)</label>
                             <i class="fas fa-align-left"></i>
-                            <textarea name="product_description" placeholder="Product Description"
-                              ><?=htmlspecialchars($old['description'] ?? '') ?></textarea>
+                            <textarea name="product_description" placeholder="Product Description"><?= htmlspecialchars($old['description'] ?? '') ?></textarea>
                         </div>
 
                         <!-- STATUS -->
@@ -254,7 +254,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </div>
                 </form>
             </div>
-
+            <!-- CONFIRM DELETE MODAL -->
             <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
                 <div class="modal-content">
                     <div class="modal-icon">
