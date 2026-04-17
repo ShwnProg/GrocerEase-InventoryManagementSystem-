@@ -25,15 +25,15 @@ class Category
 
     public function GetAllCategories()
     {
-        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description FROM categories ORDER BY category_id_pk DESC");
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description,is_deleted FROM categories ORDER BY category_id_pk DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function SoftDeleteCategory($id)
     {
         $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 1 WHERE category_id_pk = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->rowCount() > 0;
+        $result = $stmt->execute([':id' => $id]);
+        return $result;
     }
     public function GetCategoryById($id)
     {
@@ -46,5 +46,11 @@ class Category
         $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description FROM categories WHERE is_deleted = 1;");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function GetCategoryNameById($id)
+    {
+        $stmt = $this->conn->prepare("SELECT category_name FROM categories WHERE category_id_pk = :id;");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetchColumn();
     }
 }
