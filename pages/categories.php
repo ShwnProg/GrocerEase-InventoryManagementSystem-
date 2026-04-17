@@ -9,12 +9,19 @@ $_SESSION['page_title'] = "CATEGORIES";
 $category = new Category();
 $categories = $category->GetAllCategories();
 
+$open_modal = isset($_SESSION['add_category_error']) || isset($_SESSION['success_msg']);
+$error = $_SESSION['add_category_error'] ?? [];
+$old_inputs = $_SESSION['old_inputs'] ?? [];
+$success_msg = $_SESSION['success_msg'] ?? '';
+
 // echo "hello $user_info[username]";
+unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php"?>
+<?php include "../includes/head.php" ?>
 
 <body>
 
@@ -75,7 +82,8 @@ $categories = $category->GetAllCategories();
                     </tbody>
                 </table>
             </div>
-            <div class="add-modal" id="add-modal">
+            <!-- Add Category Modal -->
+            <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
 
                 <form action="../validation/categories/add_category.php" method="POST">
                     <div class="header">
@@ -86,6 +94,12 @@ $categories = $category->GetAllCategories();
 
                     </div>
                     <div class="body">
+                        <!-- SUCCESS MESSAGE -->
+                        <?php if (!empty($success_msg)): ?>
+                            <div class="success-message">
+                                <p><?= htmlspecialchars($success_msg) ?></p>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="input">
                             <label for="">Category Name</label>
@@ -93,8 +107,14 @@ $categories = $category->GetAllCategories();
                             <input type="text" name="category_name" placeholder="Category Name">
                         </div>
 
+                        <?php if (!empty($error['category_name'])): ?>
+                            <div class="error-message">
+                                <p><?= htmlspecialchars($error['category_name']) ?></p>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="input">
-                            <label for="">Description</label>
+                            <label for="">Description (OPTIONAL) </label>
                             <i class="fas fa-align-left"></i>
                             <textarea name="category_description" placeholder="Category Description"></textarea>
                         </div>

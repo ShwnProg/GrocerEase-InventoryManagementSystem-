@@ -26,7 +26,7 @@ class Product
                                              JOIN categories c ON c.category_id_pk = p.category_id_fk
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
                                              LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
-                                             ORDER BY p.product_name ASC");
+                                             ORDER BY p.product_id_pk DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

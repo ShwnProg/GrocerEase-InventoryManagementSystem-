@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../config/db.php');
+require_once __DIR__ . '/../config/db.php';
 
 class Category
 {
@@ -10,10 +10,22 @@ class Category
         $database = new DB();
         $this->conn = $database->conn;
     }
+    public function AddCategory($name, $description)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO categories(category_name, category_description) 
+        VALUES (:name, :description)");
+        $stmt->execute([':name' => $name, ':description' => $description]);
+        return $stmt->rowCount() > 0;
+    }
+    public function CheckDuplicateCategory($category_name){
+        $stmt = $this->conn->prepare('SELECT COUNT(*) FROM categories WHERE category_name = :name AND is_deleted = 0');
+        $stmt->execute([':name' => $category_name]);
+        return $stmt->fetchColumn() > 0;
+    }
 
     public function GetAllCategories()
     {
-        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description FROM categories;");
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description FROM categories ORDER BY category_id_pk DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -36,4 +48,3 @@ class Category
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-?>
