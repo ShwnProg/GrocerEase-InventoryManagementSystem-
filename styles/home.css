@@ -1011,3 +1011,169 @@ body {
     font-size: 13px;
     text-align: center;
 }
+/* EDIT MODAL */
+.edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    align-items: center;        
+    justify-content: center;   
+}
+
+.edit-modal.active {
+    display: flex;
+}
+
+.edit-modal .modal-content {
+    background: #fff;
+    border-radius: 14px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+    animation: modalIn 0.2s ease;
+    overflow: hidden;
+}
+
+/* HEADER */
+.edit-modal .modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    background: #fff;
+}
+
+.edit-modal .modal-header i {
+    font-size: 13px;
+    color: #1c5515;
+    background: rgba(28, 85, 21, 0.08);
+    padding: 7px;
+    border-radius: 8px;
+}
+
+.edit-modal .modal-header p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111;
+    flex: 1;
+}
+
+/* BODY */
+.edit-modal .modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.edit-modal .modal-body > p {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.edit-modal .modal-body > p b {
+    color: #111;
+}
+
+/* INPUT */
+.edit-modal .input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    position: relative;
+}
+
+.edit-modal .input label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.edit-modal .input i {
+    position: absolute;
+    left: 11px;
+    bottom: 10px;
+    font-size: 12px;
+    color: #ccc;
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+.edit-modal .input input {
+    padding: 9px 12px 9px 33px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    font-size: 13px;
+    color: #222;
+    background: #fafafa;
+    outline: none;
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.edit-modal .input input:focus {
+    border-color: #1c5515;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(28, 85, 21, 0.08);
+}
+
+.edit-modal .input:focus-within i {
+    color: #1c5515;
+}
+
+/* ACTIONS */
+.edit-modal .modal-close {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #aaa;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1;
+}
+
+.edit-modal .modal-close:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: #333;
+}
+
+/* Save button full width */
+#confirm-edit {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, box-shadow 0.2s;
+    background: #1c5515;
+    color: #fff;
+}
+
+#confirm-edit:hover {
+    background: #32702b;
+    box-shadow: 0 4px 12px rgba(28, 85, 21, 0.2);
+}
+
+#confirm-edit:active {
+    transform: scale(0.99);
+}

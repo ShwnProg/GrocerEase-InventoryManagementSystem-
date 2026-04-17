@@ -98,7 +98,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <tr>
                                 <td><?= $count++ ?></td>
                                 <td><?= htmlspecialchars($prod['product_name']) ?></td>
-                                <td><?= htmlspecialchars($prod['category_name']) ?></td>
+                                <td><?= htmlspecialchars($prod['category_name'] ?? 'N/A') ?></td>
                                 <td>
                                     <?= $prod['cost_price']
                                         ? '₱' . number_format($prod['cost_price'], 2)

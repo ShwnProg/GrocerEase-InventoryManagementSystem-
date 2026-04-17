@@ -23,7 +23,7 @@ class Product
                                              p.is_deleted,
                                              s.supplier_name as preferred_supplier_name
                                              FROM products p
-                                             JOIN categories c ON c.category_id_pk = p.category_id_fk
+                                             LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk AND c.is_deleted = 0
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
                                              LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
                                              ORDER BY p.product_id_pk DESC");

@@ -102,5 +102,14 @@ class ProductSuppliers
 
         return $stmt->rowCount() > 0;
     }   
+    public function UpdateCostPrice($product_id,$supplier_id,$cost_price){
+        $stmt =  $this->conn->prepare("UPDATE product_supplier SET cost_price = :price WHERE product_id_fk = :product_id AND supplier_id_fk = :supplier_id");
+
+        $stmt->execute([':price' => $cost_price,
+                        ':product_id' => $product_id,
+                        ':supplier_id' => $supplier_id]);
+
+        return $stmt->rowCount() > 0;
+    }
 }
 ?>
