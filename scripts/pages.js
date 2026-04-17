@@ -38,3 +38,23 @@ if (cancelDelete && confirmModal) {
         }
     });
 }
+
+// EDIT MODAL
+const editModal = document.getElementById('edit-modal');
+const closeEditBtn = document.getElementById('close-edit-modal');
+
+if (editModal && closeEditBtn) {
+    const cancelUrl = editModal.dataset.cancelUrl;
+
+    closeEditBtn.addEventListener('click', () => {
+        editModal.classList.remove('active');
+        window.location.href = cancelUrl;
+    });
+
+    editModal.addEventListener('click', (e) => {
+        if (e.target === editModal) {
+            editModal.classList.remove('active');
+            window.location.href = cancelUrl;
+        }
+    });
+}

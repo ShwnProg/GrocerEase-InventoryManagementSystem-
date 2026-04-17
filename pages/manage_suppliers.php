@@ -4,52 +4,53 @@ require_once "../models/product.php";
 require_once "../models/supplier.php";
 require_once "../models/product_suppliers.php";
 
-
 include "../includes/auth_check.php";
-
 
 if (isset($_POST["product_id"])) {
     $product_id = $_POST["product_id"];
 } else {
     $product_id = $_GET["product_id"] ?? null;
 }
-$product = new Product();
+
+$product          = new Product();
 $product_supplier = new ProductSuppliers();
-$supplier = new Supplier();
+$supplier         = new Supplier();
 
 $product_suppliers = $product_supplier->GetProductSupplier($product_id);
-$suppliers = $supplier->GetAllSuppliers();
-$supplier_count = $product_supplier->GetProductSupplierCount($product_id);
-$product_name = $product->GetProductNameById($product_id);
+$suppliers         = $supplier->GetAllSuppliers();
+$supplier_count    = $product_supplier->GetProductSupplierCount($product_id);
+$product_name      = $product->GetProductNameById($product_id);
 
 $_SESSION['page_title'] = "MANAGE SUPPLIERS FOR " . strtoupper($product_name);
 
 
-$has_error = isset($_SESSION["error"]["add_supplier"]) || isset($_SESSION['error']);
-$has_success = isset($_SESSION["success"]["add_supplier"]);
-$open_modal = isset($_POST["add_supplier"]) || $has_error || $has_success;
-
-$error = $_SESSION["error"] ?? null;
+$error   = $_SESSION["error"]   ?? null;
 $success = $_SESSION["success"] ?? null;
-$old = $_SESSION["old"] ?? null;
+$old     = $_SESSION["old"]     ?? null;
 
-$confirm_delete = false;
-$delete_supplier_id = '';
+// ADD MODAL 
+$has_add_error    = isset($error['supplier']) || isset($error['cost_price']);
+$has_add_success  = isset($success['add_supplier']);
+$open_modal       = isset($_POST["add_supplier"]) || $has_add_error || $has_add_success;
+
+//  DELETE FLOW 
+$confirm_delete      = false;
+$delete_supplier_id  = '';
 $delete_supplier_name = '';
 
 if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_product_id'] = $product_id;
-    $_SESSION['delete_supplier_id'] = $_POST['supplier_id'];
+    $_SESSION['delete_product_id']   = $product_id;
+    $_SESSION['delete_supplier_id']  = $_POST['supplier_id'];
     $_SESSION['delete_supplier_name'] = $_POST['supplier_name'];
     header("Location: manage_suppliers.php?product_id=" . $product_id);
     exit;
 }
 
 if (isset($_SESSION['delete_supplier_id'])) {
-    $delete_product_id = $_SESSION['delete_product_id'];
-    $delete_supplier_id = $_SESSION['delete_supplier_id'];
+    $delete_product_id    = $_SESSION['delete_product_id'];
+    $delete_supplier_id   = $_SESSION['delete_supplier_id'];
     $delete_supplier_name = $_SESSION['delete_supplier_name'];
-    $confirm_delete = true;
+    $confirm_delete       = true;
 }
 
 if (isset($_GET['cancel_delete'])) {
@@ -58,16 +59,62 @@ if (isset($_GET['cancel_delete'])) {
     exit;
 }
 
-$delete_success = $_SESSION['success']['remove_supplier'] ?? '';
-$delete_error = $_SESSION['errors']['remove_supplier'] ?? '';
+// --- EDIT FLOW ---
+$confirm_edit      = false;
+$edit_supplier_id  = '';
+$edit_supplier_name = '';
+$edit_cost_price   = '';
+$edit_product_id   = '';
 
-unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
+if (isset($_POST['edit_btn'])) {
+    $_SESSION['edit_product_id']    = $product_id;
+    $_SESSION['edit_supplier_id']   = $_POST['supplier_id'];
+    $_SESSION['edit_supplier_name'] = $_POST['supplier_name'];
+    $_SESSION['edit_cost_price']    = $_POST['cost_price'];
+    header("Location: manage_suppliers.php?product_id=" . $product_id);
+    exit;
+}
+
+if (isset($_SESSION['edit_supplier_id'])) {
+    $edit_product_id    = $_SESSION['edit_product_id'];
+    $edit_supplier_id   = $_SESSION['edit_supplier_id'];
+    $edit_supplier_name = $_SESSION['edit_supplier_name'];
+    $edit_cost_price    = $_SESSION['edit_cost_price'];
+    // Also open edit modal if returning from an edit error
+    $confirm_edit = true;
+}
+
+if (isset($_GET['cancel_edit'])) {
+    unset(
+        $_SESSION['edit_product_id'],
+        $_SESSION['edit_supplier_id'],
+        $_SESSION['edit_supplier_name'],
+        $_SESSION['edit_cost_price']
+    );
+    header("Location: manage_suppliers.php?product_id=" . $product_id);
+    exit;
+}
+
+$delete_success = $success['remove_supplier'] ?? '';
+$delete_error   = $error['remove_supplier']   ?? '';
+$edit_error     = $error['edit_cost_price']   ?? '';
+$edit_success   = $success['edit_supplier']   ?? '';
+
+// --- Clear session flash data ---
+unset(
+    $_SESSION["error"],
+    $_SESSION["success"],
+    $_SESSION["old"],
+    $_SESSION['edit_product_id'],
+    $_SESSION['edit_supplier_id'],
+    $_SESSION['edit_supplier_name'],
+    $_SESSION['edit_cost_price']
+);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php"?>
-
+<?php include "../includes/head.php" ?>
 
 <body>
     <?php include '../includes/sidebar.php'; ?>
@@ -83,6 +130,7 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                     <button type="button" id="addbtn">Assign Supplier</button>
                 </div>
             </div>
+
             <div class="menu-table">
                 <table>
                     <thead>
@@ -94,28 +142,27 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                             <th>Email</th>
                             <th>Company Name</th>
                             <th>Cost Price</th>
-                            <th>Preffered</th>
+                            <th>Preferred</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($product_suppliers as $index => $sup): ?>
+                        <?php $num = 0; ?>
+                        <?php foreach ($product_suppliers as $sup): ?>
                             <tr>
-                                <td><?= $index + 1 ?></td>
-                                <td><?= $sup['supplier_name'] ?></td>
-                                <td><?= $sup['contact_person'] ?></td>
-                                <td><?= $sup['phone_number'] ?></td>
-                                <td><?= $sup['email'] ?></td>
-                                <td><?= $sup['company_name'] ?></td>
-                                <td><?= $sup['cost_price'] ?></td>
+                                <td><?= ++$num ?></td>
+                                <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
+                                <td><?= htmlspecialchars($sup['contact_person']) ?></td>
+                                <td><?= htmlspecialchars($sup['phone_number']) ?></td>
+                                <td><?= htmlspecialchars($sup['email']) ?></td>
+                                <td><?= htmlspecialchars($sup['company_name']) ?></td>
+                                <td><?= htmlspecialchars($sup['cost_price']) ?></td>
                                 <td>
                                     <div class="actions">
-                                        <!-- PREFERRED BUTTON -->
                                         <form action="../validation/product_suppliers/preferred_supplier.php" method="POST">
                                             <input type="hidden" name="product_id" value="<?= $product_id ?>">
                                             <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
                                             <input type="hidden" name="is_preferred" value="<?= $sup['preferred'] ?>">
-
                                             <button type="submit" class="preferred-btn">
                                                 <?php if ($sup['preferred'] == 1): ?>
                                                     <i class="fa-solid fa-check-circle active"></i>
@@ -128,21 +175,21 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                                 </td>
                                 <td>
                                     <div class="actions">
-                                        <!-- EDIT ACTION -->
-                                        <form action="edit_product_supplier.php" method="POST">
-                                            <input type="hidden" name="product_id" value="<?= $product_id ?>">
-                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                            <button type="submit" class="edit-btn">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                        </form>
-                                        <!-- DELETE BUTTON -->
+                                        <!-- EDIT -->
                                         <form method="POST">
                                             <input type="hidden" name="product_id" value="<?= $product_id ?>">
                                             <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                            <input type="hidden" name="supplier_name"
-                                                value="<?= htmlspecialchars($sup['supplier_name']) ?>">
-
+                                            <input type="hidden" name="supplier_name" value="<?= htmlspecialchars($sup['supplier_name']) ?>">
+                                            <input type="hidden" name="cost_price" value="<?= htmlspecialchars($sup['cost_price']) ?>">
+                                            <button type="submit" name="edit_btn" class="edit-btn">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        </form>
+                                        <!-- DELETE -->
+                                        <form method="POST">
+                                            <input type="hidden" name="product_id" value="<?= $product_id ?>">
+                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
+                                            <input type="hidden" name="supplier_name" value="<?= htmlspecialchars($sup['supplier_name']) ?>">
                                             <button type="submit" name="delete_btn" class="edit-btn">
                                                 <i class="fa-solid fa-user-minus"></i>
                                             </button>
@@ -156,7 +203,7 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
             </div>
 
             <!-- ADD MODAL -->
-            <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
+            <div class="add-modal <?= $open_modal ? 'active' : '' ?>" id="add-modal">
                 <form action="../validation/product_suppliers/add_supplier.php" method="POST">
                     <div class="header">
                         <i class="fas fa-plus"></i>
@@ -166,18 +213,19 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                     <div class="body">
                         <?php if (!empty($success['add_supplier'])): ?>
                             <div class="success-message">
-                                <?= $success['add_supplier'] ?>
+                                <?= htmlspecialchars($success['add_supplier']) ?>
                             </div>
                         <?php endif; ?>
 
                         <input type="hidden" name="product_id" value="<?= $product_id ?>">
 
                         <div class="input">
-                            <label for="">Supplier Name</label>
-                            <select name="suppliers" id="">
+                            <label for="suppliers">Supplier Name</label>
+                            <select name="suppliers" id="suppliers">
                                 <option value="">Select a supplier</option>
                                 <?php foreach ($suppliers as $sup): ?>
-                                    <option value="<?= $sup['supplier_id_pk'] ?>" <?= (isset($old['suppliers']) && $old['suppliers'] == $sup['supplier_id_pk']) ? 'selected' : '' ?>>
+                                    <option value="<?= $sup['supplier_id_pk'] ?>"
+                                        <?= (isset($old['suppliers']) && $old['suppliers'] == $sup['supplier_id_pk']) ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($sup['supplier_name']) ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -185,30 +233,24 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                         </div>
 
                         <?php if (!empty($error['supplier'])): ?>
-                            <div class="error-message">
-                                <?= htmlspecialchars($error['supplier']) ?>
-                            </div>
+                            <div class="error-message"><?= htmlspecialchars($error['supplier']) ?></div>
                         <?php endif; ?>
 
                         <div class="input">
                             <label for="cost_price">Cost Price</label>
                             <i class="fas fa-tag"></i>
-                            <input type="text" name="cost_price"
+                            <input type="text" name="cost_price" id="cost_price"
                                 value="<?= htmlspecialchars($old['cost_price'] ?? '') ?>">
                         </div>
 
                         <?php if (!empty($error['cost_price'])): ?>
-                            <div class="error-message">
-                                <?= htmlspecialchars($error['cost_price']) ?>
-                            </div>
+                            <div class="error-message"><?= htmlspecialchars($error['cost_price']) ?></div>
                         <?php endif; ?>
 
                         <button type="submit" name="add_supplier">Add Supplier</button>
                     </div>
                 </form>
             </div>
-
-
 
             <!-- REMOVE MODAL -->
             <div class="confirm-modal warning-orange <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
@@ -217,11 +259,8 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                         <i class="fa-solid fa-user-minus"></i>
                     </div>
                     <p>Remove <b><?= htmlspecialchars($delete_supplier_name) ?></b> from this product?</p>
-
                     <div class="modal-actions">
-                        <a href="manage_suppliers.php?product_id=<?= $product_id ?>&cancel_delete=1"
-                            class="cancel-btn">Cancel</a>
-
+                        <a href="manage_suppliers.php?product_id=<?= $product_id ?>&cancel_delete=1" class="cancel-btn">Cancel</a>
                         <form action="../validation/product_suppliers/remove_suppliers.php" method="POST">
                             <input type="hidden" name="product_id" value="<?= $delete_product_id ?>">
                             <input type="hidden" name="supplier_id" value="<?= $delete_supplier_id ?>">
@@ -231,9 +270,44 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                 </div>
             </div>
 
+            <!-- EDIT MODAL -->
+            <div class="edit-modal <?= $confirm_edit ? 'active' : '' ?>" id="edit-modal"
+                data-cancel-url="manage_suppliers.php?product_id=<?= $product_id ?>&cancel_edit=1">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                        <p>Edit Cost Price</p>
+                        <span class="modal-close" id="close-edit-modal">&times;</span>
+                    </div>
+                    <div class="modal-body">
+                        <form action="../validation/product_suppliers/edit_process.php" method="POST">
+                            <input type="hidden" name="product_id" value="<?= $edit_product_id ?>">
+                            <input type="hidden" name="supplier_id" value="<?= $edit_supplier_id ?>">
+                            <input type="hidden" name="supplier_name" value="<?= htmlspecialchars($edit_supplier_name) ?>">
+                            
+                            <?php if (!empty($edit_success)): ?>
+                                <div class="success-message"><?= htmlspecialchars($edit_success) ?></div>
+                            <?php endif; ?>
+
+                            <div class="input">
+                                <label for="edit_cost_price"><?= htmlspecialchars($edit_supplier_name) ?></label>
+                                <i class="fas fa-tag"></i>
+                                <input type="text" name="cost_price" id="edit_cost_price"
+                                    value="<?= htmlspecialchars($edit_cost_price) ?>">
+                            </div>
+
+                            <?php if (!empty($edit_error)): ?>
+                                <div class="error-message"><?= htmlspecialchars($edit_error) ?></div>
+                            <?php endif; ?>
+
+                            <button type="submit" id="confirm-edit">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
         </section>
     </main>
 </body>
 <script src="../scripts/pages.js"></script>
-
 </html>
