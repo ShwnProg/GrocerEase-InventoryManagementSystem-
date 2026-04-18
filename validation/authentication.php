@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error["password"] = "Password is required";
 
     if (!empty($username) && !empty($password)) {
-        if (!$id =$user->AuthenicateUser($username, $password)) {
+        if (!$id =$user->AuthenticateUser($username, $password)) {
             $error["invalid"] = "Invalid username or password";
         }
     }

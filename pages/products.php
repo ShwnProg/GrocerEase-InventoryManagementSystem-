@@ -105,7 +105,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                         : '<span style="color:#6b7280;">No cost price</span>' ?>
                                 </td>
                                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                                <td><?= htmlspecialchars($prod['product_description']) ?></td>
+                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'N/A' : $prod['product_description']) ?></td>
                                 <td style="color:#6b7280;">
                                     <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
                                 </td>

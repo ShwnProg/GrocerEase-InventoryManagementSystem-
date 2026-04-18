@@ -15,16 +15,16 @@ $user_info = $user->GetUserById($user_id);
     <div class="profile-dropdown" id="profile-dropdown">
         <i class="fa-regular fa-circle-user profile-icon"></i>
         <span class="profile-label">
-            <?= htmlspecialchars($user_info['username']) ?>
+            <?= strtoupper($user_info['username']) ?>
         </span>
 
         <div class="profile-menu">
             <a href="profile.php" id="profile-link">
                 <i class="fa-solid fa-user"></i> View Profile
             </a>
-            <a href="profile.php?tab=password">
+            <!-- <a href="profile.php?tab=password">
                 <i class="fa-solid fa-lock"></i> Change Password
-            </a>
+            </a> -->
             <div class="logout">
                 <a href="/admin/logout.php">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
