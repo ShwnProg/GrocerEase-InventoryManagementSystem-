@@ -1,5 +1,7 @@
 <?php
 require_once '../../models/product.php';
+require_once '../../models/stocks.php';
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,16 +48,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    $stock = new Stock();
     // SANITIZE INPUTS BEFORE DB INSERTION
     $product_name = htmlspecialchars($product_name);
     $description = htmlspecialchars($description);
     $selling_price = filter_var($selling_price, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 
     // INSERT INTO DB
-    $result = $product->AddProduct($product_name, $category, $selling_price, $description, $status);
+    $product_id = $product->AddProduct($product_name, $category, $selling_price, $description, $status);
 
-    if ($result) {
-        $_SESSION['success'] = ['add' => "Product added successfully."];
+    if ($product_id) {
+
+        $stock = new Stock();
+
+        $stock_result = $stock->AddProductStock(
+            $product_id,
+            0, // default quantity
+            date('Y-m-d H:i:s')
+        );
+
+        if ($stock_result) {
+
+            $_SESSION['success'] = ['add' => "Product added successfully."];
+        }
     } else {
         $_SESSION['errors'] = ['add' => ['form' => "Failed to add product. Please try again."]];
         $_SESSION['old'] = $_POST;

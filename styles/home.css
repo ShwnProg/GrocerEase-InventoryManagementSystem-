@@ -467,6 +467,80 @@ body {
     color: #1c5515;
 }
 
+/* BASE BUTTON*/
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 11px;
+    border-radius: 8px;
+
+    font-size: 12.5px;
+    font-weight: 500;
+    background: #fff;
+
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* ICON */
+.btn i {
+    font-size: 13px;
+}
+
+.btn-in {
+    color: #1c5515;
+    background: rgba(28, 85, 21, 0.06);
+    /* border: 1px solid rgba(28, 85, 21, 0.15); */
+    border: none;
+}
+
+.btn-in:hover {
+    background: rgba(28, 85, 21, 0.10);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(28, 85, 21, 0.15);
+}
+
+.btn-in i {
+    color: #1c5515;
+}
+
+
+.btn-out {
+    color: #c82828;
+    background: rgba(200, 40, 40, 0.06);
+    border: none;
+}
+
+.btn-out:hover {
+    background: rgba(200, 40, 40, 0.10);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(200, 40, 40, 0.12);
+}
+
+.btn-out i {
+    color: #c82828;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+
+@media (max-width: 600px) {
+    .actions {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* ADD MODAL */
 .add-modal {
     display: none;
@@ -887,7 +961,7 @@ body {
 
 /* ── Form Header ────────────────────────────────── */
 
-.edit-content form > i {
+.edit-content form>i {
     font-size: 13px;
     color: #1c5515;
     background: rgba(28, 85, 21, 0.08);
@@ -896,7 +970,7 @@ body {
     width: fit-content;
 }
 
-.edit-content form > p {
+.edit-content form>p {
     margin: 0;
     font-size: 14px;
     font-weight: 600;
@@ -1006,11 +1080,13 @@ body {
 .edit-content form button[name="edit_btn"]:active {
     transform: scale(0.99);
 }
-.no-changes{
+
+.no-changes {
     color: orangered;
     font-size: 13px;
     text-align: center;
 }
+
 /* EDIT MODAL */
 .edit-modal {
     display: none;
@@ -1020,8 +1096,8 @@ body {
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     z-index: 1000;
-    align-items: center;        
-    justify-content: center;   
+    align-items: center;
+    justify-content: center;
 }
 
 .edit-modal.active {
@@ -1072,13 +1148,13 @@ body {
     gap: 14px;
 }
 
-.edit-modal .modal-body > p {
+.edit-modal .modal-body>p {
     margin: 0;
     font-size: 13px;
     color: #6b7280;
 }
 
-.edit-modal .modal-body > p b {
+.edit-modal .modal-body>p b {
     color: #111;
 }
 

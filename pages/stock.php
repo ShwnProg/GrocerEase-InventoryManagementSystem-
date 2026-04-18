@@ -12,7 +12,7 @@ $all_stocks = $stocks->GetAllStocks();
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php"?>
+<?php include "../includes/head.php" ?>
 
 
 <body>
@@ -30,10 +30,6 @@ $all_stocks = $stocks->GetAllStocks();
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
-                <div class="add">
-                    <button id="stockin">Stock IN</button>
-                    <button id="stockout">Stock OUT</button>
-                </div>
             </div>
 
             <!-- table -->
@@ -46,17 +42,33 @@ $all_stocks = $stocks->GetAllStocks();
                             <th>Category</th>
                             <th>Quantity</th>
                             <th>Last Updated</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no = 1; ?>
                         <?php foreach ($all_stocks as $stock): ?>
                             <tr>
+                                <?php if ($stock['is_deleted'] == 1)
+                                    continue; ?>
                                 <td><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($stock['product_name']) ?></td>
-                                <td><?= htmlspecialchars($stock['category_name']) ?></td>
+                                <td><?= htmlspecialchars($stock['category_name'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($stock['quantity']) ?></td>
                                 <td><?= htmlspecialchars($stock['last_updated']) ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <button class="btn btn-in">
+                                            <i class="fa-solid fa-circle-plus"></i>
+                                            <span>Stock IN</span>
+                                        </button>
+
+                                        <button class="btn btn-out">
+                                            <i class="fa-solid fa-circle-minus"></i>
+                                            <span>Stock OUT</span>
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -66,4 +78,5 @@ $all_stocks = $stocks->GetAllStocks();
     </div>
 </body>
 <script src="../scripts/pages.js"></script>
+
 </html>
