@@ -14,18 +14,20 @@ const modal = document.getElementById('add-modal');
 const addBtn = document.getElementById('addbtn');
 const closeBtn = document.getElementById('close-modal');
 
-addBtn.addEventListener('click', () => modal.classList.add('active'));
-closeBtn.addEventListener('click', () => modal.classList.remove('active'));
-modal.addEventListener('click', (e) => {
-    if (e.target === modal) modal.classList.remove('active');
-});
+if (addBtn && modal && closeBtn) {
+    addBtn.addEventListener('click', () => modal.classList.add('active'));
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) modal.classList.remove('active');
+    });
+} 
 
 // DELETE CONFIRM MODAL
 const confirmModal = document.getElementById('confirm-modal');
 const cancelDelete = document.getElementById('cancel-delete');
 
 if (cancelDelete && confirmModal) {
-    
+
     const currentPage = window.location.pathname.split('/').pop();
 
     cancelDelete.addEventListener('click', () => {
@@ -56,5 +58,49 @@ if (editModal && closeEditBtn) {
             editModal.classList.remove('active');
             window.location.href = cancelUrl;
         }
+    });
+}
+
+// STOCK IN MODAL
+const stockInModal = document.getElementById('stock-in-modal');
+const closeStockIn = document.getElementById('close-stock-in');
+
+document.querySelectorAll('.open-stock-in').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.getElementById('stock-in-product-id').value = btn.dataset.id;
+        document.getElementById('stock-in-product-name').textContent = btn.dataset.name;
+        stockInModal.classList.add('active');
+    });
+});
+
+if (closeStockIn) {
+    closeStockIn.addEventListener('click', () => stockInModal.classList.remove('active'));
+}
+
+if (stockInModal) {
+    stockInModal.addEventListener('click', (e) => {
+        if (e.target === stockInModal) stockInModal.classList.remove('active');
+    });
+}
+
+// STOCK OUT MODAL
+const stockOutModal = document.getElementById('stock-out-modal');
+const closeStockOut = document.getElementById('close-stock-out');
+
+document.querySelectorAll('.open-stock-out').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.getElementById('stock-out-product-id').value = btn.dataset.id;
+        document.getElementById('stock-out-product-name').textContent = btn.dataset.name;
+        stockOutModal.classList.add('active');
+    });
+});
+
+if (closeStockOut) {
+    closeStockOut.addEventListener('click', () => stockOutModal.classList.remove('active'));
+}
+
+if (stockOutModal) {
+    stockOutModal.addEventListener('click', (e) => {
+        if (e.target === stockOutModal) stockOutModal.classList.remove('active');
     });
 }

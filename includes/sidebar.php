@@ -7,7 +7,7 @@ $products_active = in_array($current, ['products.php', 'manage_suppliers.php', '
 
 <div class="side-bar">
     <div class="logo">
-        <img src="../images/logo.png" alt="Grocer Ease Logo">
+        <img src="../images/page-logo.png" alt="Grocer Ease Logo">
         <p>Grocer Ease</p>
     </div>
 

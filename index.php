@@ -23,7 +23,7 @@ unset($_SESSION['error'],$_SESSION['old']);
     <div class="container">
         <!-- LOGO -->
         <div class="logo">
-            <img src="../images/logo.png" alt="">
+            <img src="../images/page-logo.png" alt="">
             <p>Grocer Ease</p>
         </div>
         <form action="../validation/authentication.php" method="post">
