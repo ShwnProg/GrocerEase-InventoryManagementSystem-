@@ -15,9 +15,9 @@ body {
     left: 0;
     width: 230px;
     height: 100%;
-    background-color: #ffffff;
+    background-color: #fff;
     font-size: 16px;
-    box-shadow: 2px 0 10px #0000001a;
+    box-shadow: 2px 0 5px #0000001a;
     transition: width 0.35s ease;
     overflow: hidden;
 }
@@ -1176,4 +1176,172 @@ body {
 
 #confirm-edit:active {
     transform: scale(0.99);
+}
+
+.page-content {
+    padding: 24px;
+    min-height: calc(100vh - 60px);
+    box-sizing: border-box;
+}
+
+.alert {
+    margin: 16px 24px 0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: rgba(28, 85, 21, 0.08);
+    color: #1c5515;
+    border: 1px solid rgba(28, 85, 21, 0.15);
+}
+
+.alert-error {
+    background: rgba(200, 40, 40, 0.07);
+    color: #c82828;
+    border: 1px solid rgba(200, 40, 40, 0.15);
+}
+
+.profile-wrapper {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.form-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.card-title {
+    margin: 0 0 2px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+}
+
+.card-subtitle {
+    margin: 0;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.section-block {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1c5515;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin: 0 0 16px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
+}
+
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group input {
+    padding: 8px 11px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 7px;
+    font-size: 13px;
+    color: #222;
+    background: #fafafa;
+    outline: none;
+    font-family: inherit;
+    transition: border 0.2s, background 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.form-group input:focus {
+    border-color: #1c5515;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(28, 85, 21, 0.08);
+}
+
+.form-group small {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.role-text {
+    padding: 8px 11px;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 7px;
+    font-size: 13px;
+    color: #6b7280;
+    background: #f4f7f4;
+}
+
+.card-footer {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #1c5515;
+    color: #fff;
+    border: none;
+    padding: 9px 20px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-save:hover {
+    background: #32702b;
+    box-shadow: 0 4px 12px rgba(28, 85, 21, 0.2);
+}
+
+.btn-save:active {
+    transform: scale(0.99);
+}
+
+
+@media (max-width: 700px) {
+    .form-row {
+        flex-direction: column;
+    }
 }
