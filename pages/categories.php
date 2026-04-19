@@ -88,7 +88,7 @@ unset($_SESSION['success'], $_SESSION['errors']);
                                 <?php if($categ['is_deleted'] == 1) continue;?>
                                 <td><?= ++$num ?></td>
                                 <td><?= htmlspecialchars($categ['category_name']) ?></td>
-                                <td><?= htmlspecialchars($categ['category_description']) ?></td>
+                                <td><?= htmlspecialchars($categ['category_description'] == '' ? 'N/A' : $categ['category_description']) ?></td>
                                 <td>
                                     <div class="actions">
                                         <form action="edit_category.php" method="POST">
