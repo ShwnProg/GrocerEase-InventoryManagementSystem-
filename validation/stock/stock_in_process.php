@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $date_movement  = date("Y-m-d");
 
         $movement_result = $stock_movement->AddStockMovements(
-            $quantity, "STOCK IN", $reference_id, $reason, $date_movement, $product_id
+            $quantity, "IN", $reference_id, $reason, $date_movement, $product_id
         );
 
         if ($movement_result) {
