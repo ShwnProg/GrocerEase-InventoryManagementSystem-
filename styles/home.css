@@ -28,7 +28,7 @@ body {
     align-items: center;
     gap: 10px;
     padding: 10px;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .logo img {
@@ -36,7 +36,7 @@ body {
     height: auto;
     object-fit: contain;
     flex-shrink: 0;
-    margin-left: 5px;
+    margin-left: 3px;
 }
 
 .logo p {
@@ -241,10 +241,10 @@ body {
     color: #c82828;
 }
 
-/* PRODUCT */
-/* ── PRODUCTS PAGE ─────────────────────────── */
+/* MAIN CONTENT */
 .page-content {
     padding: 24px;
+    
 }
 
 /* SEARCH + ADD ROW */
