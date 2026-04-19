@@ -41,15 +41,39 @@ class Stock
         return $stmt->rowCount() > 0;
     }
 
-    public function StockIn($product_id,$quantity,$date){
+    public function StockIn($product_id, $quantity, $date)
+    {
         $stmt = $this->conn->prepare("UPDATE stocks set quantity = quantity + :quantity,last_updated = :date WHERE product_id_fk = :id");
 
-        $stmt->execute([':quantity'=>$quantity,
-                        ':date' => $date,
-                        ':id' => $product_id]);
+        $stmt->execute([
+            ':quantity' => $quantity,
+            ':date' => $date,
+            ':id' => $product_id
+        ]);
 
         return $stmt->rowCount() > 0;
     }
+    public function StockOut($product_id, $quantity, $date)
+    {
+        $check = $this->conn->prepare("SELECT quantity FROM stocks WHERE product_id_fk = :id");
+        $check->execute([':id' => $product_id]);
+        $current = $check->fetchColumn();
+
+        if ($current === false || $current < $quantity) {
+            return false;
+        }
+        
+        $stmt = $this->conn->prepare("UPDATE stocks set quantity = quantity - :quantity,last_updated = :date WHERE product_id_fk = :id");
+
+        $stmt->execute([
+            ':quantity' => $quantity,
+            ':date' => $date,
+            ':id' => $product_id
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
+
 
 }
 
