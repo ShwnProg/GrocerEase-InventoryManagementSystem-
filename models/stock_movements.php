@@ -38,7 +38,7 @@ class StockMovements
     }
     public function GetStockMovements()
     {
-        $stmt = $this->conn->prepare("SELECT p.product_name, m.quantity, m.reference_type, m.reference_id, m.date 
+        $stmt = $this->conn->prepare("SELECT p.product_name, m.quantity, m.reference_type, m.reference_id, m.reason,m.date 
                                       FROM stock_movements as m
                                       LEFT JOIN products as p ON m.product_id_fk = p.product_id_pk
                                       ORDER BY movement_id_pk DESC");

@@ -59,6 +59,7 @@ $stock_movements = $movement->GetStockMovements();
                             <th>Quantity</th>
                             <th>Type</th>
                             <th>Reference Id</th>
+                            <th>Reason</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -85,6 +86,7 @@ $stock_movements = $movement->GetStockMovements();
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($stocks['reference_id']) ?></td>
+                                <td><?= htmlspecialchars($stocks['reason'] == ''? 'N/A' : $stocks['reason']) ?></td>
                                 <td><?= htmlspecialchars($stocks['date']) ?></td>
 
                             </tr>
