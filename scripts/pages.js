@@ -10,8 +10,8 @@ if (searchInput) {
 }
 
 // ADD MODAL
-const modal = document.getElementById('add-modal');
-const addBtn = document.getElementById('addbtn');
+const modal    = document.getElementById('add-modal');
+const addBtn   = document.getElementById('addbtn');
 const closeBtn = document.getElementById('close-modal');
 
 if (addBtn && modal && closeBtn) {
@@ -20,14 +20,13 @@ if (addBtn && modal && closeBtn) {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.classList.remove('active');
     });
-} 
+}
 
 // DELETE CONFIRM MODAL
 const confirmModal = document.getElementById('confirm-modal');
 const cancelDelete = document.getElementById('cancel-delete');
 
 if (cancelDelete && confirmModal) {
-
     const currentPage = window.location.pathname.split('/').pop();
 
     cancelDelete.addEventListener('click', () => {
@@ -42,7 +41,7 @@ if (cancelDelete && confirmModal) {
 }
 
 // EDIT MODAL
-const editModal = document.getElementById('edit-modal');
+const editModal    = document.getElementById('edit-modal');
 const closeEditBtn = document.getElementById('close-edit-modal');
 
 if (editModal && closeEditBtn) {
@@ -67,8 +66,9 @@ const closeStockIn = document.getElementById('close-stock-in');
 
 document.querySelectorAll('.open-stock-in').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.getElementById('stock-in-product-id').value = btn.dataset.id;
-        document.getElementById('stock-in-product-name').textContent = btn.dataset.name;
+        document.getElementById('stock-in-product-id').value          = btn.dataset.id;
+        document.getElementById('stock-in-product-name').textContent  = btn.dataset.name;
+        document.getElementById('stock-in-product-name-input').value  = btn.dataset.name;
         stockInModal.classList.add('active');
     });
 });
@@ -76,7 +76,6 @@ document.querySelectorAll('.open-stock-in').forEach(btn => {
 if (closeStockIn) {
     closeStockIn.addEventListener('click', () => stockInModal.classList.remove('active'));
 }
-
 if (stockInModal) {
     stockInModal.addEventListener('click', (e) => {
         if (e.target === stockInModal) stockInModal.classList.remove('active');
@@ -89,8 +88,9 @@ const closeStockOut = document.getElementById('close-stock-out');
 
 document.querySelectorAll('.open-stock-out').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.getElementById('stock-out-product-id').value = btn.dataset.id;
+        document.getElementById('stock-out-product-id').value         = btn.dataset.id;
         document.getElementById('stock-out-product-name').textContent = btn.dataset.name;
+        document.getElementById('stock-out-product-name-input').value = btn.dataset.name;
         stockOutModal.classList.add('active');
     });
 });
@@ -98,7 +98,6 @@ document.querySelectorAll('.open-stock-out').forEach(btn => {
 if (closeStockOut) {
     closeStockOut.addEventListener('click', () => stockOutModal.classList.remove('active'));
 }
-
 if (stockOutModal) {
     stockOutModal.addEventListener('click', (e) => {
         if (e.target === stockOutModal) stockOutModal.classList.remove('active');
