@@ -20,7 +20,7 @@ class Supplier
                                                  phone_number,
                                                  email, 
                                                  address, 
-                                                 company_name,is_deleted FROM suppliers;");
+                                                 company_name,is_deleted FROM suppliers ORDER BY supplier_id_pk DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

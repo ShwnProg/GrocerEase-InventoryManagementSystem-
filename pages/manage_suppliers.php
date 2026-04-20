@@ -224,6 +224,7 @@ unset(
                             <select name="suppliers" id="suppliers">
                                 <option value="">Select a supplier</option>
                                 <?php foreach ($suppliers as $sup): ?>
+                                    <?php if($sup['is_deleted'] == 1) continue; ?>
                                     <option value="<?= $sup['supplier_id_pk'] ?>"
                                         <?= (isset($old['suppliers']) && $old['suppliers'] == $sup['supplier_id_pk']) ? 'selected' : '' ?>>
                                         <?= htmlspecialchars($sup['supplier_name']) ?>
