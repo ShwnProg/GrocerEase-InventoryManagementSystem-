@@ -9,6 +9,8 @@ $_SESSION['page_title'] = "SUPPLIERS";
 $supplier = new Supplier();
 $suppliers = $supplier->GetAllSuppliers();
 
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

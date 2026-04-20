@@ -74,4 +74,18 @@ class Supplier
         ]);
         return $stmt->rowCount() > 0;
     }
+    public function AddSupplier($name, $contact_person, $phone_number, $email, $address, $company_name, $status)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO suppliers (supplier_name, contact_person, phone_number, email, address, company_name, status) VALUES (:name, :contact_person, :phone_number, :email, :address, :company_name, :status)");
+        $stmt->execute([
+            ':name' => $name,
+            ':contact_person' => $contact_person,
+            ':phone_number' => $phone_number,
+            ':email' => $email,
+            ':address' => $address,
+            ':company_name' => $company_name,
+            ':status' => $status
+        ]);
+        return $stmt->rowCount() > 0;
+    }
 }
