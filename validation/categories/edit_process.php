@@ -72,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function IsSameData($original, $category_name, $category_description)
 {
     if (
-        $category_name == $original['category_name']
+        $category_name == $original['category_name'] &&
+        $category_description == $original['category_description']
     ) {
         return true;
     }
