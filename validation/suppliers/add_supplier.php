@@ -15,20 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     // VALIDATE
-    if (empty($name))
-        $errors['supplier_name'] = "Supplier name is required.";
-    if (empty($person))
-        $errors['contact_person'] = "Contact person is required.";
-    if (empty($number))
-        $errors['phone_number'] = "Phone number is required.";
-    if (empty($email))
-        $errors['email'] = "Email is required.";
-    if (empty($address))
-        $errors['address'] = "Address is required.";
-    if (empty($company))
-        $errors['company_name'] = "Company name is required.";
-    // if (empty($status))
-    //     $errors['status'] = "Status is required.";
+    if (empty($name) && empty($person) && empty($number) && empty($email) && empty($address) && empty($company) && empty($errors)) {
+        $errors['form'] = "All fields are required.";
+    }
 
     if (!empty($errors)) {
         $_SESSION['errors'] = ['add' => $errors];
@@ -60,4 +49,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ../../pages/suppliers.php");
     exit;
 }
-?>

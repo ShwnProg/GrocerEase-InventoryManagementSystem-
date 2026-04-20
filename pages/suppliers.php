@@ -9,7 +9,6 @@ $_SESSION['page_title'] = "SUPPLIERS";
 $supplier = new Supplier();
 $suppliers = $supplier->GetAllSuppliers();
 
-<<<<<<< HEAD
 $open_modal = isset($_SESSION['add_supplier_error']) || isset($_SESSION['success_msg']);
 $error = $_SESSION['add_supplier_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
@@ -17,7 +16,6 @@ $success_msg = $_SESSION['success_msg'] ?? '';
 
 $confirm_delete = false;
 $delete_supplier_id = '';
-=======
 $errors  = $_SESSION['errors']['add'] ?? [];
 $old     = $_SESSION['old'] ?? [];
 $success = $_SESSION['success'] ?? [];
@@ -27,7 +25,6 @@ $open_add_modal = !empty($errors);
 // CONFIRM DELETE
 $confirm_delete       = false;
 $delete_supplier_id   = '';
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
 $delete_supplier_name = '';
 
 if (isset($_POST['delete_btn'])) {
@@ -37,18 +34,17 @@ if (isset($_POST['delete_btn'])) {
 }
 
 if (isset($_SESSION['delete_supplier_id'])) {
-<<<<<<< HEAD
+
     $delete_supplier_id = $_SESSION['delete_supplier_id'];
     $confirm_delete = true;
 
-     $supplierData = $supplier->GetSupplierById($delete_supplier_id);
+    $supplierData = $supplier->GetSupplierById($delete_supplier_id);
     $delete_supplier_name = $supplierData['supplier_name'] ?? '';
-=======
+
     $delete_supplier_id   = $_SESSION['delete_supplier_id'];
     $sup_data             = $supplier->GetSupplierById($delete_supplier_id);
     $delete_supplier_name = $sup_data['supplier_name'] ?? '';
     $confirm_delete       = true;
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
 }
 
 if (isset($_GET['cancel_delete'])) {
@@ -57,7 +53,7 @@ if (isset($_GET['cancel_delete'])) {
     exit;
 }
 
-<<<<<<< HEAD
+
 $delete_success = $_SESSION['success']['delete'] ?? '';
 $delete_error = $_SESSION['errors']['delete'] ?? '';
 
@@ -65,9 +61,8 @@ $delete_error = $_SESSION['errors']['delete'] ?? '';
 unset($_SESSION['add_supplier_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
 unset($_SESSION['success'], $_SESSION['errors']);
 
-=======
 unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,10 +76,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
         <?php include '../includes/topbar.php'; ?>
         <div class="page-content">
 
-            <!-- SUCCESS MESSAGES -->
-            <?php if (!empty($success['add'])): ?>
-                <div class="success-message"><?= htmlspecialchars($success['add']) ?></div>
-            <?php endif; ?>
             <?php if (!empty($success['delete'])): ?>
                 <div class="success-message"><?= htmlspecialchars($success['delete']) ?></div>
             <?php endif; ?>
@@ -114,14 +105,13 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <th>Address</th>
                             <th>Company Name</th>
                             <th>Email</th>
-                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no = 1; ?>
                         <?php foreach ($suppliers as $sup): ?>
-                            <?php if($sup['is_deleted'] == 1)
+                            <?php if ($sup['is_deleted'] == 1)
                                 continue;  ?>
                             <tr>
                                 <td><?= $no++ ?></td>
@@ -129,8 +119,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                 <td><?= htmlspecialchars($sup['contact_person']) ?></td>
                                 <td><?= htmlspecialchars($sup['phone_number']) ?></td>
                                 <td><?= htmlspecialchars($sup['address']) ?></td>
-                                <td><?= htmlspecialchars($sup['email']) ?></td>
                                 <td><?= htmlspecialchars($sup['company_name']) ?></td>
+                                <td><?= htmlspecialchars($sup['email']) ?></td>
+
                                 <!-- <td>
                                      <span class="badge <?= $sup['status'] == 1 ? 'active' : 'inactive' ?>">
                                         <?= $sup['status'] == 1 ? 'Active' : 'Inactive' ?>
@@ -146,18 +137,12 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                         </form>
-<<<<<<< HEAD
-                                        <!-- DELETE SUPPLIER -->
-                                        <form method="POST">
-                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                            <button type="submit" name= "delete_btn" class ="edit-btn">
-=======
 
                                         <!-- DELETE BUTTON -->
                                         <form method="POST">
                                             <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
                                             <button type="submit" name="delete_btn" class="edit-btn">
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
+
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -168,11 +153,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </tbody>
                 </table>
             </div>
-<<<<<<< HEAD
-            
-            <div class="add-modal" id="add-modal">
-=======
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
+
 
             <!-- ADD SUPPLIER MODAL -->
             <div class="add-modal <?= $open_add_modal ? 'active' : '' ?>" id="add-modal">
@@ -204,9 +185,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="text" name="contact_person" placeholder="Contact Person"
                                 value="<?= htmlspecialchars($old['contact_person'] ?? '') ?>">
                         </div>
-                        <?php if (!empty($errors['contact_person'])): ?>
+                        <!-- <?php if (!empty($errors['contact_person'])): ?>
                             <div class="error-message"><?= htmlspecialchars($errors['contact_person']) ?></div>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Phone Number</label>
@@ -214,9 +195,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="text" name="phone_number" placeholder="Phone Number"
                                 value="<?= htmlspecialchars($old['phone_number'] ?? '') ?>">
                         </div>
-                        <?php if (!empty($errors['phone_number'])): ?>
+                        <!-- <?php if (!empty($errors['phone_number'])): ?>
                             <div class="error-message"><?= htmlspecialchars($errors['phone_number']) ?></div>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Email</label>
@@ -224,9 +205,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="email" name="email" placeholder="Email"
                                 value="<?= htmlspecialchars($old['email'] ?? '') ?>">
                         </div>
-                        <?php if (!empty($errors['email'])): ?>
+                        <!-- <?php if (!empty($errors['email'])): ?>
                             <div class="error-message"><?= htmlspecialchars($errors['email']) ?></div>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Address</label>
@@ -234,9 +215,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="text" name="address" placeholder="Address"
                                 value="<?= htmlspecialchars($old['address'] ?? '') ?>">
                         </div>
-                        <?php if (!empty($errors['address'])): ?>
+                        <!-- <?php if (!empty($errors['address'])): ?>
                             <div class="error-message"><?= htmlspecialchars($errors['address']) ?></div>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Company Name</label>
@@ -244,9 +225,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="text" name="company_name" placeholder="Company Name"
                                 value="<?= htmlspecialchars($old['company_name'] ?? '') ?>">
                         </div>
-                        <?php if (!empty($errors['company_name'])): ?>
+                        <!-- <?php if (!empty($errors['company_name'])): ?>
                             <div class="error-message"><?= htmlspecialchars($errors['company_name']) ?></div>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
 
                         <!-- <div class="input">
                             <label>Status</label>
@@ -256,49 +237,41 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                 <option value="0" <?= ($old['status'] ?? '') === '0 ' ? 'selected' : '' ?>>Inactive</option>
                             </select>
                         </div> -->
-                        <?php if (!empty($errors['status'])): ?>
+                        <!-- <?php if (!empty($errors['status'])): ?>
                             <div class="error-message"><?= htmlspecialchars($errors['status']) ?></div>
-                        <?php endif; ?>
+                        <?php endif; ?> -->
 
                         <button type="submit">Add Supplier</button>
                     </div>
                 </form>
             </div>
 
-<<<<<<< HEAD
-=======
+
+
             <!-- CONFIRM DELETE MODAL -->
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
+
             <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
                 <div class="modal-content">
                     <div class="modal-icon">
                         <i class="fa-solid fa-trash"></i>
                     </div>
                     <p>Delete <b><?= htmlspecialchars($delete_supplier_name ?? '') ?></b>?</p>
-<<<<<<< HEAD
-
-                    <div class="modal-actions">
-
-                        <button id="cancel-delete" class="cancel-btn">Cancel</button>
-                        <!-- CONFIRM DELETE -->
-                        <form action="../validation/delete_supplier/delete_supplier.php" method="POST">
-=======
+                    <!-- CONFIRM DELETE -->
                     <div class="modal-actions">
                         <button id="cancel-delete" class="cancel-btn">Cancel</button>
                         <form action="../validation/suppliers/delete_supplier.php" method="POST">
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
                             <input type="hidden" name="supplier_id" value="<?= $delete_supplier_id ?>">
                             <button type="submit" id="confirm-delete">Yes, Delete</button>
                         </form>
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
-=======
 
->>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
+
+
         </div>
     </div>
 </body>
 <script src="../scripts/pages.js"></script>
+
 </html>
