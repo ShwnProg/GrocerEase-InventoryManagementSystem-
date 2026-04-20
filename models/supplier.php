@@ -20,7 +20,7 @@ class Supplier
                                                  phone_number,
                                                  email, 
                                                  address, 
-                                                 company_name FROM suppliers;");
+                                                 company_name,is_deleted FROM suppliers;");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
