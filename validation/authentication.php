@@ -5,7 +5,11 @@ $user = new User();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+<<<<<<< HEAD
  // $user->InsertUser("admin",password_hash("admin123",PASSWORD_DEFAULT),"admin@gmail.com","123-456-7890");
+=======
+// $user->InsertUser("admin",passwo rd_hash("admin123",PASSWORD_DEFAULT),"admin@gmail.com","123-456-7890");
+>>>>>>> 37ba499ec9922ae0cdb2ccb000d1a45a893d9d53
 
     $username = trim($_POST["username"]) ?? "";
     $password = trim($_POST["password"]) ?? "";
