@@ -9,11 +9,47 @@ $_SESSION['page_title'] = "SUPPLIERS";
 $supplier = new Supplier();
 $suppliers = $supplier->GetAllSuppliers();
 
+$open_modal = isset($_SESSION['add_supplier_error']) || isset($_SESSION['success_msg']);
+$error = $_SESSION['add_supplier_error'] ?? [];
+$old_inputs = $_SESSION['old_inputs'] ?? [];
+$success_msg = $_SESSION['success_msg'] ?? '';
+
+$confirm_delete = false;
+$delete_supplier_id = '';
+$delete_supplier_name = '';
+
+if (isset($_POST['delete_btn'])) {
+    $_SESSION['delete_supplier_id'] = $_POST['supplier_id'];
+    header("Location: suppliers.php");
+    exit;
+}
+
+if (isset($_SESSION['delete_supplier_id'])) {
+    $delete_supplier_id = $_SESSION['delete_supplier_id'];
+    $confirm_delete = true;
+
+     $supplierData = $supplier->GetSupplierById($delete_supplier_id);
+    $delete_supplier_name = $supplierData['supplier_name'] ?? '';
+}
+
+if (isset($_GET['cancel_delete'])) {
+    unset($_SESSION['delete_supplier_id']);
+    header("Location: suppliers.php");
+    exit;
+}
+
+$delete_success = $_SESSION['success']['delete'] ?? '';
+$delete_error = $_SESSION['errors']['delete'] ?? '';
+
+// echo "hello $user_info[username]";
+unset($_SESSION['add_supplier_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
+unset($_SESSION['success'], $_SESSION['errors']);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php"?>
+<?php include "../includes/head.php" ?>
 
 
 <body>
@@ -53,6 +89,8 @@ $suppliers = $supplier->GetAllSuppliers();
                     <tbody>
                         <?php $no = 1; ?>
                         <?php foreach ($suppliers as $sup): ?>
+                            <?php if($sup['is_deleted'] == 1)
+                                continue;  ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
@@ -62,6 +100,7 @@ $suppliers = $supplier->GetAllSuppliers();
                                 <td><?= htmlspecialchars($sup['address']) ?></td>
                                 <td><?= htmlspecialchars($sup['company_name']) ?></td>
                                 <td>
+                                    <!-- EDIT SUPPLIER -->
                                     <div class="actions">
                                         <form action="edit_supplier.php" method="POST">
                                             <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
@@ -69,9 +108,10 @@ $suppliers = $supplier->GetAllSuppliers();
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </button>
                                         </form>
-                                        <form action="delete_supplier.php" method="POST">
+                                        <!-- DELETE SUPPLIER -->
+                                        <form method="POST">
                                             <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                            <button type="submit" class="edit-btn">
+                                            <button type="submit" name= "delete_btn" class ="edit-btn">
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
                                         </form>
@@ -82,6 +122,7 @@ $suppliers = $supplier->GetAllSuppliers();
                     </tbody>
                 </table>
             </div>
+            
             <div class="add-modal" id="add-modal">
 
                 <form action="../validation/suppliers/add_supplier.php" method="POST">
@@ -133,6 +174,25 @@ $suppliers = $supplier->GetAllSuppliers();
                         <button type="submit">Add Supplier</button>
                     </div>
                 </form>
+            </div>
+
+            <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
+                <div class="modal-content">
+                    <div class="modal-icon">
+                        <i class="fa-solid fa-trash"></i>
+                    </div>
+                    <p>Delete <b><?= htmlspecialchars($delete_supplier_name ?? '') ?></b>?</p>
+
+                    <div class="modal-actions">
+
+                        <button id="cancel-delete" class="cancel-btn">Cancel</button>
+                        <!-- CONFIRM DELETE -->
+                        <form action="../validation/delete_supplier/delete_supplier.php" method="POST">
+                            <input type="hidden" name="supplier_id" value="<?= $delete_supplier_id ?>">
+                            <button type="submit" id="confirm-delete">Yes, Delete</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
