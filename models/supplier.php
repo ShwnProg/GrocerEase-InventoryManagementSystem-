@@ -20,6 +20,7 @@ class Supplier
                                                  phone_number,
                                                  email, 
                                                  address, 
+                                                 status,
                                                  company_name FROM suppliers;");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
