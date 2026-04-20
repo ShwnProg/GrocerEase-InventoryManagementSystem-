@@ -20,7 +20,6 @@ class Supplier
                                                  phone_number,
                                                  email, 
                                                  address, 
-                                                 status,
                                                  company_name FROM suppliers;");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -75,17 +74,16 @@ class Supplier
         ]);
         return $stmt->rowCount() > 0;
     }
-    public function AddSupplier($name, $contact_person, $phone_number, $email, $address, $company_name, $status)
+    public function AddSupplier($name, $contact_person, $phone_number, $email, $address, $company_name)
     {
-        $stmt = $this->conn->prepare("INSERT INTO suppliers (supplier_name, contact_person, phone_number, email, address, company_name, status) VALUES (:name, :contact_person, :phone_number, :email, :address, :company_name, :status)");
+        $stmt = $this->conn->prepare("INSERT INTO suppliers (supplier_name, contact_person, phone_number, email, address, company_name) VALUES (:name, :contact_person, :phone_number, :email, :address, :company_name)");
         $stmt->execute([
             ':name' => $name,
             ':contact_person' => $contact_person,
             ':phone_number' => $phone_number,
             ':email' => $email,
             ':address' => $address,
-            ':company_name' => $company_name,
-            ':status' => $status
+            ':company_name' => $company_name
         ]);
         return $stmt->rowCount() > 0;
     }

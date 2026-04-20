@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email   = trim($_POST['email'] ?? '');
     $address = trim($_POST['address'] ?? '');
     $company = trim($_POST['company_name'] ?? '');
-    $status  = trim($_POST['status'] ?? '');
+    // $status  = trim($_POST['status'] ?? '');
 
     $errors = [];
 
@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['address'] = "Address is required.";
     if (empty($company))
         $errors['company_name'] = "Company name is required.";
-    if (empty($status))
-        $errors['status'] = "Status is required.";
+    // if (empty($status))
+    //     $errors['status'] = "Status is required.";
 
     if (!empty($errors)) {
         $_SESSION['errors'] = ['add' => $errors];
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // INSERT
-    $result = $supplier->AddSupplier($name, $person, $number, $email, $address, $company, $status);
+    $result = $supplier->AddSupplier($name, $person, $number, $email, $address, $company);
 
     if ($result) {
         $_SESSION['success'] = ['add' => "Supplier added successfully."];

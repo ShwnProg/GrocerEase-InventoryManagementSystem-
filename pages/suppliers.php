@@ -101,11 +101,11 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                 <td><?= htmlspecialchars($sup['address']) ?></td>
                                 <td><?= htmlspecialchars($sup['email']) ?></td>
                                 <td><?= htmlspecialchars($sup['company_name']) ?></td>
-                                <td>
+                                <!-- <td>
                                      <span class="badge <?= $sup['status'] == 1 ? 'active' : 'inactive' ?>">
                                         <?= $sup['status'] == 1 ? 'Active' : 'Inactive' ?>
                                     </span>
-                                </td>
+                                </td> -->
                                 <td>
                                     <div class="actions">
                                         <!-- EDIT BUTTON -->
@@ -205,14 +205,14 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <div class="error-message"><?= htmlspecialchars($errors['company_name']) ?></div>
                         <?php endif; ?>
 
-                        <div class="input">
+                        <!-- <div class="input">
                             <label>Status</label>
                             <select name="status">
                                 <option value="">Select a status</option>
                                 <option value="1" <?= ($old['status'] ?? '') === '1' ? 'selected' : '' ?>>Active</option>
                                 <option value="0" <?= ($old['status'] ?? '') === '0 ' ? 'selected' : '' ?>>Inactive</option>
                             </select>
-                        </div>
+                        </div> -->
                         <?php if (!empty($errors['status'])): ?>
                             <div class="error-message"><?= htmlspecialchars($errors['status']) ?></div>
                         <?php endif; ?>
