@@ -316,6 +316,42 @@ body {
     font-size: 16px;
     font-weight: 400;
 }
+.header-btn {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    background: #f4f7f4;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 9px;
+    padding: 3px;
+}
+
+.header-btn a {
+    text-decoration: none;
+    color: #6b7280;
+    background: transparent;
+    padding: 6px 16px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    transition: color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+    border: 1px solid transparent;
+}
+
+.header-btn a:hover {
+    color: #1c5515;
+    background: rgba(28, 85, 21, 0.06);
+}
+
+.header-btn a.active {
+    color: #1c5515;
+    background: #fff;
+    border-color: rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
 
 /* TABLE */
 .menu-table {
@@ -324,6 +360,7 @@ body {
     border: 1px solid rgba(0, 0, 0, 0.07);
     overflow: hidden;
     box-shadow: 0 0 5px #0000001a;
+    table-layout: fixed;
     overflow-y: auto;
     /*max-height: 500px; */
     overflow-x: auto;
@@ -374,12 +411,19 @@ body {
     vertical-align: middle;
 }
 
+.menu-table td:nth-child(2),
+.menu-table td:nth-child(6) {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    max-width: 180px; 
+}
+
 .menu-table th:last-child,
 .menu-table td:last-child {
     text-align: center;
 }
 
-/* IMPORTANT: center flex content inside actions */
 .menu-table .actions {
     display: flex;
     justify-content: center;
