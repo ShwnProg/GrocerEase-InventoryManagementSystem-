@@ -946,7 +946,33 @@ body {
 .back-btn:active {
     transform: scale(0.97);
 }
+/* RESTORE MODAL */
+#confirm-restore {
+    width: 100%;
+    padding: 9px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: 0.2s ease;
+    background: #1c5515;
+    color: #fff;
+}
 
+#confirm-restore:hover {
+    background: #32702b;
+}
+
+#restore-modal .modal-icon {
+    background: rgba(245, 158, 11, 0.1);
+    color: #1c5515;
+}
+
+#restore-modal .modal-icon i {
+    color: #32702b;
+}
 /* PREFERRED BUTTON */
 
 .preferred-btn {
