@@ -23,7 +23,7 @@
                                 <td><?= htmlspecialchars($prod['category_name']) ?></td>
                                 <td>₱<?= number_format($prod['cost_price'], 2) ?></td>
                                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                                <td><?= htmlspecialchars($prod['product_description']) ?></td>
+                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'N/A' : ($prod['product_description'])) ?></td>
                                 <td>
                                     <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
                                         <?= $prod['status'] == 1 ? 'Active' : 'Inactive' ?>
