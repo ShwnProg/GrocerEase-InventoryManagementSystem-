@@ -28,17 +28,52 @@ const cancelDelete = document.getElementById('cancel-delete');
 
 if (cancelDelete && confirmModal) {
     const currentPage = window.location.pathname.split('/').pop();
+    const cancelDeleteUrl = currentPage.includes('archived')
+        ? `${currentPage}?tab=products&cancel_delete=1`
+        : `${currentPage}?cancel_delete=1`;
 
     cancelDelete.addEventListener('click', () => {
-        window.location.href = `${currentPage}?cancel_delete=1`;
+        window.location.href = cancelDeleteUrl;
     });
 
     confirmModal.addEventListener('click', (e) => {
         if (e.target === confirmModal) {
-            window.location.href = `${currentPage}?cancel_delete=1`;
+            window.location.href = cancelDeleteUrl;
         }
     });
 }
+
+// RESTORE CONFIRM MODAL
+const restoreModal  = document.getElementById('restore-modal');
+const cancelRestore = document.getElementById('cancel-restore');
+
+if (cancelRestore && restoreModal) {
+    const currentPage = window.location.pathname.split('/').pop();
+
+    cancelRestore.addEventListener('click', () => {
+        window.location.href = `${currentPage}?tab=products&cancel_restore=1`;
+    });
+
+    restoreModal.addEventListener('click', (e) => {
+        if (e.target === restoreModal) {
+            window.location.href = `${currentPage}?tab=products&cancel_restore=1`;
+        }
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+
+    const currentPage = window.location.pathname.split('/').pop();
+
+    if (restoreModal?.classList.contains('active')) {
+        window.location.href = `${currentPage}?tab=products&cancel_restore=1`;
+    }
+
+    if (confirmModal?.classList.contains('active')) {
+        window.location.href = `${currentPage}?cancel_delete=1`;
+    }
+});
 
 // EDIT MODAL
 const editModal    = document.getElementById('edit-modal');

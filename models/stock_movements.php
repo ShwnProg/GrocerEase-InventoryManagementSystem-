@@ -13,7 +13,7 @@ class StockMovements
 
     public function AddStockMovements($quantity, $reference_type, $reference_id, $reason, $date, $product_id)
     {
-        $stmt = $this->conn->prepare("INSERT INTO stock_movements (quantity,reference_type,reference_id,reason,date,product_id_fk)
+        $stmt = $this->conn->prepare("INSERT INTO stock_movements (quantity,reference_type,reference_id,reason,date,product_id)
                                           VALUES(:quantity,:type,:ref_id,:reason,:date,:product_id)");
 
         $stmt->execute([
