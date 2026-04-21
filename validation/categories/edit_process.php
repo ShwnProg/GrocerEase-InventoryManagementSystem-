@@ -5,7 +5,7 @@ session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category = new Category();
 
-    $category_id = $_SESSION['category_id'] ?? '';
+    $category_id = $_SESSION['category_id'] ?? ''; // get current id
 
     $category_name = ucfirst(trim($_POST['category_name'] ?? ''));
     $category_description = trim($_POST['category_description'] ?? '');
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error['category_name'] = 'Category name is required.';
     }
 
-    $original = $category->GetCategoryById($category_id);
+    $original = $category->GetCategoryById($category_id); // original data
     // var_dump($original);
 
     $isTrue = false;
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $isTrue = IsSameData($original, $category_name, $category_description) ? true : false;
         // var_dump(IsSameData($original, $category_name, $category_id, $category_description));
     }
-
+// DUPLICATE CHECK (only if changed)
     if (!$isTrue) {
         if ($category_name != $original['category_name']) {
             if ($category->CheckDuplicateCategory($category_name)) {
@@ -69,9 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: ../../pages/edit_category.php?category_id=$category_id");
     exit;
 }
+// CHECK IF NO CHANGES
 function IsSameData($original, $category_name, $category_description)
 {
     if (
+        // check if same lahat ng data
         $category_name == $original['category_name'] &&
         $category_description == $original['category_description']
     ) {

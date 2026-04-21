@@ -7,8 +7,9 @@ include "../includes/auth_check.php";
 $_SESSION['page_title'] = "CATEGORIES";
 
 $category = new Category();
-$categories = $category->GetAllCategories();
+$categories = $category->GetAllCategories(); // fetch all categories
 
+// check if modal should open (error or success)
 $open_modal = isset($_SESSION['add_category_error']) || isset($_SESSION['success_msg']);
 $error = $_SESSION['add_category_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
@@ -18,16 +19,18 @@ $confirm_delete = false;
 $delete_category_id = '';
 $delete_category_name = '';
 
+// DELETE BUTTON CLICK
 if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_category_id'] = $_POST['category_id'];
-    header("Location: categories.php");
+    $_SESSION['delete_category_id'] = $_POST['category_id']; // store id
+    header("Location: categories.php"); // reload page
     exit;
 }
 
+// SHOW CONFIRM DELETE MODAL
 if (isset($_SESSION['delete_category_id'])) {
     $delete_category_id = $_SESSION['delete_category_id'];
     $delete_category_name = $category->GetCategoryNameById($delete_category_id);
-    $confirm_delete = true;
+    $confirm_delete = true; // show modal
 }
 
 if (isset($_GET['cancel_delete'])) {
@@ -86,8 +89,10 @@ unset($_SESSION['success'], $_SESSION['errors']);
                         <?php foreach ($categories as $categ): ?>
                             <tr>
                                 <?php if($categ['is_deleted'] == 1) continue;?>
+                                 <!-- skip deleted categories -->
                                 <td><?= ++$num ?></td>
                                 <td><?= htmlspecialchars($categ['category_name']) ?></td>
+                                 <!-- prevent XSS attack -->
                                 <td><?= htmlspecialchars($categ['category_description'] == '' ? 'N/A' : $categ['category_description']) ?></td>
                                 <td>
                                     <div class="actions">
