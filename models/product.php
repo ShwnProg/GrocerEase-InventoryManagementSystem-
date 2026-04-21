@@ -97,9 +97,15 @@ class Product
     }
     public function GetProductInfoById($product_id)
     {
-        $stmt = $this->conn->prepare("SELECT p.product_name,p.category_id_fk,c.category_name,c.category_id_pk,p.selling_price,p.product_description,p.status
-                                      FROM products as p INNER JOIN categories as c on c.category_id_pk = p.category_id_fk 
-                                      WHERE product_id_pk = :product_id");
+        $stmt = $this->conn->prepare("SELECT p.product_name,
+                                             p.category_id_fk,
+                                             c.category_name,
+                                             c.category_id_pk,
+                                             p.selling_price,
+                                             p.product_description
+                                             ,p.status
+                                             FROM products as p LEFT JOIN categories as c on c.category_id_pk = p.category_id_fk 
+                                             WHERE product_id_pk = :product_id");
 
         $stmt->execute([':product_id' => $product_id]);
 
