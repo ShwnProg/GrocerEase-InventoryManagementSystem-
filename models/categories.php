@@ -38,9 +38,16 @@ class Category
     }
     public function SoftDeleteCategory($id)
     {
-        $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 1 WHERE category_id_pk = :id");
-        $result = $stmt->execute([':id' => $id]);
-        return $result;
+
+        $stmt0 = $this->conn->prepare("UPDATE products set category_id_fk = NULL WHERE category_id_fk = :id");
+        $result0 = $stmt0->execute([':id' => $id]);
+
+        if ($result0) {
+            $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 1,deleted_at = NOW() WHERE category_id_pk = :id");
+            $result = $stmt->execute([':id' => $id]);
+            return $result;
+        }
+        return false;
     }
     public function GetCategoryById($id)
     {
@@ -50,7 +57,8 @@ class Category
     }
     public function GetDeletedCategories()
     {
-        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description FROM categories WHERE is_deleted = 1;");
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description 
+                                      FROM categories WHERE is_deleted = 1 ORDER BY deleted_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

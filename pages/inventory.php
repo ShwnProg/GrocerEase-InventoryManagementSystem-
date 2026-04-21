@@ -68,7 +68,7 @@ $stock_movements = $movement->GetStockMovements();
                         <?php foreach ($stock_movements as $stocks): ?>
                             <tr>
                                 <td><?= $count++ ?></td>
-                                <td><?= htmlspecialchars($stocks['product_name']) ?></td>
+                                <td><?= htmlspecialchars($stocks['product_name'] ?? 'Deleted Product') ?></td>
                                 <td>
                                     <?php if ($stocks['reference_type'] == 'IN'): ?>
                                         <span style="color: #32702b; font-weight: 600;">

@@ -19,7 +19,7 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
 
         <a href="dashboard.php" class="menu-btn <?= $current == 'dashboard.php' ? 'active' : '' ?>">
             <i class="fas fa-home"></i>
-            <span>Dashboard</span>
+            <span>Home</span>
         </a>
 
         <a href="products.php" class="menu-btn <?= $products_active ? 'active' : '' ?>">

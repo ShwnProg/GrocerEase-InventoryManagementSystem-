@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($result) {
         $_SESSION['success'] = ['delete' => "Product deleted successfully."];
     } else {
-        $_SESSION['errors'] = ['delete' => "Failed to delete product. Please try again."];
+        $_SESSION['errors'] = /*['delete' => "Failed to delete product. Please try again."]*/ $result;
     }
 
     header("Location: ../../pages/products.php");

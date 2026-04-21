@@ -57,13 +57,13 @@ class Product
             ':name' => $name,
             ':category' => $category
         ]);
-        
-         return $stmt->rowCount() > 0;
+
+        return $stmt->rowCount() > 0;
     }
 
     public function SoftDeleteProduct($id)
     {
-        $stmt = $this->conn->prepare("UPDATE products SET is_deleted = 1 WHERE product_id_pk = :id");
+        $stmt = $this->conn->prepare("UPDATE products SET is_deleted = 1,deleted_at = NOW() WHERE product_id_pk = :id");
         $stmt->execute([':id' => $id]);
 
         return $stmt->rowCount() > 0;
@@ -91,20 +91,22 @@ class Product
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
                                              WHERE p.is_deleted = 1
                                              GROUP BY p.product_id_pk
-                                             ORDER BY p.product_name ASC");
+                                             ORDER BY p.deleted_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function GetProductInfoById($product_id){
+    public function GetProductInfoById($product_id)
+    {
         $stmt = $this->conn->prepare("SELECT p.product_name,p.category_id_fk,c.category_name,c.category_id_pk,p.selling_price,p.product_description,p.status
                                       FROM products as p INNER JOIN categories as c on c.category_id_pk = p.category_id_fk 
                                       WHERE product_id_pk = :product_id");
 
-        $stmt->execute([':product_id'=>$product_id]);
+        $stmt->execute([':product_id' => $product_id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    public function UpdateProductInfo($product_id,$name,$category,$selling_price,$description,$status){
+    public function UpdateProductInfo($product_id, $name, $category, $selling_price, $description, $status)
+    {
         $stmt = $this->conn->prepare("UPDATE products set 
                                       product_name = :name,
                                       category_id_fk = :category,
@@ -112,15 +114,17 @@ class Product
                                       product_description = :description,
                                       status = :status WHERE product_id_pk = :product_id");
 
-        $stmt->execute([':name'=>$name,
-                        ':category'=>$category,
-                        ':selling_price'=>$selling_price,
-                        ':description'=>$description,
-                        ':status'=>$status,
-                        ':product_id'=>$product_id]);
+        $stmt->execute([
+            ':name' => $name,
+            ':category' => $category,
+            ':selling_price' => $selling_price,
+            ':description' => $description,
+            ':status' => $status,
+            ':product_id' => $product_id
+        ]);
 
 
-        return $stmt->rowCount()>0;
+        return $stmt->rowCount() > 0;
     }
 }
 ?>
