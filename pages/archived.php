@@ -6,6 +6,8 @@ require_once '../models/supplier.php';
 
 include "../includes/auth_check.php";
 
+$current = basename($_SERVER['PHP_SELF']);
+$tab = $_GET['tab'] ?? 'products'; // default: products
 $_SESSION['page_title'] = "ARCHIVED";
 
 $product = new Product();
@@ -16,89 +18,98 @@ $products = $product->GetDeletedProducts();
 $category = $categories->GetDeletedCategories();
 $supplier = $suppliers->GetDeletedSuppliers();
 
+$confirm_restore = false;
+$restore_product_id = '';
+$restore_product_name = '';
+
+if (isset($_POST['restore_btn'])) {
+    $_SESSION['restore_product_id'] = $_POST['product_id'];
+    header("Location: archived.php");
+    exit;
+}
+
+
+if (isset($_SESSION['restore_product_id'])) {
+    $restore_product_id = $_SESSION['restore_product_id'];
+    $restore_product_name = $product->GetProductNameById($restore_product_id);
+    $confirm_restore = true;
+}
+
+
+if (isset($_GET['cancel_restore'])) {
+    unset($_SESSION['restore_product_id']);
+    header("Location: archived.php");
+    exit;
+}
+
+$confirm_delete = false;
+$delete_product_id = '';
+$delete_product_name = '';
+
+if (isset($_POST['delete_btn'])) {
+    $_SESSION['delete_product_id'] = $_POST['product_id'];
+    header("Location: archived.php?tab=products");
+    exit;
+}
+
+if (isset($_SESSION['delete_product_id'])) {
+    $delete_product_id = $_SESSION['delete_product_id'];
+    $delete_product_name = $product->GetProductNameById($delete_product_id);
+    $confirm_delete = true;
+}
+
+if (isset($_GET['cancel_delete'])) {
+    unset($_SESSION['delete_product_id']);
+    header("Location: archived.php?tab=products");
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php"?>
+<?php include "../includes/head.php" ?>
 
 <body>
-
     <?php include '../includes/sidebar.php'; ?>
     <div class="main-content">
         <?php include '../includes/topbar.php'; ?>
         <div class="page-content">
-            <div class="header-btn">
-                <a href="deleted_products.php">Products</a>
-                <a href="deleted_categories.php">Categories</a>
-                <a href="deleted_suppliers.php">Suppliers</a>
-            </div>
-            
+            <?php if (isset($_SESSION['archive_msg'])): ?>
+                <p class="<?= $_SESSION['archive_msg']['type'] === 'success' ? 'success-message' : 'error-message' ?>">
+                    <?= $_SESSION['archive_msg']['text'] ?>
+                </p>
+                <?php unset($_SESSION['archive_msg']); ?>
+            <?php endif; ?>
             <div class="toolbar">
 
                 <div class="search-area">
                     <form action="">
                         <i class="fas fa-search"></i>
-                        <input type="text" name="search" id="search" placeholder="Search a product">
+                        <input type="text" name="search" id="search" placeholder="Search...">
                         <button type="submit">SEARCH</button>
                     </form>
+                </div>
+                <div class="header-btn">
+                    <a href="archived.php?tab=products" class="<?= $tab == 'products' ? 'active' : '' ?>">Products</a>
+                    <a href="archived.php?tab=categories"
+                        class="<?= $tab == 'categories' ? 'active' : '' ?>">Categories</a>
+                    <a href="archived.php?tab=suppliers"
+                        class="<?= $tab == 'suppliers' ? 'active' : '' ?>">Suppliers</a>
                 </div>
             </div>
 
             <!-- table -->
             <div class="menu-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th>Product Name</th>
-                            <th>Category</th>
-                            <th>Cost Price</th>
-                            <th>Selling Price</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $no = 1; ?>
-                        <?php foreach ($products as $prod): ?>
-                            <?php if ($prod['is_deleted'] == 0)
-                                continue; ?>
-                            <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= htmlspecialchars($prod['product_name']) ?></td>
-                                <td><?= htmlspecialchars($prod['category_name']) ?></td>
-                                <td>₱<?= number_format($prod['cost_price'], 2) ?></td>
-                                <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                                <td><?= htmlspecialchars($prod['product_description']) ?></td>
-                                <td>
-                                    <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
-                                        <?= $prod['status'] == 1 ? 'Active' : 'Inactive' ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <div class="actions">
-                                        <form action="recover.php" method="POST">
-                                            <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                            <button type="submit" class="edit-btn">
-                                                <i class="fa-solid fa-recycle"></i>
-                                            </button>
-                                        </form>
-                                        <!-- DELETE ACTION -->
-                                        <form method="POST">
-                                            <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                            <button type="submit" name="delete_btn" class="edit-btn">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                <?php
+                if ($tab == 'products')
+                    include 'archive_tables/deleted_products.php';
+                elseif ($tab == 'categories')
+                    include 'archive_tables/deleted_categories.php';
+                elseif ($tab == 'suppliers')
+                    include 'archive_tables/deleted_suppliers.php';
+                ?>
             </div>
+
         </div>
     </div>
 </body>

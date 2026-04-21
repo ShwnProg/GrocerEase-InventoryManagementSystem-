@@ -59,6 +59,7 @@ $stock_movements = $movement->GetStockMovements();
                             <th>Quantity</th>
                             <th>Type</th>
                             <th>Reference Id</th>
+                            <th>Reason</th>
                             <th>Date</th>
                         </tr>
                     </thead>
@@ -67,7 +68,7 @@ $stock_movements = $movement->GetStockMovements();
                         <?php foreach ($stock_movements as $stocks): ?>
                             <tr>
                                 <td><?= $count++ ?></td>
-                                <td><?= htmlspecialchars($stocks['product_name']) ?></td>
+                                <td><?= htmlspecialchars($stocks['product_name'] ?? 'Deleted Product') ?></td>
                                 <td>
                                     <?php if ($stocks['reference_type'] == 'IN'): ?>
                                         <span style="color: #32702b; font-weight: 600;">
@@ -85,6 +86,7 @@ $stock_movements = $movement->GetStockMovements();
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($stocks['reference_id']) ?></td>
+                                <td><?= htmlspecialchars($stocks['reason'] == ''? 'N/A' : $stocks['reason']) ?></td>
                                 <td><?= htmlspecialchars($stocks['date']) ?></td>
 
                             </tr>

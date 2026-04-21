@@ -1,7 +1,10 @@
-<?php 
+<?php
 
 $current = basename($_SERVER['PHP_SELF']);
 $products_active = in_array($current, ['products.php', 'manage_suppliers.php', 'edit_product.php']);
+$archived_active = in_array($current, ['archived.php', 'deleted_products.php', 'deleted_categories.php', 'deleted_suppliers.php']);
+
+
 
 ?>
 
@@ -16,7 +19,7 @@ $products_active = in_array($current, ['products.php', 'manage_suppliers.php', '
 
         <a href="dashboard.php" class="menu-btn <?= $current == 'dashboard.php' ? 'active' : '' ?>">
             <i class="fas fa-home"></i>
-            <span>Dashboard</span>
+            <span>Home</span>
         </a>
 
         <a href="products.php" class="menu-btn <?= $products_active ? 'active' : '' ?>">
@@ -46,16 +49,15 @@ $products_active = in_array($current, ['products.php', 'manage_suppliers.php', '
             <span>Inventory Logs</span>
         </a>
 
-        <a href="archived.php" class="menu-btn <?= $current == 'archived.php' ? 'active' : '' ?>">
+        <a href="archived.php" class="menu-btn <?= $archived_active ? 'active' : '' ?>">
             <i class="fa-solid fa-box-archive"></i>
             <span>Archived Records</span>
         </a>
-
         <div class="action-group">
             <div class="sb-divider"></div>
             <label>Account</label>
 
-            <a href="profile.php" class="action <?= $current == 'profile.php' ? 'active' : '' ?>" id = "profile-menu">
+            <a href="profile.php" class="action <?= $current == 'profile.php' ? 'active' : '' ?>" id="profile-menu">
                 <i class="fa-solid fa-user"></i>
                 <span>Profile</span>
             </a>

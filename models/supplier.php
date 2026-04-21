@@ -38,7 +38,7 @@ class Supplier
     }
     public function SoftDeleteSupplier($id)
     {
-        $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1 WHERE supplier_id_pk = :id");
+        $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
         $stmt->execute([':id' => $id]);
         return $stmt->rowCount() > 0;
     }
@@ -50,7 +50,8 @@ class Supplier
                                                  phone_number,
                                                  email, 
                                                  address, 
-                                                 company_name FROM suppliers WHERE is_deleted = 1;");
+                                                 company_name FROM suppliers WHERE is_deleted = 1 
+                                                 ORDER BY deleted_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -13,7 +13,7 @@ class StockMovements
 
     public function AddStockMovements($quantity, $reference_type, $reference_id, $reason, $date, $product_id)
     {
-        $stmt = $this->conn->prepare("INSERT INTO stock_movements (quantity,reference_type,reference_id,reason,date,product_id_fk)
+        $stmt = $this->conn->prepare("INSERT INTO stock_movements (quantity,reference_type,reference_id,reason,date,product_id)
                                           VALUES(:quantity,:type,:ref_id,:reason,:date,:product_id)");
 
         $stmt->execute([
@@ -38,9 +38,9 @@ class StockMovements
     }
     public function GetStockMovements()
     {
-        $stmt = $this->conn->prepare("SELECT p.product_name, m.quantity, m.reference_type, m.reference_id, m.date 
+        $stmt = $this->conn->prepare("SELECT p.product_name, m.quantity, m.reference_type, m.reference_id, m.reason,m.date 
                                       FROM stock_movements as m
-                                      LEFT JOIN products as p ON m.product_id_fk = p.product_id_pk
+                                      LEFT JOIN products as p ON m.product_id = p.product_id_pk
                                       ORDER BY movement_id_pk DESC");
 
         $stmt->execute();
