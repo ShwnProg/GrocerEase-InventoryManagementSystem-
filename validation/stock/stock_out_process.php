@@ -11,11 +11,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $reason       = trim(ucfirst($_POST['reason'] ?? ''));
 
     $error = [];
+    $stock  = new Stock();
+    $currentStock = $stock->GetQuantityByProductId($product_id);
 
     if (empty($quantity))
         $error['quantity'] = 'Quantity is required';
     elseif ($quantity <= 0)
         $error['quantity'] = 'Please enter a valid quantity greater than 0';
+    elseif ($quantity > $currentStock['quantity'])
+        $error['quantity'] = 'Insufficient stock. Current stock: ' . $currentStock['quantity'];
 
     if (!empty($error)) {
         $_SESSION['error'] = ['out' => $error];
@@ -29,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stock  = new Stock();
     $date = date("Y-m-d H:i:s");
     $result = $stock->StockOut($product_id, $quantity, $date);
 
@@ -39,14 +42,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $date_movement  = date("Y-m-d");
 
         $movement_result = $stock_movement->AddStockMovements(
-            $quantity, "OUT", $reference_id, $reason, $date_movement, $product_id
+            $quantity,
+            "OUT",
+            $reference_id,
+            $reason,
+            $date_movement,
+            $product_id
         );
 
         if ($movement_result) {
             $_SESSION['success'] = ['out' => ['form' => 'Stock updated successfully']];
         }
     } else {
-        $_SESSION['error'] = ['out' => ['form' => 'Insufficient stock or something went wrong']];
+        $_SESSION['error'] = ['out' => ['form' => 'Something went wrong']];
     }
 
     header("Location: ../../pages/stock.php");
@@ -66,4 +74,3 @@ function GeneratedUniqueId()
 
     return $reference_id;
 }
-?>

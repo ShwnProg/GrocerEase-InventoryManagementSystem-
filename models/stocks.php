@@ -27,6 +27,12 @@ class Stock
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function GetQuantityByProductId($product_id)
+    {
+        $stmt = $this->conn->prepare("SELECT quantity FROM stocks WHERE product_id_fk = :id");
+        $stmt->execute([':id' => $product_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     public function AddProductStock($id, $default_quantity, $last_updated)
     {
         $stmt = $this->conn->prepare("INSERT INTO stocks(product_id_fk,quantity,last_updated)
@@ -55,13 +61,13 @@ class Stock
     }
     public function StockOut($product_id, $quantity, $date)
     {
-        $check = $this->conn->prepare("SELECT quantity FROM stocks WHERE product_id_fk = :id");
-        $check->execute([':id' => $product_id]);
-        $current = $check->fetchColumn();
+        // $check = $this->conn->prepare("SELECT quantity FROM stocks WHERE product_id_fk = :id");
+        // $check->execute([':id' => $product_id]);
+        // $current = $check->fetchColumn();
 
-        if ($current === false || $current < $quantity) {
-            return false;
-        }
+        // if ($current === false || $current < $quantity) {
+        //     return false;
+        // }
         
         $stmt = $this->conn->prepare("UPDATE stocks set quantity = quantity - :quantity,last_updated = :date WHERE product_id_fk = :id");
 

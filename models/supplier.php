@@ -20,7 +20,7 @@ class Supplier
                                                  phone_number,
                                                  email, 
                                                  address, 
-                                                 company_name FROM suppliers;");
+                                                 company_name,is_deleted FROM suppliers ORDER BY supplier_id_pk DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -71,6 +71,19 @@ class Supplier
             ':address' => $address,
             ':company_name' => $company_name,
             ':id' => $id
+        ]);
+        return $stmt->rowCount() > 0;
+    }
+    public function AddSupplier($name, $contact_person, $phone_number, $email, $address, $company_name)
+    {
+        $stmt = $this->conn->prepare("INSERT INTO suppliers (supplier_name, contact_person, phone_number, email, address, company_name) VALUES (:name, :contact_person, :phone_number, :email, :address, :company_name)");
+        $stmt->execute([
+            ':name' => $name,
+            ':contact_person' => $contact_person,
+            ':phone_number' => $phone_number,
+            ':email' => $email,
+            ':address' => $address,
+            ':company_name' => $company_name
         ]);
         return $stmt->rowCount() > 0;
     }
