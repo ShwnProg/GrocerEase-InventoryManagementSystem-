@@ -41,12 +41,12 @@ class Category
     }
     public function SoftDeleteCategory($id)
     {
-<<<<<<< HEAD
+
         // soft delete (mark as deleted instead of removing)
         $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 1 WHERE category_id_pk = :id");
         $result = $stmt->execute([':id' => $id]);
         return $result;
-=======
+
 
         $stmt0 = $this->conn->prepare("UPDATE products set category_id_fk = NULL WHERE category_id_fk = :id");
         $result0 = $stmt0->execute([':id' => $id]);
@@ -57,7 +57,7 @@ class Category
             return $result;
         }
         return false;
->>>>>>> e616dbe15b9c4674cee136df67a77384bc83e6d1
+
     }
     public function GetCategoryById($id)
     {
@@ -84,5 +84,31 @@ class Category
         $stmt = $this->conn->prepare("UPDATE categories SET category_name = :name, category_description = :description WHERE category_id_pk = :id");
         $stmt->execute([':name' => $name, ':description' => $description, ':id' => $id]);
         return $stmt->rowCount() > 0; // check if updated
+    }  
+
+    public function RestoreCategory($id)
+    {
+        $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 0, deleted_at = NULL WHERE category_id_pk = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function HardDeleteCategory($id)
+    {
+        try {
+            $this->conn->beginTransaction();
+
+            $stmt1 = $this->conn->prepare("DELETE FROM category WHERE category_id_pk = :id");
+            $stmt1->execute([':id' => $id]);
+
+           
+            $this->conn->commit();
+
+            return true;
+
+        } catch (Exception $e) {
+            $this->conn->rollBack();
+            return false;
+        }
     }
 }
