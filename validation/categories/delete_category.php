@@ -4,13 +4,13 @@ require_once '../../models/categories.php';
 header('Content-Type: application/json');
 session_start();
 
-<<<<<<< HEAD
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
         "status" => "error",
         "message" => "Invalid request method"
     ]);
-=======
+
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $category_id = $_POST['category_id'] ?? '';
 
@@ -28,7 +28,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     }
 
     header("Location: ../../pages/categories.php");
->>>>>>> cbe618f6972275f215404ae980d7e854aa9781fd
     exit;
 }
 
@@ -64,3 +63,4 @@ if ($result) {
 }
 
 exit;
+}

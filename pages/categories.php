@@ -15,8 +15,7 @@ $error = $_SESSION['add_category_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
 $success_msg = $_SESSION['success_msg'] ?? '';
 
-<<<<<<< HEAD
-=======
+
 $confirm_delete = false;
 $delete_category_id = '';
 $delete_category_name = '';
@@ -44,7 +43,6 @@ if (isset($_GET['cancel_delete'])) {
 $delete_success = $_SESSION['success']['delete'] ?? '';
 $delete_error = $_SESSION['errors']['delete'] ?? '';
 
->>>>>>> cbe618f6972275f215404ae980d7e854aa9781fd
 // echo "hello $user_info[username]";
 unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
 unset($_SESSION['success'], $_SESSION['errors']);
@@ -90,21 +88,20 @@ unset($_SESSION['success'], $_SESSION['errors']);
                         <?php $num = 0; ?>
                         <?php foreach ($categories as $categ): ?>
                             <tr>
-<<<<<<< HEAD
+
                                 <?php if ($categ['is_deleted'] == 1)
                                     continue; ?>
                                 <td><?= ++$num ?></td>
                                 <td><?= htmlspecialchars($categ['category_name']) ?></td>
                                 <td><?= htmlspecialchars($categ['category_description'] == '' ? 'N/A' : $categ['category_description']) ?>
                                 </td>
-=======
+
                                 <?php if($categ['is_deleted'] == 1) continue;?>
                                  <!-- skip deleted categories -->
                                 <td><?= ++$num ?></td>
                                 <td><?= htmlspecialchars($categ['category_name']) ?></td>
                                  <!-- prevent XSS attack -->
                                 <td><?= htmlspecialchars($categ['category_description'] == '' ? 'N/A' : $categ['category_description']) ?></td>
->>>>>>> cbe618f6972275f215404ae980d7e854aa9781fd
                                 <td>
                                     <div class="actions">
                                         <form action="edit_category.php" method="POST">
