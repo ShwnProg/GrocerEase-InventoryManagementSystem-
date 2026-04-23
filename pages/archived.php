@@ -57,11 +57,11 @@ $supplier = $suppliers->GetDeletedSuppliers();
             <div class="menu-table">
                 <?php
                 if ($tab == 'products')
-                    include 'archive_tables/deleted_products.php';
+                    include 'archives/deleted_products.php';
                 elseif ($tab == 'categories')
-                    include 'archive_tables/deleted_categories.php';
+                    include 'archives/deleted_categories.php';
                 elseif ($tab == 'suppliers')
-                    include 'archive_tables/deleted_suppliers.php';
+                    include 'archives/deleted_suppliers.php';
                 ?>
             </div>
 
