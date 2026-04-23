@@ -3,12 +3,7 @@ class DB
 {
     private $host = "localhost";
     private $user = "root";
-<<<<<<< HEAD
-    private $pass = "anna_luna1223";
-=======
-
-    private $pass = "shawnmarlogaldo@1122";
->>>>>>> e616dbe15b9c4674cee136df67a77384bc83e6d1
+    private $pass = "";
     private $dbname = "grocer_easedb";
 
     public $conn = null;
