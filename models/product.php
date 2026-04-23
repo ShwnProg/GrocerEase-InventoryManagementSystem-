@@ -88,7 +88,7 @@ class Product
                                              p.status,
                                              p.is_deleted
                                              FROM products p
-                                             JOIN categories c ON c.category_id_pk = p.category_id_fk
+                                             LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
                                              WHERE p.is_deleted = 1
                                              GROUP BY p.product_id_pk

@@ -20,31 +20,6 @@ $errors = $_SESSION['errors']['add'] ?? [];
 $old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success']['add'] ?? '';
 
-$confirm_delete = false;
-$delete_product_id = '';
-$delete_product_name = '';
-
-if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_product_id'] = $_POST['product_id'];
-    header("Location: products.php");
-    exit;
-}
-
-if (isset($_SESSION['delete_product_id'])) {
-    $delete_product_id = $_SESSION['delete_product_id'];
-    $delete_product_name = $product->GetProductNameById($delete_product_id);
-    $confirm_delete = true;
-}
-
-if (isset($_GET['cancel_delete'])) {
-    unset($_SESSION['delete_product_id']);
-    header("Location: products.php");
-    exit;
-}
-
-$delete_success = $_SESSION['success']['delete'] ?? '';
-$delete_error = $_SESSION['errors']['delete'] ?? '';
-
 unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 ?>
 <!DOCTYPE html>
@@ -59,7 +34,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
         <?php include '../includes/topbar.php'; ?>
 
         <section class="page-content">
-            <?php include '../includes/delete_message.php' ?>
             <div class="toolbar">
 
                 <div class="search-area">
@@ -105,7 +79,8 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                         : '<span style="color:#6b7280;">No cost price</span>' ?>
                                 </td>
                                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'N/A' : $prod['product_description']) ?></td>
+                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'N/A' : $prod['product_description']) ?>
+                                </td>
                                 <td style="color:#6b7280;">
                                     <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
                                 </td>
@@ -124,12 +99,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                             </button>
                                         </form>
                                         <!-- DELETE ACTION -->
-                                        <form method="POST">
-                                            <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                            <button type="submit" name="delete_btn" class="edit-btn">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button
+                                            class = "edit-btn" onclick="deleteProduct(<?= $prod['product_id_pk'] ?>, '<?= htmlspecialchars($prod['product_name']) ?>')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
                                         <?php if ($prod['status'] == 1): ?>
                                             <form action="manage_suppliers.php" method="POST">
                                                 <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
@@ -200,12 +173,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                 <?php endforeach; ?>
                             </select>
                         </div>
-                        <!-- ERROR MESSAGE FOR CATEGORY -->
-                        <?php if (!empty($errors['category'])): ?>
-                            <div class="error-message">
-                                <?= htmlspecialchars($errors['category']) ?>
-                            </div>
-                        <?php endif; ?>
 
                         <!-- SELLING PRICE -->
                         <div class="input">
@@ -226,7 +193,8 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         <div class="input">
                             <label for="description">Description (Optional)</label>
                             <i class="fas fa-align-left"></i>
-                            <textarea name="product_description" placeholder="Product Description"><?= htmlspecialchars($old['description'] ?? '') ?></textarea>
+                            <textarea name="product_description"
+                                placeholder="Product Description"><?= htmlspecialchars($old['description'] ?? '') ?></textarea>
                         </div>
 
                         <!-- STATUS -->
@@ -245,35 +213,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 
                             </select>
                         </div>
-                        <!-- ERROR MESSAGE FOR STATUS -->
-                        <?php if (!empty($errors['status'])): ?>
-                            <div class="error-message">
-                                <?= htmlspecialchars($errors['status']) ?>
-                            </div>
-                        <?php endif; ?>
 
                         <button type="submit" name="add_product_btn">Add Product</button>
                     </div>
                 </form>
-            </div>
-            <!-- CONFIRM DELETE MODAL -->
-            <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
-                <div class="modal-content">
-                    <div class="modal-icon">
-                        <i class="fa-solid fa-trash"></i>
-                    </div>
-                    <p>Delete <b><?= htmlspecialchars($delete_product_name ?? '') ?></b>?</p>
-
-                    <div class="modal-actions">
-
-                        <button id="cancel-delete" class="cancel-btn">Cancel</button>
-                        <!-- CONFIRM DELETE -->
-                        <form action="../validation/products/delete_product.php" method="POST">
-                            <input type="hidden" name="product_id" value="<?= $delete_product_id ?>">
-                            <button type="submit" id="confirm-delete">Yes, Delete</button>
-                        </form>
-                    </div>
-                </div>
             </div>
 
         </section>

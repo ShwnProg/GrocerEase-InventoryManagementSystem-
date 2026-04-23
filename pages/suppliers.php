@@ -16,46 +16,12 @@ $success_msg = $_SESSION['success_msg'] ?? '';
 
 $confirm_delete = false;
 $delete_supplier_id = '';
-$errors  = $_SESSION['errors']['add'] ?? [];
-$old     = $_SESSION['old'] ?? [];
+$errors = $_SESSION['errors']['add'] ?? [];
+$old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success'] ?? [];
 
 $open_add_modal = !empty($errors);
 
-// CONFIRM DELETE
-$confirm_delete       = false;
-$delete_supplier_id   = '';
-$delete_supplier_name = '';
-
-if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_supplier_id'] = $_POST['supplier_id'];
-    header("Location: suppliers.php");
-    exit;
-}
-
-if (isset($_SESSION['delete_supplier_id'])) {
-
-    $delete_supplier_id = $_SESSION['delete_supplier_id'];
-    $confirm_delete = true;
-
-    $supplierData = $supplier->GetSupplierById($delete_supplier_id);
-    $delete_supplier_name = $supplierData['supplier_name'] ?? '';
-
-    $delete_supplier_id   = $_SESSION['delete_supplier_id'];
-    $sup_data             = $supplier->GetSupplierById($delete_supplier_id);
-    $delete_supplier_name = $sup_data['supplier_name'] ?? '';
-    $confirm_delete       = true;
-}
-
-if (isset($_GET['cancel_delete'])) {
-    unset($_SESSION['delete_supplier_id']);
-    header("Location: suppliers.php");
-    exit;
-}
-
-
-$delete_success = $_SESSION['success']['delete'] ?? '';
-$delete_error = $_SESSION['errors']['delete'] ?? '';
 
 // echo "hello $user_info[username]";
 unset($_SESSION['add_supplier_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
@@ -72,14 +38,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 <body>
 
     <?php include '../includes/sidebar.php'; ?>
-    <div class="main-content">
+    <main class="main-content">
         <?php include '../includes/topbar.php'; ?>
-        <div class="page-content">
-
-            <?php if (!empty($success['delete'])): ?>
-                <div class="success-message"><?= htmlspecialchars($success['delete']) ?></div>
-            <?php endif; ?>
-
+        <section class="page-content">
             <div class="toolbar">
                 <div class="search-area">
                     <form action="">
@@ -112,7 +73,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         <?php $no = 1; ?>
                         <?php foreach ($suppliers as $sup): ?>
                             <?php if ($sup['is_deleted'] == 1)
-                                continue;  ?>
+                                continue; ?>
                             <tr>
                                 <td><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
@@ -139,13 +100,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                         </form>
 
                                         <!-- DELETE BUTTON -->
-                                        <form method="POST">
-                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                            <button type="submit" name="delete_btn" class="edit-btn">
-
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="edit-btn"
+                                            onclick="deleteSupplier('<?= $sup['supplier_id_pk'] ?>', '<?= htmlspecialchars($sup['supplier_name']) ?>')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -245,32 +203,8 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </div>
                 </form>
             </div>
-
-
-
-            <!-- CONFIRM DELETE MODAL -->
-
-            <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
-                <div class="modal-content">
-                    <div class="modal-icon">
-                        <i class="fa-solid fa-trash"></i>
-                    </div>
-                    <p>Delete <b><?= htmlspecialchars($delete_supplier_name ?? '') ?></b>?</p>
-                    <!-- CONFIRM DELETE -->
-                    <div class="modal-actions">
-                        <button id="cancel-delete" class="cancel-btn">Cancel</button>
-                        <form action="../validation/suppliers/delete_supplier.php" method="POST">
-                            <input type="hidden" name="supplier_id" value="<?= $delete_supplier_id ?>">
-                            <button type="submit" id="confirm-delete">Yes, Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
+        </section>
+    </main>
 </body>
 <script src="../scripts/pages.js"></script>
 

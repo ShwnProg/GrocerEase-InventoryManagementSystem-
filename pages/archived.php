@@ -7,7 +7,7 @@ require_once '../models/supplier.php';
 include "../includes/auth_check.php";
 
 $current = basename($_SERVER['PHP_SELF']);
-$tab = $_GET['tab'] ?? 'products'; // default: products
+$tab = $_GET['tab'] ?? 'products'; 
 $_SESSION['page_title'] = "ARCHIVED";
 
 $product = new Product();
@@ -18,51 +18,6 @@ $products = $product->GetDeletedProducts();
 $category = $categories->GetDeletedCategories();
 $supplier = $suppliers->GetDeletedSuppliers();
 
-$confirm_restore = false;
-$restore_product_id = '';
-$restore_product_name = '';
-
-if (isset($_POST['restore_btn'])) {
-    $_SESSION['restore_product_id'] = $_POST['product_id'];
-    header("Location: archived.php");
-    exit;
-}
-
-
-if (isset($_SESSION['restore_product_id'])) {
-    $restore_product_id = $_SESSION['restore_product_id'];
-    $restore_product_name = $product->GetProductNameById($restore_product_id);
-    $confirm_restore = true;
-}
-
-
-if (isset($_GET['cancel_restore'])) {
-    unset($_SESSION['restore_product_id']);
-    header("Location: archived.php");
-    exit;
-}
-
-$confirm_delete = false;
-$delete_product_id = '';
-$delete_product_name = '';
-
-if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_product_id'] = $_POST['product_id'];
-    header("Location: archived.php?tab=products");
-    exit;
-}
-
-if (isset($_SESSION['delete_product_id'])) {
-    $delete_product_id = $_SESSION['delete_product_id'];
-    $delete_product_name = $product->GetProductNameById($delete_product_id);
-    $confirm_delete = true;
-}
-
-if (isset($_GET['cancel_delete'])) {
-    unset($_SESSION['delete_product_id']);
-    header("Location: archived.php?tab=products");
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -113,5 +68,5 @@ if (isset($_GET['cancel_delete'])) {
         </div>
     </div>
 </body>
-
+<script src="../scripts/pages.js"></script>
 </html>

@@ -2,15 +2,34 @@
 session_start();
 require_once '../../models/product.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['product_id'])) {
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $product_id = $_POST['product_id'] ?? null;
+
+    if (!$product_id) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Invalid request."
+        ]);
+        exit;
+    }
+
     $product = new Product();
-    $result = $product->HardDeleteProduct($_POST['product_id']);
+    $result = $product->HardDeleteProduct($product_id);
 
-    $_SESSION['archive_msg'] = $result
-        ? ['type' => 'success', 'text' => 'Product permanently deleted.']
-        : ['type' => 'error', 'text' => 'Failed to delete product.'];
+    if ($result) {
+        echo json_encode([
+            "status" => "success",
+            "message" => "Product permanently deleted."
+        ]);
+    } else {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Failed to delete product."
+        ]);
+    }
+
+    exit;
 }
-
-unset($_SESSION['delete_product_id']);
-header("Location: ../../pages/archived.php?tab=products");
-exit;

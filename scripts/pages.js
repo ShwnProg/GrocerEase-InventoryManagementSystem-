@@ -1,5 +1,13 @@
-// SEARCH
 const searchInput = document.getElementById('search');
+
+const restoreModal = document.getElementById('restore-modal');
+const confirmModal = document.getElementById('confirm-modal');
+
+const modal = document.getElementById('add-modal');
+const addBtn = document.getElementById('addbtn');
+const closeBtn = document.getElementById('close-modal');
+
+// SEARCH
 if (searchInput) {
     searchInput.addEventListener('keyup', function () {
         const value = this.value.toLowerCase();
@@ -10,10 +18,6 @@ if (searchInput) {
 }
 
 // ADD MODAL
-const modal    = document.getElementById('add-modal');
-const addBtn   = document.getElementById('addbtn');
-const closeBtn = document.getElementById('close-modal');
-
 if (addBtn && modal && closeBtn) {
     addBtn.addEventListener('click', () => modal.classList.add('active'));
     closeBtn.addEventListener('click', () => modal.classList.remove('active'));
@@ -23,41 +27,249 @@ if (addBtn && modal && closeBtn) {
 }
 
 // DELETE CONFIRM MODAL
-const confirmModal = document.getElementById('confirm-modal');
-const cancelDelete = document.getElementById('cancel-delete');
 
-if (cancelDelete && confirmModal) {
-    const currentPage = window.location.pathname.split('/').pop();
-    const cancelDeleteUrl = currentPage.includes('archived')
-        ? `${currentPage}?tab=products&cancel_delete=1`
-        : `${currentPage}?cancel_delete=1`;
+const deleteAlertConfig = (name) => ({
+    title: `Delete ${name}?`,
+    text: "This action cannot be undone.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#c82828",
+    cancelButtonColor: "#6b7280",
+    confirmButtonText: "Delete",
+    cancelButtonText: "Cancel"
+});
 
-    cancelDelete.addEventListener('click', () => {
-        window.location.href = cancelDeleteUrl;
+function deleteProduct(id, name) {
+    Swal.fire(deleteAlertConfig(name)).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: '../validation/products/delete_product.php',
+                type: 'POST',
+                data: { product_id: id },
+
+                success: function () {
+                    Swal.fire({
+                        title: 'Deleted!',
+                        text: 'Product has been deleted.',
+                        icon: 'success',
+                        confirmButtonColor: '#1c5515'
+                    }).then(() => location.reload());
+                },
+
+                error: function () {
+                    Swal.fire('Error!', 'Something went wrong.', 'error');
+                }
+            });
+
+        }
+
+    });
+}
+function deleteCategory(id, name) {
+
+    Swal.fire(deleteAlertConfig(name)).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: '../validation/categories/delete_category.php',
+                type: 'POST',
+                dataType: 'json',
+                data: { category_id: id },
+
+                success: function (res) {
+
+                    if (res.status === "success") {
+
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: res.message,
+                            icon: 'success',
+                            confirmButtonColor: '#1c5515'
+                        }).then(() => location.reload());
+
+                    } else {
+
+                        Swal.fire({
+                            title: 'Error',
+                            text: res.message,
+                            icon: 'error'
+                        });
+
+                    }
+
+                },
+
+                error: function () {
+                    Swal.fire('Server Error', 'Something went wrong.', 'error');
+                }
+
+            });
+
+        }
+
+    });
+}
+function removeSupplier(productId, supplierId, name) {
+
+    Swal.fire({
+        title: `Remove ${name}?`,
+        text: "This will detach supplier from product.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#c82828",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Remove",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: '../validation/product_suppliers/remove_suppliers.php',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    product_id: productId,
+                    supplier_id: supplierId
+                },
+
+                success: function (res) {
+
+                    if (res.status === "success") {
+                        Swal.fire({
+                            title: "Removed!",
+                            text: res.message,
+                            icon: "success",
+                            confirmButtonColor: "#1c5515"
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire("Error", res.message, "error");
+                    }
+
+                },
+
+                error: function () {
+                    Swal.fire("Server Error", "Something went wrong", "error");
+                }
+
+            });
+
+        }
+
     });
 
-    confirmModal.addEventListener('click', (e) => {
-        if (e.target === confirmModal) {
-            window.location.href = cancelDeleteUrl;
+}
+
+function deleteSupplier(id, name) {
+
+    Swal.fire({
+        title: `Delete ${name}?`,
+        text: "This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#c82828",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: '../validation/suppliers/delete_supplier.php',
+                type: 'POST',
+                dataType: 'json',
+                data: { supplier_id: id },
+
+                success: function (res) {
+                    if (res.status === "success") {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Deleted!",
+                            text: res.message,
+                            confirmButtonColor: "#3085d6"
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: res.message,
+                            confirmButtonColor: "#c82828"
+                        });
+                    }
+                },
+
+                error: function () {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Server Error",
+                        text: "Something went wrong."
+                    });
+                }
+            });
+
+        }
+
+    });
+}
+// RESTORE CONFIRM MODAL
+
+function restoreProduct(id, name) {
+    Swal.fire({
+        title: `Restore ${name}?`,
+        icon: "question",
+        showCancelButton: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post('../validation/products/recover.php', { product_id: id }, function(res) {
+                Swal.fire("Restored!", "Success", "success")
+                .then(() => location.reload());
+            });
         }
     });
 }
 
-// RESTORE CONFIRM MODAL
-const restoreModal  = document.getElementById('restore-modal');
-const cancelRestore = document.getElementById('cancel-restore');
+// HARD DELETE
+function hardDeleteProduct(id, name) {
 
-if (cancelRestore && restoreModal) {
-    const currentPage = window.location.pathname.split('/').pop();
+    Swal.fire({
+        title: `Delete ${name}?`,
+        text: "This action is permanent.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#c82828",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
 
-    cancelRestore.addEventListener('click', () => {
-        window.location.href = `${currentPage}?tab=products&cancel_restore=1`;
-    });
+        if (result.isConfirmed) {
 
-    restoreModal.addEventListener('click', (e) => {
-        if (e.target === restoreModal) {
-            window.location.href = `${currentPage}?tab=products&cancel_restore=1`;
+            $.ajax({
+                url: '../validation/products/hard_delete_product.php',
+                type: 'POST',
+                dataType: 'json',
+                data: { product_id: id },
+
+                success: function (res) {
+                    if (res.status === "success") {
+                        Swal.fire("Deleted!", res.message, "success")
+                            .then(() => location.reload());
+                    } else {
+                        Swal.fire("Error", res.message, "error");
+                    }
+                },
+
+                error: function () {
+                    Swal.fire("Error", "Server error occurred", "error");
+                }
+            });
+
         }
+
     });
 }
 
@@ -76,7 +288,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // EDIT MODAL
-const editModal    = document.getElementById('edit-modal');
+const editModal = document.getElementById('edit-modal');
 const closeEditBtn = document.getElementById('close-edit-modal');
 
 if (editModal && closeEditBtn) {
@@ -101,9 +313,9 @@ const closeStockIn = document.getElementById('close-stock-in');
 
 document.querySelectorAll('.open-stock-in').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.getElementById('stock-in-product-id').value          = btn.dataset.id;
-        document.getElementById('stock-in-product-name').textContent  = btn.dataset.name;
-        document.getElementById('stock-in-product-name-input').value  = btn.dataset.name;
+        document.getElementById('stock-in-product-id').value = btn.dataset.id;
+        document.getElementById('stock-in-product-name').textContent = btn.dataset.name;
+        document.getElementById('stock-in-product-name-input').value = btn.dataset.name;
         stockInModal.classList.add('active');
     });
 });
@@ -123,7 +335,7 @@ const closeStockOut = document.getElementById('close-stock-out');
 
 document.querySelectorAll('.open-stock-out').forEach(btn => {
     btn.addEventListener('click', () => {
-        document.getElementById('stock-out-product-id').value         = btn.dataset.id;
+        document.getElementById('stock-out-product-id').value = btn.dataset.id;
         document.getElementById('stock-out-product-name').textContent = btn.dataset.name;
         document.getElementById('stock-out-product-name-input').value = btn.dataset.name;
         stockOutModal.classList.add('active');

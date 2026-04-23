@@ -14,31 +14,6 @@ $error = $_SESSION['add_category_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
 $success_msg = $_SESSION['success_msg'] ?? '';
 
-$confirm_delete = false;
-$delete_category_id = '';
-$delete_category_name = '';
-
-if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_category_id'] = $_POST['category_id'];
-    header("Location: categories.php");
-    exit;
-}
-
-if (isset($_SESSION['delete_category_id'])) {
-    $delete_category_id = $_SESSION['delete_category_id'];
-    $delete_category_name = $category->GetCategoryNameById($delete_category_id);
-    $confirm_delete = true;
-}
-
-if (isset($_GET['cancel_delete'])) {
-    unset($_SESSION['delete_category_id']);
-    header("Location: categories.php");
-    exit;
-}
-
-$delete_success = $_SESSION['success']['delete'] ?? '';
-$delete_error = $_SESSION['errors']['delete'] ?? '';
-
 // echo "hello $user_info[username]";
 unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
 unset($_SESSION['success'], $_SESSION['errors']);
@@ -56,7 +31,6 @@ unset($_SESSION['success'], $_SESSION['errors']);
         <?php include '../includes/topbar.php'; ?>
 
         <section class="page-content">
-            <?php include '../includes/delete_message.php' ?>
             <div class="toolbar">
                 <div class="search-area">
                     <form action="">
@@ -82,13 +56,15 @@ unset($_SESSION['success'], $_SESSION['errors']);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $num = 0;?>
+                        <?php $num = 0; ?>
                         <?php foreach ($categories as $categ): ?>
                             <tr>
-                                <?php if($categ['is_deleted'] == 1) continue;?>
+                                <?php if ($categ['is_deleted'] == 1)
+                                    continue; ?>
                                 <td><?= ++$num ?></td>
                                 <td><?= htmlspecialchars($categ['category_name']) ?></td>
-                                <td><?= htmlspecialchars($categ['category_description'] == '' ? 'N/A' : $categ['category_description']) ?></td>
+                                <td><?= htmlspecialchars($categ['category_description'] == '' ? 'N/A' : $categ['category_description']) ?>
+                                </td>
                                 <td>
                                     <div class="actions">
                                         <form action="edit_category.php" method="POST">
@@ -98,12 +74,10 @@ unset($_SESSION['success'], $_SESSION['errors']);
                                             </button>
                                         </form>
                                         <!-- DELETE -->
-                                        <form method="POST">
-                                            <input type="hidden" name="category_id" value="<?= $categ['category_id_pk'] ?>">
-                                            <button type="submit" name="delete_btn" class="edit-btn">
-                                                <i class="fa-solid fa-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button class="edit-btn"
+                                            onclick="deleteCategory(<?= $categ['category_id_pk'] ?>, '<?= htmlspecialchars($categ['category_name']) ?>')">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -151,25 +125,6 @@ unset($_SESSION['success'], $_SESSION['errors']);
                         <button type="submit">Add Category</button>
                     </div>
                 </form>
-            </div>
-
-            <div class="confirm-modal <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
-                <div class="modal-content">
-                    <div class="modal-icon">
-                        <i class="fa-solid fa-trash"></i>
-                    </div>
-                    <p>Delete <b><?= htmlspecialchars($delete_category_name ?? '') ?></b>?</p>
-
-                    <div class="modal-actions">
-
-                        <button id="cancel-delete" class="cancel-btn">Cancel</button>
-                        <!-- CONFIRM DELETE -->
-                        <form action="../validation/categories/delete_category.php" method="POST">
-                            <input type="hidden" name="category_id" value="<?= $delete_category_id ?>">
-                            <button type="submit" id="confirm-delete">Yes, Delete</button>
-                        </form>
-                    </div>
-                </div>
             </div>
         </section>
     </main>

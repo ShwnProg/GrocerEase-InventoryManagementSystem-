@@ -15,14 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     // CHECK FOR EMPTY FIELDS
-    if (empty($product_name))
-        $errors['product_name'] = "Product name is required.";
-    if (empty($category))
-        $errors['category'] = "Category is required.";
-    if (empty($selling_price))
-        $errors['selling_price'] = "Selling price is required.";
-    if ($status === '')
-        $errors['status'] = "Status is required.";
+    if (empty($product_name) || empty($category) || empty($selling_price) || $status === '')
+        $errors['form'] = "Please fill in all required fields.";
 
     // VALIDATE INPUTS
     $product = new Product();
@@ -34,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($product->CheckDuplicateProduct($product_name, $category))
             $errors['product_name'] = "Product already exists in the selected category.";
 
-    if (empty($errors['selling_price'])) {
+    if (!empty($selling_price) ) {
         if (!is_numeric($selling_price))
             $errors['selling_price'] = "Selling price must be a valid number.";
         elseif ($selling_price < 0)

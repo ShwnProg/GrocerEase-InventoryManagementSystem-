@@ -86,7 +86,6 @@ body {
 .menu-btn.active {
     color: #1c5515;
     background: rgba(28, 85, 21, 0.055);
-    /* border-left: 3px solid #1c5515;  */
 }
 
 /* ACTIVE STYLE */
@@ -119,7 +118,6 @@ body {
 }
 
 .side-bar-menu .action:hover {
-    /* background: rgba(0, 0, 0, 0.082); */
     color: #1c5515;
 }
 
@@ -135,7 +133,6 @@ body {
 }
 
 .side-bar-menu .action.logout:hover {
-    /* background: rgba(239,100,100,0.08); */
     color: #e77979;
 }
 
@@ -200,8 +197,6 @@ body {
     z-index: 100;
 }
 
-
-
 .profile-menu a {
     display: flex;
     align-items: center;
@@ -244,7 +239,6 @@ body {
 /* MAIN CONTENT */
 .page-content {
     padding: 24px;
-
 }
 
 /* SEARCH + ADD ROW */
@@ -304,7 +298,6 @@ body {
     font-weight: 500;
     text-decoration: none;
     transition: 0.3s ease;
-
 }
 
 .add button:hover {
@@ -316,6 +309,7 @@ body {
     font-size: 16px;
     font-weight: 400;
 }
+
 .header-btn {
     display: flex;
     align-items: center;
@@ -362,10 +356,7 @@ body {
     box-shadow: 0 0 5px #0000001a;
     table-layout: fixed;
     overflow-y: auto;
-    /*max-height: 500px; */
-    overflow-x: auto;
     max-height: 500px;
-
 }
 
 .menu-table table {
@@ -416,19 +407,29 @@ body {
     white-space: normal;
     word-break: break-word;
     overflow-wrap: break-word;
-    max-width: 180px; 
+    max-width: 180px;
 }
 
+/*  Actions column  */
 .menu-table th:last-child,
 .menu-table td:last-child {
     text-align: center;
+    width: 230px;         
 }
 
 .menu-table .actions {
     display: flex;
+    flex-wrap: wrap;          
     justify-content: center;
     align-items: center;
     gap: 6px;
+}
+
+
+.menu-table .btn {
+    padding: 5px 10px;
+    font-size: 12px;
+    white-space: nowrap;    
 }
 
 /* STATUS BADGE */
@@ -514,19 +515,16 @@ body {
     color: #1c5515;
 }
 
-/* BASE BUTTON*/
+/* BASE BUTTON */
 .btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-
     padding: 7px 11px;
     border-radius: 8px;
-
     font-size: 12.5px;
     font-weight: 500;
     background: #fff;
-
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
@@ -540,7 +538,6 @@ body {
 .btn-in {
     color: #1c5515;
     background: rgba(28, 85, 21, 0.06);
-    /* border: 1px solid rgba(28, 85, 21, 0.15); */
     border: none;
 }
 
@@ -553,7 +550,6 @@ body {
 .btn-in i {
     color: #1c5515;
 }
-
 
 .btn-out {
     color: #c82828;
@@ -574,7 +570,6 @@ body {
 .btn:active {
     transform: scale(0.97);
 }
-
 
 @media (max-width: 600px) {
     .actions {
@@ -775,14 +770,12 @@ body {
     font-size: 13px;
     margin-bottom: 8px;
     text-align: center;
-
 }
 
 .error-message {
     color: #c82828;
     font-size: 11px;
     margin-top: 4px;
-
 }
 
 /* DELETE MODAL */
@@ -942,10 +935,10 @@ body {
     color: #74be6c;
 }
 
-/* click effect */
 .back-btn:active {
     transform: scale(0.97);
 }
+
 /* RESTORE MODAL */
 #confirm-restore {
     width: 100%;
@@ -973,8 +966,8 @@ body {
 #restore-modal .modal-icon i {
     color: #32702b;
 }
-/* PREFERRED BUTTON */
 
+/* PREFERRED BUTTON */
 .preferred-btn {
     border: none;
     background: none;
@@ -985,13 +978,11 @@ body {
     font-size: 15px;
 }
 
-/* default icon */
 .preferred-btn i {
     color: rgba(0, 0, 0, 0.4);
     transition: color 0.15s ease;
 }
 
-/* ACTIVE (preferred) */
 .preferred-btn i.active {
     color: #1c5515;
 }
@@ -1014,8 +1005,6 @@ body {
 }
 
 /* EDIT */
-/* ── Edit Product Page ──────────────────────────── */
-
 .edit-content {
     display: flex;
     align-items: flex-start;
@@ -1032,8 +1021,6 @@ body {
     gap: 14px;
 }
 
-/* ── Form Header ────────────────────────────────── */
-
 .edit-content form>i {
     font-size: 13px;
     color: #1c5515;
@@ -1049,8 +1036,6 @@ body {
     font-weight: 600;
     color: #111;
 }
-
-/* ── Input Groups ───────────────────────────────── */
 
 .edit-content .input {
     display: flex;
@@ -1077,8 +1062,6 @@ body {
     transition: color 0.2s;
 }
 
-/* ── Text Inputs ────────────────────────────────── */
-
 .edit-content .input input {
     padding: 9px 12px 9px 33px;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1091,8 +1074,6 @@ body {
     box-sizing: border-box;
     font-family: inherit;
 }
-
-/* ── Selects & Textarea ─────────────────────────── */
 
 .edit-content .input select,
 .edit-content .input textarea {
@@ -1114,8 +1095,6 @@ body {
     line-height: 1.5;
 }
 
-/* ── Focus States ───────────────────────────────── */
-
 .edit-content .input input:focus,
 .edit-content .input select:focus,
 .edit-content .input textarea:focus {
@@ -1127,7 +1106,6 @@ body {
 .edit-content .input:focus-within i {
     color: #1c5515;
 }
-
 
 .edit-content form button[name="edit_btn"] {
     width: 100%;
@@ -1187,7 +1165,6 @@ body {
     overflow: hidden;
 }
 
-/* HEADER */
 .edit-modal .modal-header {
     display: flex;
     align-items: center;
@@ -1213,7 +1190,6 @@ body {
     flex: 1;
 }
 
-/* BODY */
 .edit-modal .modal-body {
     padding: 20px;
     display: flex;
@@ -1231,7 +1207,6 @@ body {
     color: #111;
 }
 
-/* INPUT */
 .edit-modal .input {
     display: flex;
     flex-direction: column;
@@ -1280,7 +1255,6 @@ body {
     color: #1c5515;
 }
 
-/* ACTIONS */
 .edit-modal .modal-close {
     width: 28px;
     height: 28px;
@@ -1301,7 +1275,6 @@ body {
     color: #333;
 }
 
-/* Save button full width */
 #confirm-edit {
     width: 100%;
     padding: 10px;
@@ -1333,12 +1306,21 @@ body {
     box-sizing: border-box;
 }
 
+/*  ALERTS (inside page-content)  */
 .alert {
-    margin: 16px 24px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 10px 16px;
     border-radius: 8px;
     font-size: 13px;
     font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.alert i {
+    font-size: 14px;
+    flex-shrink: 0;
 }
 
 .alert-success {
@@ -1353,26 +1335,50 @@ body {
     border: 1px solid rgba(200, 40, 40, 0.15);
 }
 
+/*  PROFILE WRAPPER  */
 .profile-wrapper {
-    max-width: 700px;
+    max-width: 680px;
     margin: 0 auto;
 }
 
+/*  FORM CARD  */
 .form-card {
     background: #fff;
     border: 1px solid rgba(0, 0, 0, 0.07);
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
 }
 
+/*  CARD HEADER  */
 .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
     padding: 20px 24px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    background: #f9faf9;
+}
+
+.card-header-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: rgba(28, 85, 21, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card-header-icon i {
+    font-size: 16px;
+    color: #1c5515;
 }
 
 .card-title {
     margin: 0 0 2px;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 600;
     color: #111;
 }
@@ -1383,9 +1389,14 @@ body {
     color: #9ca3af;
 }
 
+/*  SECTION BLOCK  */
 .section-block {
-    padding: 20px 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    padding: 22px 24px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.section-block:last-of-type {
+    border-bottom: none;
 }
 
 .section-label {
@@ -1397,6 +1408,7 @@ body {
     margin: 0 0 16px;
 }
 
+/*  FORM GROUPS  */
 .form-row {
     display: flex;
     gap: 16px;
@@ -1412,6 +1424,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    min-width: 0;
 }
 
 .form-group label {
@@ -1422,8 +1435,25 @@ body {
     letter-spacing: 0.5px;
 }
 
-.form-group input {
-    padding: 8px 11px;
+/* INPUT WITH ICON  */
+.input-icon-wrap {
+    position: relative;
+}
+
+.input-icon-wrap i {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #ccc;
+    pointer-events: none;
+    transition: color 0.2s;
+}
+
+.input-icon-wrap input {
+    width: 100%;
+    padding: 8px 11px 8px 32px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 7px;
     font-size: 13px;
@@ -1433,13 +1463,16 @@ body {
     font-family: inherit;
     transition: border 0.2s, background 0.2s, box-shadow 0.2s;
     box-sizing: border-box;
-    width: 100%;
 }
 
-.form-group input:focus {
+.input-icon-wrap input:focus {
     border-color: #1c5515;
     background: #fff;
     box-shadow: 0 0 0 3px rgba(28, 85, 21, 0.08);
+}
+
+.input-icon-wrap:focus-within i {
+    color: #1c5515;
 }
 
 .form-group small {
@@ -1447,7 +1480,11 @@ body {
     color: #9ca3af;
 }
 
+/*  ROLE TEXT */
 .role-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 11px;
     border: 1px solid rgba(0, 0, 0, 0.07);
     border-radius: 7px;
@@ -1456,10 +1493,19 @@ body {
     background: #f4f7f4;
 }
 
+.role-text i {
+    font-size: 12px;
+    color: #1c5515;
+    opacity: 0.7;
+}
+
+/*  CARD FOOTER  */
 .card-footer {
     padding: 16px 24px;
     display: flex;
     justify-content: flex-end;
+    background: #f9faf9;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .btn-save {
@@ -1488,9 +1534,20 @@ body {
     transform: scale(0.99);
 }
 
-
 @media (max-width: 700px) {
     .form-row {
         flex-direction: column;
+    }
+
+    .card-header {
+        padding: 16px 18px;
+    }
+
+    .section-block {
+        padding: 18px;
+    }
+
+    .card-footer {
+        padding: 14px 18px;
     }
 }

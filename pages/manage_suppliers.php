@@ -33,32 +33,6 @@ $has_add_error    = isset($error['supplier']) || isset($error['cost_price']);
 $has_add_success  = isset($success['add_supplier']);
 $open_modal       = isset($_POST["add_supplier"]) || $has_add_error || $has_add_success;
 
-//  DELETE FLOW 
-$confirm_delete      = false;
-$delete_supplier_id  = '';
-$delete_supplier_name = '';
-
-if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_product_id']   = $product_id;
-    $_SESSION['delete_supplier_id']  = $_POST['supplier_id'];
-    $_SESSION['delete_supplier_name'] = $_POST['supplier_name'];
-    header("Location: manage_suppliers.php?product_id=" . $product_id);
-    exit;
-}
-
-if (isset($_SESSION['delete_supplier_id'])) {
-    $delete_product_id    = $_SESSION['delete_product_id'];
-    $delete_supplier_id   = $_SESSION['delete_supplier_id'];
-    $delete_supplier_name = $_SESSION['delete_supplier_name'];
-    $confirm_delete       = true;
-}
-
-if (isset($_GET['cancel_delete'])) {
-    unset($_SESSION['delete_product_id'], $_SESSION['delete_supplier_id'], $_SESSION['delete_supplier_name']);
-    header("Location: manage_suppliers.php?product_id=" . $product_id);
-    exit;
-}
-
 // --- EDIT FLOW ---
 $confirm_edit      = false;
 $edit_supplier_id  = '';
@@ -80,7 +54,7 @@ if (isset($_SESSION['edit_supplier_id'])) {
     $edit_supplier_id   = $_SESSION['edit_supplier_id'];
     $edit_supplier_name = $_SESSION['edit_supplier_name'];
     $edit_cost_price    = $_SESSION['edit_cost_price'];
-    // Also open edit modal if returning from an edit error
+
     $confirm_edit = true;
 }
 
@@ -95,12 +69,8 @@ if (isset($_GET['cancel_edit'])) {
     exit;
 }
 
-$delete_success = $success['remove_supplier'] ?? '';
-$delete_error   = $error['remove_supplier']   ?? '';
-$edit_error     = $error['edit_cost_price']   ?? '';
-$edit_success   = $success['edit_supplier']   ?? '';
 
-// --- Clear session flash data ---
+// Clear session
 unset(
     $_SESSION["error"],
     $_SESSION["success"],
@@ -186,14 +156,12 @@ unset(
                                             </button>
                                         </form>
                                         <!-- DELETE -->
-                                        <form method="POST">
-                                            <input type="hidden" name="product_id" value="<?= $product_id ?>">
-                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                            <input type="hidden" name="supplier_name" value="<?= htmlspecialchars($sup['supplier_name']) ?>">
-                                            <button type="submit" name="delete_btn" class="edit-btn">
-                                                <i class="fa-solid fa-user-minus"></i>
-                                            </button>
-                                        </form>
+                                      <button
+                                        type="button"
+                                        class="edit-btn"
+                                        onclick="removeSupplier(<?= $product_id ?>, <?= $sup['supplier_id_pk'] ?>, '<?= htmlspecialchars($sup['supplier_name']) ?>')">
+                                        <i class="fa-solid fa-user-minus"></i>
+                                    </button>
                                     </div>
                                 </td>
                             </tr>
@@ -251,24 +219,6 @@ unset(
                         <button type="submit" name="add_supplier">Add Supplier</button>
                     </div>
                 </form>
-            </div>
-
-            <!-- REMOVE MODAL -->
-            <div class="confirm-modal warning-orange <?= $confirm_delete ? 'active' : '' ?>" id="confirm-modal">
-                <div class="modal-content">
-                    <div class="modal-icon">
-                        <i class="fa-solid fa-user-minus"></i>
-                    </div>
-                    <p>Remove <b><?= htmlspecialchars($delete_supplier_name) ?></b> from this product?</p>
-                    <div class="modal-actions">
-                        <a href="manage_suppliers.php?product_id=<?= $product_id ?>&cancel_delete=1" class="cancel-btn">Cancel</a>
-                        <form action="../validation/product_suppliers/remove_suppliers.php" method="POST">
-                            <input type="hidden" name="product_id" value="<?= $delete_product_id ?>">
-                            <input type="hidden" name="supplier_id" value="<?= $delete_supplier_id ?>">
-                            <button type="submit" id="confirm-delete">Yes, Remove</button>
-                        </form>
-                    </div>
-                </div>
             </div>
 
             <!-- EDIT MODAL -->

@@ -1,24 +1,35 @@
 <?php
-require_once '../../models/supplier.php';
 session_start();
+require_once '../../models/supplier.php';
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $supplier_id = $_POST['supplier_id'] ?? '';
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $supplier_id = $_POST['supplier_id'] ?? null;
+
+    if (!$supplier_id) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Invalid request."
+        ]);
+        exit;
+    }
 
     $Supplier = new Supplier();
     $result = $Supplier->SoftDeleteSupplier($supplier_id);
 
-    unset($_SESSION['delete_supplier_id']);
-
-    if($result){
-        $_SESSION['success'] = ['delete' => "Supplier deleted successfully."];
+    if ($result) {
+        echo json_encode([
+            "status" => "success",
+            "message" => "Supplier deleted successfully."
+        ]);
+    } else {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Failed to delete supplier."
+        ]);
     }
-    else{
-        $_SESSION['errors'] = ['delete' => "Failed to delete supplier. Please try again."];
-    }
 
-    header("Location: ../../pages/suppliers.php");
     exit;
-
 }
-?>
