@@ -41,13 +41,6 @@ class Category
     }
     public function SoftDeleteCategory($id)
     {
-<<<<<<< HEAD
-        // soft delete (mark as deleted instead of removing)
-        $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 1 WHERE category_id_pk = :id");
-        $result = $stmt->execute([':id' => $id]);
-        return $result;
-=======
-
         $stmt0 = $this->conn->prepare("UPDATE products set category_id_fk = NULL WHERE category_id_fk = :id");
         $result0 = $stmt0->execute([':id' => $id]);
 
@@ -57,7 +50,6 @@ class Category
             return $result;
         }
         return false;
->>>>>>> e616dbe15b9c4674cee136df67a77384bc83e6d1
     }
     public function GetCategoryById($id)
     {
