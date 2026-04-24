@@ -414,12 +414,12 @@ body {
 .menu-table th:last-child,
 .menu-table td:last-child {
     text-align: center;
-    width: 230px;         
+    width: 230px;
 }
 
 .menu-table .actions {
     display: flex;
-    flex-wrap: wrap;          
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 6px;
@@ -429,7 +429,7 @@ body {
 .menu-table .btn {
     padding: 5px 10px;
     font-size: 12px;
-    white-space: nowrap;    
+    white-space: nowrap;
 }
 
 /* STATUS BADGE */
@@ -1306,7 +1306,7 @@ body {
     box-sizing: border-box;
 }
 
-/*  ALERTS (inside page-content)  */
+/* ALERTS */
 .alert {
     display: flex;
     align-items: center;
@@ -1335,99 +1335,110 @@ body {
     border: 1px solid rgba(200, 40, 40, 0.15);
 }
 
-/*  PROFILE WRAPPER  */
+/*  PROFILE PAGE */
+
 .profile-wrapper {
-    max-width: 680px;
+    max-width: 640px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-/*  FORM CARD  */
-.form-card {
+/* CARD BASE */
+.profile-card {
     background: #fff;
     border: 1px solid rgba(0, 0, 0, 0.07);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 20px 22px;
 }
 
-/*  CARD HEADER  */
-.card-header {
+/* IDENTITY CARD */
+.identity-card {
     display: flex;
     align-items: center;
-    gap: 14px;
-    padding: 20px 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-    background: #f9faf9;
+    gap: 16px;
+    padding: 18px 22px;
 }
 
-.card-header-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    background: rgba(28, 85, 21, 0.08);
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(28, 85, 21, 0.1);
+    color: #1c5515;
+    font-size: 18px;
+    font-weight: 600;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    letter-spacing: 0;
 }
 
-.card-header-icon i {
-    font-size: 16px;
-    color: #1c5515;
+.identity-info {
+    flex: 1;
+    min-width: 0;
 }
 
-.card-title {
+.identity-name {
     margin: 0 0 2px;
     font-size: 14px;
     font-weight: 600;
     color: #111;
 }
 
-.card-subtitle {
+.identity-email {
     margin: 0;
-    font-size: 12px;
+    font-size: 12.5px;
     color: #9ca3af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/*  SECTION BLOCK  */
-.section-block {
-    padding: 22px 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-.section-block:last-of-type {
-    border-bottom: none;
-}
-
-.section-label {
-    font-size: 11px;
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: rgba(28, 85, 21, 0.08);
+    color: #1c5515;
+    border-radius: 20px;
+    font-size: 11.5px;
     font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.role-badge i {
+    font-size: 11px;
+}
+
+/* SECTION LABEL */
+.card-section-label {
+    margin: 0 0 14px;
+    font-size: 11px;
+    font-weight: 700;
     color: #1c5515;
     text-transform: uppercase;
     letter-spacing: 0.7px;
-    margin: 0 0 16px;
 }
 
-/*  FORM GROUPS  */
-.form-row {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 14px;
+/* FORM GRID */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
 }
 
-.form-row:last-child {
-    margin-bottom: 0;
-}
-
-.form-group {
-    flex: 1;
+.form-field {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    min-width: 0;
 }
 
-.form-group label {
+.form-field label {
     font-size: 11px;
     font-weight: 600;
     color: #6b7280;
@@ -1435,25 +1446,25 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* INPUT WITH ICON  */
-.input-icon-wrap {
+/* INPUT WRAP */
+.input-wrap {
     position: relative;
 }
 
-.input-icon-wrap i {
+.input-wrap i {
     position: absolute;
-    left: 11px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 12px;
-    color: #ccc;
+    color: #d1d5db;
     pointer-events: none;
     transition: color 0.2s;
 }
 
-.input-icon-wrap input {
+.input-wrap input {
     width: 100%;
-    padding: 8px 11px 8px 32px;
+    padding: 8px 10px 8px 30px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 7px;
     font-size: 13px;
@@ -1465,49 +1476,29 @@ body {
     box-sizing: border-box;
 }
 
-.input-icon-wrap input:focus {
+.input-wrap input:focus {
     border-color: #1c5515;
     background: #fff;
     box-shadow: 0 0 0 3px rgba(28, 85, 21, 0.08);
 }
 
-.input-icon-wrap:focus-within i {
+.input-wrap:focus-within i {
     color: #1c5515;
 }
 
-.form-group small {
+.field-hint {
     font-size: 11px;
-    color: #9ca3af;
+    color: #b0b7c3;
 }
 
-/*  ROLE TEXT */
-.role-text {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 11px;
-    border: 1px solid rgba(0, 0, 0, 0.07);
-    border-radius: 7px;
-    font-size: 13px;
-    color: #6b7280;
-    background: #f4f7f4;
-}
-
-.role-text i {
-    font-size: 12px;
-    color: #1c5515;
-    opacity: 0.7;
-}
-
-/*  CARD FOOTER  */
-.card-footer {
-    padding: 16px 24px;
+/* FORM ACTIONS */
+.form-actions {
     display: flex;
     justify-content: flex-end;
-    background: #f9faf9;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding-top: 2px;
 }
 
+/* SAVE BUTTON */
 .btn-save {
     display: inline-flex;
     align-items: center;
@@ -1534,20 +1525,16 @@ body {
     transform: scale(0.99);
 }
 
-@media (max-width: 700px) {
-    .form-row {
-        flex-direction: column;
+@media (max-width: 560px) {
+    .form-grid {
+        grid-template-columns: 1fr;
     }
 
-    .card-header {
-        padding: 16px 18px;
+    .identity-card {
+        flex-wrap: wrap;
     }
 
-    .section-block {
-        padding: 18px;
-    }
-
-    .card-footer {
-        padding: 14px 18px;
+    .role-badge {
+        margin-left: calc(48px + 16px);
     }
 }

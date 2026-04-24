@@ -4,35 +4,19 @@ require_once '../../models/categories.php';
 header('Content-Type: application/json');
 session_start();
 
-
+// check request method
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     echo json_encode([
         "status" => "error",
         "message" => "Invalid request method"
     ]);
-
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    $category_id = $_POST['category_id'] ?? '';
-
-    $Category = new Category();
-    // soft delete (is_deleted = 1)
-    $result = $Category->SoftDeleteCategory($category_id);
-
-    unset($_SESSION['delete_category_id']); // clear session
-
-    if($result){
-        $_SESSION['success'] = ['delete' => "Category deleted successfully."];
-    }
-    else{
-        $_SESSION['errors'] = ['delete' => "Failed to delete category. Please try again."];
-    }
-
-    header("Location: ../../pages/categories.php");
     exit;
 }
 
+// get id
 $category_id = $_POST['category_id'] ?? '';
 
+// validate
 if (empty($category_id)) {
     echo json_encode([
         "status" => "error",
@@ -41,26 +25,21 @@ if (empty($category_id)) {
     exit;
 }
 
+// delete
 $Category = new Category();
 $result = $Category->SoftDeleteCategory($category_id);
 
+// response
 if ($result) {
-
-    unset($_SESSION['delete_category_id']); // optional nalang
-
     echo json_encode([
         "status" => "success",
         "message" => "Category deleted successfully"
     ]);
-
 } else {
-
     echo json_encode([
         "status" => "error",
         "message" => "Failed to delete category"
     ]);
-
 }
 
 exit;
-}

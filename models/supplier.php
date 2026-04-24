@@ -38,9 +38,14 @@ class Supplier
     }
     public function SoftDeleteSupplier($id)
     {
-        $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->rowCount() > 0;
+        $stmt0 = $this->conn->prepare("UPDATE product_supplier SET supplier_id_fk = NULL WHERE supplier_id_fk = :id");
+        $stmt0->execute([':id' => $id]);
+
+        if ($stmt0->rowCount() > 0) {
+            $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
+            $stmt->execute([':id' => $id]);
+            return $stmt->rowCount() > 0;
+        }
     }
     public function GetDeletedSuppliers()
     {
@@ -86,6 +91,22 @@ class Supplier
             ':address' => $address,
             ':company_name' => $company_name
         ]);
+        return $stmt->rowCount() > 0;
+    }
+    public function RestoreSupplier($id)
+    {
+        $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 0 WHERE supplier_id_pk = :id");
+
+        $stmt->execute([':id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    public function HardDeleteSupplier($id)
+    {
+        $stmt = $this->conn->prepare("DELETE FROM suppliers WHERE supplier_id_pk = :id");
+        $stmt->execute([':id' => $id]);
+
         return $stmt->rowCount() > 0;
     }
 }

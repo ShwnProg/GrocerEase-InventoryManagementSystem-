@@ -92,8 +92,6 @@ unset(
         <?php include '../includes/topbar.php'; ?>
 
         <section class="page-content">
-            <?php include '../includes/delete_message.php' ?>
-
             <div class="toolbar">
                 <a href="products.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>
                 <div class="add">

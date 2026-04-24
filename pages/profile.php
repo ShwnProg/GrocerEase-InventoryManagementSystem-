@@ -15,6 +15,8 @@ if (!$user_info) {
 }
 
 $_SESSION['page_title'] = "MY PROFILE";
+
+$initials = strtoupper(substr($user_info['username'] ?? 'A', 0, 1));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,99 +47,91 @@ $_SESSION['page_title'] = "MY PROFILE";
             <?php endif; ?>
 
             <div class="profile-wrapper">
-                <div class="form-card">
+                <form action="../validation/admin_profile/admin_profile.php" method="POST">
 
-                    <!-- CARD HEADER -->
-                    <div class="card-header">
-                        <div class="card-header-icon">
-                            <i class="fa fa-user"></i>
+                    <!-- IDENTITY CARD -->
+                    <div class="profile-card identity-card">
+                        <div class="avatar">
+                            <?= htmlspecialchars($initials) ?>
                         </div>
-                        <div>
-                            <p class="card-title">Account Information</p>
-                            <p class="card-subtitle">Manage your personal details and password</p>
+                        <div class="identity-info">
+                            <p class="identity-name"><?= htmlspecialchars($user_info['username']) ?></p>
+                            <p class="identity-email"><?= htmlspecialchars($user_info['email']) ?></p>
+                        </div>
+                        <span class="role-badge">
+                            <i class="fa fa-shield-halved"></i>
+                            <?= htmlspecialchars($user_info['role'] ?? 'Admin') ?>
+                        </span>
+                    </div>
+
+                    <!-- PERSONAL DETAILS -->
+                    <div class="profile-card">
+                        <p class="card-section-label">Personal Details</p>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="username">Username</label>
+                                <div class="input-wrap">
+                                    <i class="fa fa-user"></i>
+                                    <input type="text" id="username" name="username"
+                                        value="<?= htmlspecialchars($user_info['username']) ?>"
+                                        required autocomplete="username">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="email">Email</label>
+                                <div class="input-wrap">
+                                    <i class="fa fa-envelope"></i>
+                                    <input type="email" id="email" name="email"
+                                        value="<?= htmlspecialchars($user_info['email']) ?>"
+                                        required autocomplete="email">
+                                </div>
+                            </div>
+                            <div class="form-field">
+                                <label for="contact_number">Contact Number</label>
+                                <div class="input-wrap">
+                                    <i class="fa fa-phone"></i>
+                                    <input type="text" id="contact_number" name="contact_number"
+                                        value="<?= htmlspecialchars($user_info['contact_number'] ?? '') ?>"
+                                        autocomplete="tel">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <form action="../validation/admin_profile/admin_profile.php" method="POST">
-
-                        <!-- PERSONAL INFO -->
-                        <div class="section-block">
-                            <p class="section-label">Personal Details</p>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="username">Username</label>
-                                    <div class="input-icon-wrap">
-                                        <i class="fa fa-user"></i>
-                                        <input type="text" id="username" name="username"
-                                            value="<?= htmlspecialchars($user_info['username']) ?>"
-                                            required autocomplete="username">
-                                    </div>
+                    <!-- CHANGE PASSWORD -->
+                    <div class="profile-card">
+                        <p class="card-section-label">Change Password</p>
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label for="password">New Password</label>
+                                <div class="input-wrap">
+                                    <i class="fa fa-lock"></i>
+                                    <input type="password" id="password" name="password"
+                                        placeholder="Leave blank to keep current"
+                                        autocomplete="new-password">
                                 </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <div class="input-icon-wrap">
-                                        <i class="fa fa-envelope"></i>
-                                        <input type="email" id="email" name="email"
-                                            value="<?= htmlspecialchars($user_info['email']) ?>"
-                                            required autocomplete="email">
-                                    </div>
-                                </div>
+                                <span class="field-hint">Minimum 6 characters</span>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="contact_number">Contact Number</label>
-                                    <div class="input-icon-wrap">
-                                        <i class="fa fa-phone"></i>
-                                        <input type="text" id="contact_number" name="contact_number"
-                                            value="<?= htmlspecialchars($user_info['contact_number'] ?? '') ?>"
-                                            autocomplete="tel">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Role</label>
-                                    <div class="role-text">
-                                        <i class="fa fa-shield-halved"></i>
-                                        <?= htmlspecialchars($user_info['role'] ?? 'Admin') ?>
-                                    </div>
+                            <div class="form-field">
+                                <label for="confirm_password">Confirm Password</label>
+                                <div class="input-wrap">
+                                    <i class="fa fa-lock"></i>
+                                    <input type="password" id="confirm_password" name="confirm_password"
+                                        placeholder="Repeat new password"
+                                        autocomplete="new-password">
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- CHANGE PASSWORD -->
-                        <div class="section-block">
-                            <p class="section-label">Change Password</p>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="password">New Password</label>
-                                    <div class="input-icon-wrap">
-                                        <i class="fa fa-lock"></i>
-                                        <input type="password" id="password" name="password"
-                                            placeholder="Leave blank to keep current"
-                                            autocomplete="new-password">
-                                    </div>
-                                    <small>Minimum 6 characters</small>
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirm_password">Confirm Password</label>
-                                    <div class="input-icon-wrap">
-                                        <i class="fa fa-lock"></i>
-                                        <input type="password" id="confirm_password" name="confirm_password"
-                                            placeholder="Repeat new password"
-                                            autocomplete="new-password">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <!-- SAVE -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">
+                            <i class="fa fa-save"></i> Save Changes
+                        </button>
+                    </div>
 
-                        <!-- FOOTER -->
-                        <div class="card-footer">
-                            <button type="submit" class="btn-save">
-                                <i class="fa fa-save"></i> Save Changes
-                            </button>
-                        </div>
-
-                    </form>
-                </div>
+                </form>
             </div>
 
         </section>

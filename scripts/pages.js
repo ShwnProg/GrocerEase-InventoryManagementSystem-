@@ -114,16 +114,7 @@ function deleteCategory(id, name) {
 }
 function removeSupplier(productId, supplierId, name) {
 
-    Swal.fire({
-        title: `Remove ${name}?`,
-        text: "This will detach supplier from product.",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#c82828",
-        cancelButtonColor: "#6b7280",
-        confirmButtonText: "Remove",
-        cancelButtonText: "Cancel"
-    }).then((result) => {
+    Swal.fire(deleteAlertConfig(name)).then((result) => {
 
         if (result.isConfirmed) {
 
@@ -215,8 +206,7 @@ function deleteSupplier(id, name) {
 
     });
 }
-// RESTORE CONFIRM MODAL
-
+// RESTORE CONFIRM MODAL PRODUCT
 function restoreProduct(id, name) {
     Swal.fire({
         title: `Restore ${name}?`,
@@ -224,15 +214,15 @@ function restoreProduct(id, name) {
         showCancelButton: true
     }).then((result) => {
         if (result.isConfirmed) {
-            $.post('../validation/products/recover.php', { product_id: id }, function(res) {
+            $.post('../validation/products/recover.php', { product_id: id }, function (res) {
                 Swal.fire("Restored!", "Success", "success")
-                .then(() => location.reload());
+                    .then(() => location.reload());
             });
         }
     });
 }
 
-// HARD DELETE
+// HARD DELETE PRODUCT
 function hardDeleteProduct(id, name) {
 
     Swal.fire({
@@ -253,6 +243,120 @@ function hardDeleteProduct(id, name) {
                 type: 'POST',
                 dataType: 'json',
                 data: { product_id: id },
+
+                success: function (res) {
+                    if (res.status === "success") {
+                        Swal.fire("Deleted!", res.message, "success")
+                            .then(() => location.reload());
+                    } else {
+                        Swal.fire("Error", res.message, "error");
+                    }
+                },
+
+                error: function () {
+                    Swal.fire("Error", "Server error occurred", "error");
+                }
+            });
+
+        }
+
+    });
+}
+
+// RESTORE CONFIMATION MODAL CATEGORY
+function restoreCategory(id, name) {
+    Swal.fire({
+        title: `Restore ${name}?`,
+        icon: "question",
+        showCancelButton: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post('../validation/categories/recover.php', { category_id: id }, function (res) {
+                Swal.fire("Restored!", "Success", "success")
+                    .then(() => location.reload());
+            });
+        }
+    });
+}
+
+// HARD DELETE CATEGORY
+function hardDeleteCategory(id, name) {
+
+    Swal.fire({
+        title: `Delete ${name}?`,
+        text: "This action is permanent.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#c82828",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: '../validation/categories/hard_delete_category.php',
+                type: 'POST',
+                dataType: 'json',
+                data: { category_id: id },
+
+                success: function (res) {
+                    if (res.status === "success") {
+                        Swal.fire("Deleted!", res.message, "success")
+                            .then(() => location.reload());
+                    } else {
+                        Swal.fire("Error", res.message, "error");
+                    }
+                },
+
+                error: function () {
+                    Swal.fire("Error", "Server error occurred", "error");
+                }
+            });
+
+        }
+
+    });
+}
+
+// RESTORE CONFIMATION MODAL SUPPLIER
+function restoreSupplier(id, name) {
+    Swal.fire({
+        title: `Restore ${name}?`,
+        icon: "question",
+        showCancelButton: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post('../validation/suppliers/recover.php', { supplier_id: id }, function (res) {
+                Swal.fire("Restored!", "Success", "success")
+                    .then(() => location.reload());
+            });
+        }
+    });
+}
+
+// HARD DELETE SUPPLIER
+function hardDeleteSupplier(id, name) {
+
+    Swal.fire({
+        title: `Delete ${name}?`,
+        text: "This action is permanent.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#c82828",
+        cancelButtonColor: "#6b7280",
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+
+        if (result.isConfirmed) {
+
+            $.ajax({
+                url: '../validation/suppliers/hard_delete_supplier.php',
+                type: 'POST',
+                dataType: 'json',
+                data: { supplier_id: id },
 
                 success: function (res) {
                     if (res.status === "success") {

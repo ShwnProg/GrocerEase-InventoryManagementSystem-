@@ -20,29 +20,6 @@ $confirm_delete = false;
 $delete_category_id = '';
 $delete_category_name = '';
 
-// DELETE BUTTON CLICK
-if (isset($_POST['delete_btn'])) {
-    $_SESSION['delete_category_id'] = $_POST['category_id']; // store id
-    header("Location: categories.php"); // reload page
-    exit;
-}
-
-// SHOW CONFIRM DELETE MODAL
-if (isset($_SESSION['delete_category_id'])) {
-    $delete_category_id = $_SESSION['delete_category_id'];
-    $delete_category_name = $category->GetCategoryNameById($delete_category_id);
-    $confirm_delete = true; // show modal
-}
-
-if (isset($_GET['cancel_delete'])) {
-    unset($_SESSION['delete_category_id']);
-    header("Location: categories.php");
-    exit;
-}
-
-$delete_success = $_SESSION['success']['delete'] ?? '';
-$delete_error = $_SESSION['errors']['delete'] ?? '';
-
 // echo "hello $user_info[username]";
 unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
 unset($_SESSION['success'], $_SESSION['errors']);
