@@ -16,15 +16,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $error = [];
 
-    if (empty($supplier_name)) {
-        $error['supplier_name'] = 'Supplier name is required.';
+    if (empty($supplier_name) || empty($contact_person) || empty($phone_number) || empty($email) || empty($address) || empty($company_name)) {
+        $error['form'] = "All fields are required.";
     }
 
     $original = $supplier->GetSupplierById($supplier_id);
-    // var_dump($original);
+    var_dump($error);
 
     $isTrue = false;
-    if (!empty($supplier_name)) {
+    if (empty($error)) {
         $isTrue = IsSameData($original, $supplier_name, $contact_person, $phone_number, $email, $address, $company_name) ? true : false;
         // var_dump(IsSameData($original, $supplier_name, $contact_person, $phone_number, $email, $address, $company_name));
     }

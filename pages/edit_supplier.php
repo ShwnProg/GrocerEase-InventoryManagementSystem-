@@ -6,12 +6,12 @@ require_once "../models/supplier.php";
 if (isset($_POST['supplier_id'])) {
     $supplier_id = $_POST['supplier_id'];
 } else {
-     $supplier_id = $_GET['supplier_id'] ?? null;
+    $supplier_id = $_GET['supplier_id'] ?? null;
 }
 
- if (!$supplier_id) {
-        die("Invalid supplier ID.");
-    }
+if (!$supplier_id) {
+    die("Invalid supplier ID.");
+}
 
 
 $supplier = new Supplier();
@@ -58,6 +58,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                     <?php if (!empty($error['no_changes'])): ?>
                         <div class="no-changes">
                             <?= htmlspecialchars($error['no_changes']) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($error['form'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['form']) ?>
                         </div>
                     <?php endif; ?>
                     <input type="hidden" name="supplier_id" value=<?= htmlspecialchars($supplier_id) ?>>
