@@ -170,7 +170,7 @@ unset(
                         <?php endif; ?>
 
                         <div class="input">
-                            <label>Reason (Optional)</label>
+                            <label>Remarks (Optional)</label>
                             <i class="fas fa-align-left"></i>
                             <textarea name="reason"
                                 placeholder="e.g. New delivery, restocking..."><?= htmlspecialchars($old['reason'] ?? '') ?></textarea>
@@ -218,7 +218,7 @@ unset(
                         <?php endif; ?>
 
                         <div class="input">
-                            <label>Reason (Optional)</label>
+                            <label>Remarks (Optional)</label>
                             <i class="fas fa-align-left"></i>
                             <textarea name="reason"
                                 placeholder="e.g. Damaged goods, sold out..."><?= htmlspecialchars($old['reason'] ?? '') ?></textarea>

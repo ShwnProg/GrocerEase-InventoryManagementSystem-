@@ -59,7 +59,7 @@ $stock_movements = $movement->GetStockMovements();
                             <th>Quantity</th>
                             <th>Type</th>
                             <th>Reference Id</th>
-                            <th>Reason</th>
+                            <th>Remarks</th>
                             <th>Date</th>
                         </tr>
                     </thead>
