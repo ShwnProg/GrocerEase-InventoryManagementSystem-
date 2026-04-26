@@ -41,7 +41,7 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
             </div>
 
             <div class="edit-content">
-                <form action="../../validation/products/edit_process.php" method="POST">
+                <form action="../../controllers/products/edit_process.php" method="POST">
 
 
                     <i class="fa-solid fa-pen-to-square"></i>

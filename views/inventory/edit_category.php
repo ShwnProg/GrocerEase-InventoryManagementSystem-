@@ -42,7 +42,7 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
             </div>
 
             <div class="edit-content">
-                <form action="../../validation/categories/edit_process.php" method="POST">
+                <form action="../../controllers/categories/edit_process.php" method="POST">
 
 
                     <i class="fa-solid fa-pen-to-square"></i>

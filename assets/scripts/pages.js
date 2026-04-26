@@ -80,7 +80,7 @@ if (confirmEdit) {
         clearFeedback('edit-feedback');
 
         $.ajax({
-            url: '../../validation/product_suppliers/edit_process.php',
+            url: '../../controllers/product_suppliers/edit_process.php',
             type: 'POST',
             dataType: 'json',
             data: { product_id: productId, supplier_id: supplierId, supplier_name: supplierName, cost_price: costPrice },
@@ -118,7 +118,7 @@ function removeSupplier(productId, supplierId, name) {
     }).then(result => {
         if (!result.isConfirmed) return;
         $.ajax({
-            url: '../../validation/product_suppliers/remove_suppliers.php',
+            url: '../../controllers/product_suppliers/remove_suppliers.php',
             type: 'POST',
             dataType: 'json',
             data: { product_id: productId, supplier_id: supplierId },
@@ -144,7 +144,7 @@ function deleteProduct(id, name) {
     }).then(result => {
         if (!result.isConfirmed) return;
         $.ajax({
-            url: '../../validation/products/delete_product.php', type: 'POST', data: { product_id: id },
+            url: '../../controllers/products/delete_product.php', type: 'POST', data: { product_id: id },
             success() {
                 Swal.fire({ title: 'Deleted!', text: 'Product has been deleted.', icon: 'success', confirmButtonColor: '#1c5515' })
                     .then(() => location.reload());
@@ -163,7 +163,7 @@ function deleteCategory(id, name) {
     }).then(result => {
         if (!result.isConfirmed) return;
         $.ajax({
-            url: '../../validation/categories/delete_category.php', type: 'POST', dataType: 'json', data: { category_id: id },
+            url: '../../controllers/categories/delete_category.php', type: 'POST', dataType: 'json', data: { category_id: id },
             success(res) {
                 if (res.status === 'success') {
                     Swal.fire({ title: 'Deleted!', text: res.message, icon: 'success', confirmButtonColor: '#1c5515' })
@@ -186,7 +186,7 @@ function deleteSupplier(id, name) {
     }).then(result => {
         if (!result.isConfirmed) return;
         $.ajax({
-            url: '../../validation/suppliers/delete_supplier.php', type: 'POST', dataType: 'json', data: { supplier_id: id },
+            url: '../../controllers/suppliers/delete_supplier.php', type: 'POST', dataType: 'json', data: { supplier_id: id },
             success(res) {
                 if (res.status === 'success') {
                     Swal.fire({ icon: 'success', title: 'Deleted!', text: res.message, confirmButtonColor: '#3085d6' })
@@ -204,7 +204,7 @@ function deleteSupplier(id, name) {
 function restoreProduct(id, name) {
     Swal.fire({ title: `Restore ${name}?`, icon: 'question', showCancelButton: true }).then(result => {
         if (!result.isConfirmed) return;
-        $.post('../../validation/products/recover.php', { product_id: id }, () => {
+        $.post('../../controllers/products/recover.php', { product_id: id }, () => {
             Swal.fire('Restored!', 'Success', 'success').then(() => location.reload());
         });
     });
@@ -218,7 +218,7 @@ function hardDeleteProduct(id, name) {
     }).then(result => {
         if (!result.isConfirmed) return;
         $.ajax({
-            url: '../../validation/products/hard_delete_product.php', type: 'POST', dataType: 'json', data: { product_id: id },
+            url: '../../controllers/products/hard_delete_product.php', type: 'POST', dataType: 'json', data: { product_id: id },
             success(res) {
                 if (res.status === 'success') {
                     Swal.fire('Deleted!', res.message, 'success').then(() => location.reload());
@@ -235,7 +235,7 @@ function hardDeleteProduct(id, name) {
 function restoreCategory(id, name) {
     Swal.fire({ title: `Restore ${name}?`, icon: 'question', showCancelButton: true }).then(result => {
         if (!result.isConfirmed) return;
-        $.post('../../validation/categories/recover.php', { category_id: id }, () => {
+        $.post('../../controllers/categories/recover.php', { category_id: id }, () => {
             Swal.fire('Restored!', 'Success', 'success').then(() => location.reload());
         });
     });
@@ -249,7 +249,7 @@ function hardDeleteCategory(id, name) {
     }).then(result => {
         if (!result.isConfirmed) return;
         $.ajax({
-            url: '../../validation/categories/hard_delete_category.php', type: 'POST', dataType: 'json', data: { category_id: id },
+            url: '../../controllers/categories/hard_delete_category.php', type: 'POST', dataType: 'json', data: { category_id: id },
             success(res) {
                 if (res.status === 'success') {
                     Swal.fire('Deleted!', res.message, 'success').then(() => location.reload());
@@ -266,7 +266,7 @@ function hardDeleteCategory(id, name) {
 function restoreSupplier(id, name) {
     Swal.fire({ title: `Restore ${name}?`, icon: 'question', showCancelButton: true }).then(result => {
         if (!result.isConfirmed) return;
-        $.post('../../validation/suppliers/recover.php', { supplier_id: id }, () => {
+        $.post('../../controllers/suppliers/recover.php', { supplier_id: id }, () => {
             Swal.fire('Restored!', 'Success', 'success').then(() => location.reload());
         });
     });
@@ -280,7 +280,7 @@ function hardDeleteSupplier(id, name) {
     }).then(result => {
         if (!result.isConfirmed) return;
         $.ajax({
-            url: '../../validation/suppliers/hard_delete_supplier.php', type: 'POST', dataType: 'json', data: { supplier_id: id },
+            url: '../../controllers/suppliers/hard_delete_supplier.php', type: 'POST', dataType: 'json', data: { supplier_id: id },
             success(res) {
                 if (res.status === 'success') {
                     Swal.fire('Deleted!', res.message, 'success').then(() => location.reload());

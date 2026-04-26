@@ -67,5 +67,5 @@ $supplier = $suppliers->GetDeletedSuppliers();
         </div>
     </div>
 </body>
-<script src="../../scripts/pages.js"></script>
+<script src="../../assets/scripts/pages.js"></script>
 </html>

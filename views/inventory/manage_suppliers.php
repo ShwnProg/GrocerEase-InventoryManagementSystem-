@@ -83,7 +83,7 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                                 <td><?= htmlspecialchars($sup['cost_price']) ?></td>
                                 <td>
                                     <div class="actions">
-                                        <form action="../../validation/product_suppliers/preferred_supplier.php" method="POST">
+                                        <form action="../../controllers/product_suppliers/preferred_supplier.php" method="POST">
                                             <input type="hidden" name="product_id" value="<?= $product_id ?>">
                                             <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
                                             <input type="hidden" name="is_preferred" value="<?= $sup['preferred'] ?>">
@@ -126,7 +126,7 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
 
             <!-- ADD MODAL — unchanged: posts to add_supplier.php, session drives errors/success/old -->
             <div class="add-modal <?= $open_modal ? 'active' : '' ?>" id="add-modal">
-                <form action="../../validation/product_suppliers/add_supplier.php" method="POST">
+                <form action="../../controllers/product_suppliers/add_supplier.php" method="POST">
                     <div class="header">
                         <i class="fas fa-plus"></i>
                         <p>Assign Supplier</p>
@@ -202,5 +202,5 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
         </section>
     </main>
 </body>
-<script src="../../scripts/pages.js"></script>
+<script src="../../assets/scripts/pages.js"></script>
 </html>

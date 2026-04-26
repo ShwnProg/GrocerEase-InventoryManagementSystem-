@@ -48,7 +48,7 @@ $initials = strtoupper(substr($user_info['username'] ?? 'A', 0, 1));
             <?php endif; ?>
 
             <div class="profile-wrapper">
-                <form action="../validation/admin_profile/admin_profile.php" method="POST">
+                <form action="../controllers/admin_profile/admin_profile.php" method="POST">
 
                     <!-- IDENTITY CARD -->
                     <div class="profile-card identity-card">

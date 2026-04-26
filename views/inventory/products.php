@@ -144,7 +144,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
 
             <!-- ADD MODAL -->
             <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
-                <form action="../../validation/products/add_product_process.php" method="POST">
+                <form action="../../controllers/products/add_product_process.php" method="POST">
                     <div class="header">
 
                         <i class="fas fa-plus"></i>
@@ -251,6 +251,5 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
         </section>
     </main>
 </body>
-<script src="../../scripts/pages.js"></script>
-
+<script src="../../assets/scripts/pages.js"></script>
 </html>

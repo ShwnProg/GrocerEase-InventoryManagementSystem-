@@ -130,7 +130,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 
             <!-- ADD SUPPLIER MODAL -->
             <div class="add-modal <?= $open_add_modal ? 'active' : '' ?>" id="add-modal">
-                <form action="../../validation/suppliers/add_supplier.php" method="POST">
+                <form action="../../controllers/suppliers/add_supplier.php" method="POST">
                     <div class="header">
                         <i class="fas fa-plus"></i>
                         <p>Add Supplier</p>
@@ -221,6 +221,5 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
         </section>
     </main>
 </body>
-<script src="../../scripts/pages.js"></script>
-
+<script src="../../assets/scripts/pages.js"></script>
 </html>

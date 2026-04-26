@@ -120,7 +120,7 @@ unset($_SESSION['success'], $_SESSION['errors']);
             <!-- Add Category Modal -->
             <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
 
-                <form action="../../validation/categories/add_category.php" method="POST">
+                <form action="../../controllers/categories/add_category.php" method="POST">
                     <div class="header">
 
                         <i class="fas fa-plus"></i>
@@ -161,6 +161,6 @@ unset($_SESSION['success'], $_SESSION['errors']);
         </section>
     </main>
 </body>
-<script src="../../scripts/pages.js"></script>
+<script src="../../assets/scripts/pages.js"></script>
 
 </html>
