@@ -98,5 +98,5 @@ $stock_movements = $movement->GetStockMovements();
         </section>
     </main>
 </body>
-
+<script src="../scripts/pages.js"></script>
 </html>

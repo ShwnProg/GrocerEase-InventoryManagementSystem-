@@ -248,7 +248,7 @@ body {
     padding: 24px;
 }
 
-/* SEARCH + ADD ROW */
+/* SEARCH plus ADD ROW */
 .toolbar {
     display: flex;
     align-items: center;
@@ -359,8 +359,6 @@ body {
     background: #fff;
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.07);
-    /* FIX 1: overflow: hidden on a scrollable container blocks scrolling.
-       Use overflow-x: hidden + overflow-y: auto instead. */
     overflow-x: hidden;
     overflow-y: auto;
     box-shadow: 0 0 5px #0000001a;
@@ -371,7 +369,6 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
-    /* FIX 2: table-layout: fixed belongs on the <table>, not the wrapper <div> */
     table-layout: fixed;
 }
 
@@ -797,128 +794,8 @@ body {
     z-index: 1000;
     align-items: center;
     justify-content: center;
-    /* FIX 3: was align-items: flex-start with no padding-top,
-       causing the modal to appear flush against the top edge of the screen.
-       Changed to align-items: center so the modal is properly centered. */
 }
 
-.confirm-modal.active {
-    display: flex;
-}
-
-.confirm-modal .modal-content {
-    background: #fff;
-    border-radius: 14px;
-    padding: 28px 32px;
-    width: 100%;
-    max-width: 360px;
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
-    animation: modalIn 0.2s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    text-align: center;
-}
-
-.confirm-modal .modal-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    background: rgba(200, 40, 40, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.confirm-modal .modal-icon i {
-    font-size: 22px;
-    color: #c82828;
-}
-
-.confirm-modal .modal-content p {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: #111;
-}
-
-.confirm-modal .modal-content span {
-    font-size: 12.5px;
-    color: #6b7280;
-    margin-top: -8px;
-}
-
-.confirm-modal .modal-actions {
-    display: flex;
-    gap: 8px;
-    width: 100%;
-}
-
-.confirm-modal .modal-actions form {
-    flex: 1;
-    margin: 0;
-}
-
-.confirm-modal.warning-orange .modal-icon i {
-    color: orange;
-}
-
-.confirm-modal.warning-orange .modal-icon {
-    background-color: #ffa50026;
-}
-
-.confirm-modal.warning-orange #confirm-delete {
-    background-color: orange;
-    color: white;
-}
-
-.confirm-modal.warning-orange #confirm-delete:hover {
-    background-color: #e67e22;
-}
-
-.cancel-btn {
-    flex: 1;
-    padding: 9px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    background: #f4f4f4;
-    color: #333;
-    text-align: center;
-    text-decoration: none;
-    transition: 0.2s ease;
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    border: none;
-}
-
-.cancel-btn:hover {
-    background: #e8e8e8;
-    color: #333;
-}
-
-#confirm-delete {
-    width: 100%;
-    padding: 9px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    font-family: inherit;
-    transition: 0.2s ease;
-    background: #c82828;
-    color: #fff;
-}
-
-#confirm-delete:hover {
-    background: #a32020;
-}
 
 /* BACK BUTTON */
 .back-btn {

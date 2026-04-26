@@ -40,11 +40,11 @@ class Supplier
     {
         $stmt0 = $this->conn->prepare("SELECT 1 FROM product_supplier WHERE supplier_id_fk = :id");
 
-        $stmt0->execute([':id'=> $id]);
+        $stmt0->execute([':id' => $id]);
 
-        if($stmt0->fetch()){
+        if ($stmt0->fetch()) {
             $stmt1 = $this->conn->prepare("UPDATE product_supplier SET supplier_id_fk = NULL WHERE supplier_id_fk = :id");
-            $stmt1->execute([':id'=>$id]);
+            $stmt1->execute([':id' => $id]);
         }
         $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
         $stmt->execute([':id' => $id]);
@@ -111,5 +111,21 @@ class Supplier
         $stmt->execute([':id' => $id]);
 
         return $stmt->rowCount() > 0;
+    }
+    public function SearchSupplier($search)
+    {
+        $stmt = $this->conn->prepare("SELECT supplier_id_pk, 
+                                             supplier_name, 
+                                             contact_person,
+                                             phone_number,
+                                             email, 
+                                             address, 
+                                             company_name,is_deleted FROM suppliers 
+                                             WHERE supplier_name LIKE :search
+                                             ORDER BY supplier_id_pk DESC");
+
+        $stmt->execute([':search' => $search .'%']);
+
+        return $stmt->fetchAll();
     }
 }

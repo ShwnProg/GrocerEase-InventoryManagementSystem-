@@ -7,7 +7,7 @@ class Category
 
     public function __construct()
     {
-        $database   = new DB();
+        $database = new DB();
         $this->conn = $database->conn;
     }
 
@@ -100,10 +100,10 @@ class Category
                                               status = :status 
                                           WHERE category_id_pk = :id");
             $stmt->execute([
-                ':name'        => $name,
+                ':name' => $name,
                 ':description' => $description,
-                ':status'      => $status,
-                ':id'          => $id,
+                ':status' => $status,
+                ':id' => $id,
             ]);
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
@@ -132,5 +132,17 @@ class Category
         } catch (PDOException $e) {
             return false;
         }
+    }
+    public function SearchCategorY($search)
+    {
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description, 
+                                      is_deleted, status 
+                                      FROM categories 
+                                      WHERE category_name LIKE :search
+                                      ORDER BY category_id_pk DESC");
+
+        $stmt->execute([':search' => $search . '%']);
+
+        return $stmt->fetchAll();
     }
 }

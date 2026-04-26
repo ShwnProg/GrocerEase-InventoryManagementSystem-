@@ -61,14 +61,6 @@ class Stock
     }
     public function StockOut($product_id, $quantity, $date)
     {
-        // $check = $this->conn->prepare("SELECT quantity FROM stocks WHERE product_id_fk = :id");
-        // $check->execute([':id' => $product_id]);
-        // $current = $check->fetchColumn();
-
-        // if ($current === false || $current < $quantity) {
-        //     return false;
-        // }
-        
         $stmt = $this->conn->prepare("UPDATE stocks set quantity = quantity - :quantity,last_updated = :date WHERE product_id_fk = :id");
 
         $stmt->execute([
@@ -78,6 +70,24 @@ class Stock
         ]);
 
         return $stmt->rowCount() > 0;
+    }
+
+    public function SearchStock($search)
+    {
+        $stmt = $this->conn->prepare("SELECT s.stock_id_pk,
+                                      s.product_id_fk,
+                                      p.product_name,
+                                      p.status,
+                                      s.quantity,
+                                      c.category_name,
+                                      p.is_deleted,
+                                      s.last_updated FROM stocks as s 
+                                      INNER JOIN products as p ON s.product_id_fk = p.product_id_pk
+                                      LEFT JOIN categories as c ON p.category_id_fk = c.category_id_pk AND c.is_deleted = 0
+                                      WHERE p.product_name LIKE :search OR c.category_name LIKE :search ORDER BY stock_id_pk DESC");
+        $stmt->execute([':search' => $search . '%']);
+
+        return $stmt->fetchAll();
     }
 
 

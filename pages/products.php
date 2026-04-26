@@ -7,9 +7,14 @@ include "../includes/auth_check.php";
 
 $_SESSION['page_title'] = "PRODUCTS";
 
-
+$search = $_GET['search'] ?? '';
 $product = new Product();
-$products = $product->GetAllProducts();
+
+if (!empty($search)) {
+    $products = $product->SearchProduct($search);
+} else {
+    $products = $product->GetAllProducts();
+}
 
 $category = new Category();
 $categories = $category->GetAllCategories();
@@ -20,7 +25,7 @@ $errors = $_SESSION['errors']['add'] ?? [];
 $old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success']['add'] ?? '';
 
-unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
+unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -37,9 +42,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
             <div class="toolbar">
 
                 <div class="search-area">
-                    <form action="">
+                    <form method="get">
                         <i class="fas fa-search"></i>
-                        <input type="text" name="search" id="search" placeholder="Search a product">
+                        <input type="text" name="search" id="search" placeholder="Search a product"
+                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
@@ -66,65 +72,73 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </thead>
                     <tbody>
                         <?php $count = 1; ?>
-                        <?php foreach ($products as $prod): ?>
-                            <?php if ($prod['is_deleted'] == 1)
-                                continue; ?>
+
+                        <?php if (empty($products)): ?>
                             <tr>
-                                <td><?= $count++ ?></td>
-                                <td><?= htmlspecialchars($prod['product_name']) ?></td>
-                                <td>
-                                    <?= htmlspecialchars(
-                                        isset($prod['category_name'])
-                                        ? $prod['category_name'] . ($prod['category_status'] == 0 ? ' (Inactive)' : '')
-                                        : 'Uncategorized'
-                                    ) ?>
+                                <td colspan="9" style="text-align:center; color:#6b7280;">
+                                    No products found
                                 </td>
-                                <td>
-                                    <?= $prod['cost_price']
-                                        ? '₱' . number_format($prod['cost_price'], 2)
-                                        : '<span style="color:#6b7280;">No cost price</span>' ?>
-                                </td>
-                                <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'No description available' : $prod['product_description']) ?>
-                                </td>
-                                <td style="color:#6b7280;">
-                                    <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
-                                </td>
-                                <td>
-                                    <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
-                                        <?= $prod['status'] == 1 ? 'Active' : 'Inactive' ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <!-- EDIT ACTION -->
-                                    <div class="actions">
-                                        <form action="edit_product.php" method="POST">
-                                            <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                            <button type="submit" class="edit-btn">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                        </form>
-                                        <!-- DELETE ACTION -->
-                                        <button class="edit-btn"
-                                            onclick="deleteProduct(<?= $prod['product_id_pk'] ?>, '<?= htmlspecialchars($prod['product_name']) ?>')">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                        <?php if ($prod['status'] == 1): ?>
-                                            <form action="manage_suppliers.php" method="POST">
+                            <?php else: ?>
+                                <?php foreach ($products as $prod): ?>
+                                    <?php if ($prod['is_deleted'] == 1)
+                                        continue; ?>
+                                <tr>
+                                    <td><?= $count++ ?></td>
+                                    <td><?= htmlspecialchars($prod['product_name']) ?></td>
+                                    <td>
+                                        <?= htmlspecialchars(
+                                            isset($prod['category_name'])
+                                            ? $prod['category_name'] . ($prod['category_status'] == 0 ? ' (Inactive)' : '')
+                                            : 'Uncategorized'
+                                        ) ?>
+                                    </td>
+                                    <td>
+                                        <?= $prod['cost_price']
+                                            ? '₱' . number_format($prod['cost_price'], 2)
+                                            : '<span style="color:#6b7280;">No cost price</span>' ?>
+                                    </td>
+                                    <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
+                                    <td><?= htmlspecialchars($prod['product_description'] == '' ? 'No description available' : $prod['product_description']) ?>
+                                    </td>
+                                    <td style="color:#6b7280;">
+                                        <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
+                                            <?= $prod['status'] == 1 ? 'Active' : 'Inactive' ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <!-- EDIT ACTION -->
+                                        <div class="actions">
+                                            <form action="edit_product.php" method="POST">
                                                 <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                                <button type="submit" class="manage-btn">
-                                                    <i class="fa-solid fa-truck"></i>
+                                                <button type="submit" class="edit-btn">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
                                                 </button>
                                             </form>
-                                        <?php elseif ($prod['status'] == 0): ?>
-                                            <button class="manage-btn" disabled style="opacity:0.5; cursor:not-allowed;">
-                                                <i class="fa-solid fa-truck"></i>
+                                            <!-- DELETE ACTION -->
+                                            <button class="edit-btn"
+                                                onclick="deleteProduct(<?= $prod['product_id_pk'] ?>, '<?= htmlspecialchars($prod['product_name']) ?>')">
+                                                <i class="fa-solid fa-trash"></i>
                                             </button>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                                            <?php if ($prod['status'] == 1): ?>
+                                                <form action="manage_suppliers.php" method="POST">
+                                                    <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
+                                                    <button type="submit" class="manage-btn">
+                                                        <i class="fa-solid fa-truck"></i>
+                                                    </button>
+                                                </form>
+                                            <?php elseif ($prod['status'] == 0): ?>
+                                                <button class="manage-btn" disabled style="opacity:0.5; cursor:not-allowed;">
+                                                    <i class="fa-solid fa-truck"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

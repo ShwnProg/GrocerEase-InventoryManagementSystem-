@@ -87,7 +87,8 @@ class Product
                                              p.selling_price,
                                              p.product_description,
                                              p.status,
-                                             p.is_deleted
+                                             p.is_deleted,
+                                             c.status as category_status
                                              FROM products p
                                              LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
@@ -164,6 +165,28 @@ class Product
             $this->conn->rollBack();
             return false;
         }
+    }
+    public function SearchProduct($search){
+        $stmt= $this->conn->prepare("SELECT p.product_id_pk,
+                                             p.product_name,
+                                             c.category_name,
+                                             ps.cost_price,
+                                             p.selling_price,
+                                             p.product_description,
+                                             p.status,
+                                             p.is_deleted,
+                                             s.supplier_name as preferred_supplier_name,
+                                             c.status as category_status
+                                             FROM products p
+                                             LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk AND c.is_deleted = 0
+                                             LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
+                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
+                                             WHERE product_name LIKE :search
+                                             ORDER BY product_id_pk DESC");
+
+        $stmt->execute([':search' => $search . '%']);
+
+        return $stmt->fetchAll();
     }
 }
 ?>

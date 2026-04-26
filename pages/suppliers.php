@@ -6,8 +6,15 @@ include "../includes/auth_check.php";
 
 $_SESSION['page_title'] = "SUPPLIERS";
 
+$search = $_GET['search'] ?? '';
+
 $supplier = new Supplier();
-$suppliers = $supplier->GetAllSuppliers();
+
+if (!empty($search)) {
+    $suppliers = $supplier->SearchSupplier($search);
+} else {
+    $suppliers = $supplier->GetAllSuppliers();
+}
 
 $open_modal = isset($_SESSION['add_supplier_error']) || isset($_SESSION['success_msg']);
 $error = $_SESSION['add_supplier_error'] ?? [];
@@ -43,9 +50,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
         <section class="page-content">
             <div class="toolbar">
                 <div class="search-area">
-                    <form action="">
+                    <form method='get'>
                         <i class="fas fa-search"></i>
-                        <input type="text" name="search" id="search" placeholder="Search Suppliers...">
+                        <input type="text" name="search" id="search" placeholder="Search Suppliers"
+                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
@@ -71,43 +79,50 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </thead>
                     <tbody>
                         <?php $no = 1; ?>
-                        <?php foreach ($suppliers as $sup): ?>
-                            <?php if ($sup['is_deleted'] == 1)
-                                continue; ?>
+                        <?php if (empty($suppliers)): ?>
                             <tr>
-                                <td><?= $no++ ?></td>
-                                <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
-                                <td><?= htmlspecialchars($sup['contact_person']) ?></td>
-                                <td><?= htmlspecialchars($sup['phone_number']) ?></td>
-                                <td><?= htmlspecialchars($sup['address']) ?></td>
-                                <td><?= htmlspecialchars($sup['company_name']) ?></td>
-                                <td><?= htmlspecialchars($sup['email']) ?></td>
+                                <td colspan="8" style="text-align:center; color:#6b7280;">
+                                    No Supplier found
+                                </td>
+                            <?php else: ?>
+                                <?php foreach ($suppliers as $sup): ?>
+                                    <?php if ($sup['is_deleted'] == 1)
+                                        continue; ?>
+                                <tr>
+                                    <td><?= $no++ ?></td>
+                                    <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
+                                    <td><?= htmlspecialchars($sup['contact_person']) ?></td>
+                                    <td><?= htmlspecialchars($sup['phone_number']) ?></td>
+                                    <td><?= htmlspecialchars($sup['address']) ?></td>
+                                    <td><?= htmlspecialchars($sup['company_name']) ?></td>
+                                    <td><?= htmlspecialchars($sup['email']) ?></td>
 
-                                <!-- <td>
+                                    <!-- <td>
                                      <span class="badge <?= $sup['status'] == 1 ? 'active' : 'inactive' ?>">
                                         <?= $sup['status'] == 1 ? 'Active' : 'Inactive' ?>
                                     </span>
                                 </td> -->
-                                <td>
-                                    <!-- EDIT SUPPLIER -->
-                                    <div class="actions">
-                                        <!-- EDIT BUTTON -->
-                                        <form action="edit_supplier.php" method="GET">
-                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                            <button type="submit" class="edit-btn">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                        </form>
+                                    <td>
+                                        <!-- EDIT SUPPLIER -->
+                                        <div class="actions">
+                                            <!-- EDIT BUTTON -->
+                                            <form action="edit_supplier.php" method="GET">
+                                                <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
+                                                <button type="submit" class="edit-btn">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            </form>
 
-                                        <!-- DELETE BUTTON -->
-                                        <button type="button" class="edit-btn"
-                                            onclick="deleteSupplier('<?= $sup['supplier_id_pk'] ?>', '<?= htmlspecialchars($sup['supplier_name']) ?>')">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                                            <!-- DELETE BUTTON -->
+                                            <button type="button" class="edit-btn"
+                                                onclick="deleteSupplier('<?= $sup['supplier_id_pk'] ?>', '<?= htmlspecialchars($sup['supplier_name']) ?>')">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

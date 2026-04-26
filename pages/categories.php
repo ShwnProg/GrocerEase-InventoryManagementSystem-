@@ -6,8 +6,16 @@ include "../includes/auth_check.php";
 
 $_SESSION['page_title'] = "CATEGORIES";
 
+$search = $_GET['search'] ?? '';
+
 $category = new Category();
-$categories = $category->GetAllCategories(); // fetch all categories
+
+if (!empty($search)) {
+    $categories = $category->SearchCategorY($search);
+} else {
+
+    $categories = $category->GetAllCategories();
+}
 
 // check if modal should open (error or success)
 $open_modal = isset($_SESSION['add_category_error']) || isset($_SESSION['success_msg']);
@@ -39,9 +47,10 @@ unset($_SESSION['success'], $_SESSION['errors']);
         <section class="page-content">
             <div class="toolbar">
                 <div class="search-area">
-                    <form action="">
+                    <form method="get">
                         <i class="fas fa-search"></i>
-                        <input type="text" name="search" id="search" placeholder="Search a category">
+                        <input type="text" name="search" id="search" placeholder="Search a category"
+                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
@@ -64,38 +73,46 @@ unset($_SESSION['success'], $_SESSION['errors']);
                     </thead>
                     <tbody>
                         <?php $num = 0; ?>
-                        <?php foreach ($categories as $categ): ?>
+                        <?php if (empty($categories)): ?>
                             <tr>
+                                <td colspan="5" style="text-align:center; color:#6b7280;">
+                                    No Categories found
+                                </td>
+                            <?php else: ?>
+                                <?php foreach ($categories as $categ): ?>
+                                <tr>
 
-                                <?php if ($categ['is_deleted'] == 1)
-                                    continue; ?>
-                                <!-- skip deleted categories -->
-                                <td><?= ++$num ?></td>
-                                <td><?= htmlspecialchars($categ['category_name']) ?></td>
-                                <td><?= htmlspecialchars($categ['category_description'] == '' ? 'No description available' : $categ['category_description']) ?>
-                                <td>
-                                    <span class="badge <?= $categ['status'] == 1 ? 'active' : 'inactive' ?>">
-                                        <?= $categ['status'] == 1 ? 'Active' : 'Inactive' ?>
-                                    </span>
-                                </td>
-                                </td>
-                                <td>
-                                    <div class="actions">
-                                        <form action="edit_category.php" method="POST">
-                                            <input type="hidden" name="category_id" value="<?= $categ['category_id_pk'] ?>">
-                                            <button type="submit" class="edit-btn">
-                                                <i class="fa-solid fa-pen-to-square"></i>
+                                    <?php if ($categ['is_deleted'] == 1)
+                                        continue; ?>
+                                    <!-- skip deleted categories -->
+                                    <td><?= ++$num ?></td>
+                                    <td><?= htmlspecialchars($categ['category_name']) ?></td>
+                                    <td><?= htmlspecialchars($categ['category_description'] == '' ?
+                                        'No description available' : $categ['category_description']) ?>
+                                    <td>
+                                        <span class="badge <?= $categ['status'] == 1 ? 'active' : 'inactive' ?>">
+                                            <?= $categ['status'] == 1 ? 'Active' : 'Inactive' ?>
+                                        </span>
+                                    </td>
+                                    </td>
+                                    <td>
+                                        <div class="actions">
+                                            <form action="edit_category.php" method="POST">
+                                                <input type="hidden" name="category_id" value="<?= $categ['category_id_pk'] ?>">
+                                                <button type="submit" class="edit-btn">
+                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                </button>
+                                            </form>
+                                            <!-- DELETE -->
+                                            <button class="edit-btn"
+                                                onclick="deleteCategory(<?= $categ['category_id_pk'] ?>, '<?= htmlspecialchars($categ['category_name']) ?>')">
+                                                <i class="fa-solid fa-trash"></i>
                                             </button>
-                                        </form>
-                                        <!-- DELETE -->
-                                        <button class="edit-btn"
-                                            onclick="deleteCategory(<?= $categ['category_id_pk'] ?>, '<?= htmlspecialchars($categ['category_name']) ?>')">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
