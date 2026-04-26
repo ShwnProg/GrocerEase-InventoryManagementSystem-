@@ -23,10 +23,10 @@ function clearFeedback(containerId) {
 
 //  ADD MODAL
 const addModal = document.getElementById('add-modal');
-const addBtn   = document.getElementById('addbtn');
+const addBtn = document.getElementById('addbtn');
 const closeBtn = document.getElementById('close-modal');
 
-if (addBtn)   addBtn.addEventListener('click', () => addModal.classList.add('active'));
+if (addBtn) addBtn.addEventListener('click', () => addModal.classList.add('active'));
 if (closeBtn) closeBtn.addEventListener('click', () => addModal.classList.remove('active'));
 if (addModal) {
     addModal.addEventListener('click', e => {
@@ -35,15 +35,15 @@ if (addModal) {
 }
 
 // EDIT MODAL
-const editModal    = document.getElementById('edit-modal');
+const editModal = document.getElementById('edit-modal');
 const closeEditBtn = document.getElementById('close-edit-modal');
-const confirmEdit  = document.getElementById('confirm-edit');
+const confirmEdit = document.getElementById('confirm-edit');
 
 function openEditModal(productId, supplierId, supplierName, costPrice) {
-    document.getElementById('edit-product-id').value      = productId;
-    document.getElementById('edit-supplier-id').value     = supplierId;
+    document.getElementById('edit-product-id').value = productId;
+    document.getElementById('edit-supplier-id').value = supplierId;
     document.getElementById('edit-supplier-label').textContent = supplierName;
-    document.getElementById('edit-cost-price').value      = costPrice;
+    document.getElementById('edit-cost-price').value = costPrice;
     clearFeedback('edit-feedback');
     editModal.classList.add('active');
 }
@@ -72,10 +72,10 @@ if (editModal) {
 
 if (confirmEdit) {
     confirmEdit.addEventListener('click', () => {
-        const productId    = document.getElementById('edit-product-id').value;
-        const supplierId   = document.getElementById('edit-supplier-id').value;
+        const productId = document.getElementById('edit-product-id').value;
+        const supplierId = document.getElementById('edit-supplier-id').value;
         const supplierName = document.getElementById('edit-supplier-label').textContent;
-        const costPrice    = document.getElementById('edit-cost-price').value.trim();
+        const costPrice = document.getElementById('edit-cost-price').value.trim();
 
         clearFeedback('edit-feedback');
 
@@ -102,7 +102,7 @@ if (confirmEdit) {
 document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (editModal?.classList.contains('active')) closeEditModal();
-    if (addModal?.classList.contains('active'))  addModal.classList.remove('active');
+    if (addModal?.classList.contains('active')) addModal.classList.remove('active');
 });
 
 function removeSupplier(productId, supplierId, name) {
