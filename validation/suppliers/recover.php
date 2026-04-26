@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../models/supplier.php';
+require_once '../../autoload.php';
 
 header('Content-Type: application/json');
 
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $supplier = new Supplier();
+    $supplier = new Supplier($db);
     $result = $supplier->RestoreSupplier($supplier_id);
 
     if ($result) {

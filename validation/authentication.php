@@ -1,7 +1,8 @@
 <?php
 session_start();
-require_once '../models/user.php';
-$user = new User();
+require_once __DIR__ . '../../autoload.php';
+
+$user = new User($db);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 

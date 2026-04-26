@@ -1,16 +1,14 @@
 <?php
 session_start();
-require_once "../models/product.php";
-require_once "../models/supplier.php";
-require_once "../models/product_suppliers.php";
+require_once __DIR__ . '../../autoload.php';
 
 include "../includes/auth_check.php";
 
 $product_id = $_POST["product_id"] ?? $_GET["product_id"] ?? null;
 
-$product          = new Product();
-$product_supplier = new ProductSuppliers();
-$supplier         = new Supplier();
+$product          = new Product($db);
+$product_supplier = new ProductSuppliers($db);
+$supplier         = new Supplier($db);
 
 $product_suppliers = $product_supplier->GetProductSupplier($product_id);
 $suppliers         = $supplier->GetAllSuppliers();

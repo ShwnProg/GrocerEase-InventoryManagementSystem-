@@ -7,7 +7,7 @@ class DB
     private $dbname = "grocer_easedb";
 
     public $conn = null;
-    public function __construct()
+    public function GetConnection()
     {
         try {
             $this->conn = new PDO("mysql:host=$this->host;dbname=$this->dbname", $this->user, $this->pass);
@@ -16,6 +16,8 @@ class DB
         }catch(PDOException $e){
             die("Connection Failed: ". $e->getMessage());
         }
+
+        return $this->conn;
     }
 }
 

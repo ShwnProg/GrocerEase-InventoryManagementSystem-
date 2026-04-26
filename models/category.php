@@ -5,10 +5,10 @@ class Category
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($db)
     {
-        $database = new DB();
-        $this->conn = $database->conn;
+        // $database = new DB();
+        $this->conn = $db;
     }
 
     public function AddCategory($name, $description)

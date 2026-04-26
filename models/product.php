@@ -5,10 +5,10 @@ class Product
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($db)
     {
-        $database = new DB();
-        $this->conn = $database->conn;
+        // $database = new DB();
+        $this->conn = $db;
     }
 
     public function GetAllProducts()
@@ -187,6 +187,12 @@ class Product
         $stmt->execute([':search' => $search . '%']);
 
         return $stmt->fetchAll();
+    }
+    public function GetTotalProducts(){
+        $stmt= $this->conn->prepare("SELECT COUNT(*) AS total_products FROM products WHERE is_deleted = 0");
+        $stmt->execute();
+
+        return $stmt->fetch();
     }
 }
 ?>

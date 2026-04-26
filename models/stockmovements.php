@@ -5,12 +5,11 @@ class StockMovements
 {
     private $conn = null;
 
-    public function __construct()
+    public function __construct($db)
     {
-        $db = new DB();
-        $this->conn = $db->conn;
+        // $database = new DB();
+        $this->conn = $db;
     }
-
     public function AddStockMovements($quantity, $reference_type, $reference_id, $reason, $date, $product_id)
     {
         $stmt = $this->conn->prepare("INSERT INTO stock_movements (quantity,reference_type,reference_id,reason,date,product_id)

@@ -6,10 +6,10 @@ class Supplier
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($db)
     {
-        $database = new DB();
-        $this->conn = $database->conn;
+        // $database = new DB();
+        $this->conn = $db;
     }
 
     public function GetAllSuppliers()
@@ -124,7 +124,7 @@ class Supplier
                                              WHERE supplier_name LIKE :search
                                              ORDER BY supplier_id_pk DESC");
 
-        $stmt->execute([':search' => $search .'%']);
+        $stmt->execute([':search' => $search . '%']);
 
         return $stmt->fetchAll();
     }

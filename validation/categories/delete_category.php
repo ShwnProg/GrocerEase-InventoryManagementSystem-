@@ -1,5 +1,5 @@
 <?php
-require_once '../../models/categories.php';
+require_once '../../autoload.php';
 
 header('Content-Type: application/json');
 session_start();
@@ -26,7 +26,7 @@ if (empty($category_id)) {
 }
 
 // delete
-$Category = new Category();
+$Category = new Category($db);
 $result = $Category->SoftDeleteCategory($category_id);
 
 // response

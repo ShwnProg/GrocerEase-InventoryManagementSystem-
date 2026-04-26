@@ -1,14 +1,14 @@
 <?php
 session_start();
-require_once "../models/product.php";
-require_once "../models/categories.php";
+require_once __DIR__ . '../../autoload.php';
+
 
 include "../includes/auth_check.php";
 
 $_SESSION['page_title'] = "PRODUCTS";
 
 $search = $_GET['search'] ?? '';
-$product = new Product();
+$product = new Product($db);
 
 if (!empty($search)) {
     $products = $product->SearchProduct($search);
@@ -16,7 +16,7 @@ if (!empty($search)) {
     $products = $product->GetAllProducts();
 }
 
-$category = new Category();
+$category = new Category($db);
 $categories = $category->GetAllCategories();
 
 

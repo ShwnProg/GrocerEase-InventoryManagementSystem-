@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once '../models/supplier.php';
+require_once __DIR__ . '../../autoload.php';
+
 
 include "../includes/auth_check.php";
 
@@ -8,7 +9,7 @@ $_SESSION['page_title'] = "SUPPLIERS";
 
 $search = $_GET['search'] ?? '';
 
-$supplier = new Supplier();
+$supplier = new Supplier($db);
 
 if (!empty($search)) {
     $suppliers = $supplier->SearchSupplier($search);

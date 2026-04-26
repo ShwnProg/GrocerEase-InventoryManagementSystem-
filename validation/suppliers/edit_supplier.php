@@ -1,9 +1,10 @@
 <?php
-require_once '../../models/supplier.php';
+require_once '../../autoload.php';
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $supplier = new Supplier();
+    $supplier = new Supplier($db);
 
     $supplier_id = $_POST['supplier_id'] ?? '';
 

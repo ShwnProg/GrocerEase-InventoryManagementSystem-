@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once "../models/product.php";
-require_once "../models/categories.php";
+require_once __DIR__ . '../../autoload.php';
+
 
 if (isset($_POST['product_id'])) {
     $product_id = $_POST['product_id'];
@@ -9,8 +9,8 @@ if (isset($_POST['product_id'])) {
     $product_id = $_GET["product_id"] ?? null;
 }
 
-$product = new Product();
-$category = new Category();
+$product = new Product($db);
+$category = new Category($db);
 
 $product_name = $product->GetProductNameById($product_id);
 $product_info = $product->GetProductInfoById($product_id);

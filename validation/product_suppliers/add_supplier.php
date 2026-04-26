@@ -1,13 +1,14 @@
 <?php
 session_start();
-require_once "../../models/product_suppliers.php";
+require_once '../../autoload.php';
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $product_id = $_POST["product_id"];
     $supplier_id = $_POST["suppliers"];
     $cost_price = $_POST["cost_price"];
 
-    $product_supplier = new ProductSuppliers();
+    $product_supplier = new ProductSuppliers($db);
 
     $error = [];
 

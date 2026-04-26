@@ -1,5 +1,5 @@
 <?php
-require_once "../../models/product_suppliers.php";
+require_once '../../autoload.php';
 
 header('Content-Type: application/json');
 
@@ -30,7 +30,7 @@ if ((float) $cost_price <= 0) {
 }
 
 //  Updat
-$product_supplier = new ProductSuppliers();
+$product_supplier = new ProductSuppliers($db);
 $result = $product_supplier->UpdateCostPrice($product_id, $supplier_id, $cost_price);
 
 if ($result) {

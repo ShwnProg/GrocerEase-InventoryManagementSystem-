@@ -5,12 +5,11 @@ class User
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($db)
     {
-        $db = new DB();
-        $this->conn = $db->conn;
+        // $database = new DB();
+        $this->conn = $db;
     }
-
     public function InsertUser($username, $password, $email, $contact)
     {
         $stmt = $this->conn->prepare(
@@ -20,8 +19,8 @@ class User
         $stmt->execute([
             ':username' => $username,
             ':password' => $password,
-            ':email'    => $email,
-            ':contact'  => $contact,
+            ':email' => $email,
+            ':contact' => $contact,
         ]);
         return $stmt->rowCount() > 0;
     }
@@ -59,9 +58,9 @@ class User
         );
         $stmt->execute([
             ':username' => $username,
-            ':email'    => $email,
-            ':contact'  => $contact,
-            ':id'       => $user_id,
+            ':email' => $email,
+            ':contact' => $contact,
+            ':id' => $user_id,
         ]);
         return $stmt->rowCount() > 0;
     }
@@ -73,7 +72,7 @@ class User
         );
         $stmt->execute([
             ':password' => $hashed_password,
-            ':id'       => $user_id,
+            ':id' => $user_id,
         ]);
         return $stmt->rowCount() > 0;
     }

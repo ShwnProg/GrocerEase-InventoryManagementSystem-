@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once "../models/categories.php";
-require_once "../models/categories.php";
+require_once __DIR__ . '../../autoload.php';
+
 
 if (isset($_POST['category_id'])) {
     $category_id = $_POST['category_id'];
@@ -10,7 +10,7 @@ if (isset($_POST['category_id'])) {
 }
 
 
-$category = new Category();
+$category = new Category($db);
 
 $category_name = $category->GetCategoryNameById($category_id);
 $category_info = $category->GetCategoryById($category_id);
@@ -38,7 +38,7 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
         <?php include '../includes/topbar.php'; ?>
         <section class="page-content">
             <div class="tool-bar">
-                <a href="categories.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>
+                <a href="category.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>
             </div>
 
             <div class="edit-content">

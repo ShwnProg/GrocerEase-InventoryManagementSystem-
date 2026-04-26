@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../models/user.php';
+require_once '../../autoload.php';
 
 $redirect = "../../pages/profile.php";
 
@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$user     = new User();
+$user     = new User($db);
 $username = trim($_POST['username'] ?? '');
 $email    = trim($_POST['email'] ?? '');
 $contact  = trim($_POST['contact_number'] ?? '');

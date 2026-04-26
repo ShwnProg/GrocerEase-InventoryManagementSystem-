@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../models/product.php';
+require_once '../../autoload.php';
 
 header('Content-Type: application/json');
 
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $product = new Product();
+    $product = new Product($db);
     $result = $product->RestoreProduct($product_id);
 
     if ($result) {

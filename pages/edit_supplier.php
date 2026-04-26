@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once "../models/supplier.php";
-
+require_once __DIR__ . '../../autoload.php';
 
 if (isset($_POST['supplier_id'])) {
     $supplier_id = $_POST['supplier_id'];
@@ -14,7 +13,7 @@ if (!$supplier_id) {
 }
 
 
-$supplier = new Supplier();
+$supplier = new Supplier($db);
 
 $supplier_info = $supplier->GetSupplierById($supplier_id);
 

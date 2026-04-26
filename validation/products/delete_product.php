@@ -1,11 +1,11 @@
 <?php
-require_once '../../models/product.php';
+require_once '../../autoload.php';
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_id = $_POST['product_id'] ?? '';
 
-    $product = new Product();
+    $product = new Product($db);
     $result = $product->SoftDeleteProduct($product_id);
 
     unset($_SESSION['delete_product_id']);

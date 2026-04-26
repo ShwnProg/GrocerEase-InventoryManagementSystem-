@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once '../models/stocks.php';
+require_once __DIR__ . '../../autoload.php';
 
 include "../includes/auth_check.php";
 
 $_SESSION['page_title'] = "STOCK";
 
-$stocks = new Stock();
+$stocks = new Stocks($db);
 $search = $_GET['search'] ?? '';
 
 if (!empty($search)) {

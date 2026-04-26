@@ -1,9 +1,10 @@
 <?php
-require_once '../../models/categories.php';
+require_once '../../autoload.php';
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $category = new Category();
+    $category = new Category($db);
 
     $category_id = $_SESSION['category_id'] ?? ''; // get current id
 

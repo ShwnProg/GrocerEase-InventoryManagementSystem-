@@ -1,6 +1,6 @@
 <?php
-require_once "../../models/stocks.php";
-require_once "../../models/stock_movements.php";
+require_once '../../autoload.php';
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -29,13 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $stock  = new Stock();
+    $stock  = new Stocks($db);
     $date   = date("Y-m-d H:i:s");
     $result = $stock->StockIn($product_id, $quantity, $date);
 
     if ($result) {
-        $reference_id   = GeneratedUniqueId();
-        $stock_movement = new StockMovements();
+        $reference_id   = GeneratedUniqueId($db);
+        $stock_movement = new StockMovements($db);
         $date_movement  = date("Y-m-d");
 
         $movement_result = $stock_movement->AddStockMovements(
@@ -57,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
 }
 
-function GeneratedUniqueId()
+function GeneratedUniqueId($db)
 {
-    $stock_movement = new StockMovements();
+    $stock_movement = new StockMovements($db);
     do {
         $reference_id = "STK";
         for ($i = 0; $i < 3; $i++) {

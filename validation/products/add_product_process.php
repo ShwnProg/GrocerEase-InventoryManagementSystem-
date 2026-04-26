@@ -1,6 +1,5 @@
 <?php
-require_once '../../models/product.php';
-require_once '../../models/stocks.php';
+require_once '../../autoload.php';
 
 session_start();
 
@@ -19,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['form'] = "Please fill in all required fields.";
 
     // VALIDATE INPUTS
-    $product = new Product();
+    $product = new Product($db);
 
     if (empty($errors['product_name']) && strlen($product_name) > 100)
         $errors['product_name'] = "Product name must not exceed 100 characters.";
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $stock = new Stock();
+    $stock = new Stocks($db);
     // SANITIZE INPUTS BEFORE DB INSERTION
     $product_name = htmlspecialchars($product_name);
     $description = htmlspecialchars($description);
@@ -53,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($product_id) {
 
-        $stock = new Stock();
+        $stock = new Stocks($db);
 
         $stock_result = $stock->AddProductStock(
             $product_id,

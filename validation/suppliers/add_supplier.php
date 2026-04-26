@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once "../../models/supplier.php";
+require_once __DIR__ . '../../../autoload.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -26,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $supplier = new Supplier();
+    $supplier = new Supplier($db);
 
     // CHECK DUPLICATE
     if ($supplier->checkDuplicateSupplier($name)) {

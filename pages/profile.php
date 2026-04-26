@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once '../models/user.php';
+require_once __DIR__ . '../../autoload.php';
+
 include "../includes/auth_check.php";
 
 $user_id = $_SESSION['id'] ?? null;
@@ -8,7 +9,7 @@ if (!$user_id) {
     die("You are not logged in. Please <a href='../forms/index.php'>login</a> first.");
 }
 
-$user      = new User();
+$user      = new User($db);
 $user_info = $user->GetUserById($user_id);
 if (!$user_info) {
     die("User profile not found.");

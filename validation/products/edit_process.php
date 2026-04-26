@@ -1,10 +1,11 @@
 <?php
-require_once "../../models/product.php";
+require_once '../../autoload.php';
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $product = new Product();
+    $product = new Product($db);
     // GET PRODUCT ID
     $product_id = $_SESSION['product_id'] ?? '';
     // GET INPUT

@@ -5,13 +5,10 @@ class ProductSuppliers
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($db)
     {
-        $database = new DB();
-        $this->conn = $database->conn;
-
-        // IMPORTANT: make PDO throw errors
-        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // $database = new DB();
+        $this->conn = $db;
     }
 
     // ADD SUPPLIER

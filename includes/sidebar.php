@@ -27,7 +27,7 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
             <span>Products</span>
         </a>
 
-        <a href="categories.php" class="menu-btn <?= $current == 'categories.php' ? 'active' : '' ?>">
+        <a href="category.php" class="menu-btn <?= $current == 'categories.php' ? 'active' : '' ?>">
             <i class="fa-solid fa-table-cells"></i>
             <span>Categories</span>
         </a>

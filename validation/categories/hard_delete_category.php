@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../models/categories.php';
+require_once '../../autoload.php';
 
 header('Content-Type: application/json');
 
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $category = new Category();
+    $category = new Category($db);
     $result = $category->HardDeleteCategory($category_id);
 
     if ($result) {

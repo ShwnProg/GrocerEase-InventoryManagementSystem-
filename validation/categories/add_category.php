@@ -1,5 +1,5 @@
 <?php
-require_once '../../models/categories.php';
+require_once '../../autoload.php';
 
 session_start();
 
@@ -7,7 +7,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $category_name = trim(ucfirst($_POST['category_name']));
     $category_description = trim(ucfirst($_POST['category_description']));
 
-    $Category = new category();
+    $Category = new category($db);
 
     $error =  [];
     // REQUIRED FIELD
@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(!empty($error)){
         $_SESSION['add_category_error'] = $error;
         $_SESSION['old_inputs'] = $_POST;
-        header('Location: ../../pages/categories.php');
+        header('Location: ../../pages/category.php');
         exit;
     }
     // SANITIZE INPUT (security)
@@ -52,7 +52,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $_SESSION['error_msg'] = 'Failed to add category. Please try again.';
     }
 
-    header('Location: ../../pages/categories.php');
+    header('Location: ../../pages/category.php');
     exit;
 
 }

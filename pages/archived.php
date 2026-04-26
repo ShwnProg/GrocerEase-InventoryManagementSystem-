@@ -1,8 +1,7 @@
 <?php
 session_start();
-require_once '../models/product.php';
-require_once '../models/categories.php';
-require_once '../models/supplier.php';
+require_once __DIR__ . '../../autoload.php';
+
 
 include "../includes/auth_check.php";
 
@@ -10,9 +9,9 @@ $current = basename($_SERVER['PHP_SELF']);
 $tab = $_GET['tab'] ?? 'products'; 
 $_SESSION['page_title'] = "ARCHIVED";
 
-$product = new Product();
-$categories = new Category();
-$suppliers = new Supplier();
+$product = new Product($db);
+$categories = new Category($db);
+$suppliers = new Supplier($db);
 
 $products = $product->GetDeletedProducts();
 $category = $categories->GetDeletedCategories();
@@ -38,7 +37,7 @@ $supplier = $suppliers->GetDeletedSuppliers();
             <div class="toolbar">
 
                 <div class="search-area">
-                    <form action="">
+                    <form method="get">
                         <i class="fas fa-search"></i>
                         <input type="text" name="search" id="search" placeholder="Search...">
                         <button type="submit">SEARCH</button>

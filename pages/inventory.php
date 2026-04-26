@@ -1,12 +1,12 @@
 <?php
 session_start();
-require_once '../models/stock_movements.php';
+require_once __DIR__ . '../../autoload.php';
 
 include "../includes/auth_check.php";
 
 $_SESSION['page_title'] = "INVENTORY LOGS";
 
-$movement = new StockMovements();
+$movement = new StockMovements($db);
 
 $stock_movements = $movement->GetStockMovements();
 

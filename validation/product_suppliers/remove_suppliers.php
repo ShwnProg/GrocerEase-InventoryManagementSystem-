@@ -1,5 +1,5 @@
 <?php
-require_once "../../models/product_suppliers.php";
+require_once '../../autoload.php';
 
 header('Content-Type: application/json');
 session_start();
@@ -15,7 +15,7 @@ if (!$product_id || !$supplier_id) {
     exit;
 }
 
-$product_supplier = new ProductSuppliers();
+$product_supplier = new ProductSuppliers($db);
 $removed = $product_supplier->RemoveProductSupplier($product_id, $supplier_id);
 
 if ($removed) {

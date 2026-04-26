@@ -4,7 +4,7 @@ require_once '../models/user.php';
 $page_title = $_SESSION['page_title'] ?? "Dashboard";
 
 $user_id = $_SESSION['id'];
-$user = new User();
+$user = new User($db);
 $user_info = $user->GetUserById($user_id);
 ?>
 <div class="topbar">
