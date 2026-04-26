@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
+require_once __DIR__ . '../../../autoload.php';
 
-include "../includes/auth_check.php";
+include "../../includes/auth_check.php";
 
 $user_id = $_SESSION['id'] ?? null;
 if (!$user_id) {
@@ -21,13 +21,13 @@ $initials = strtoupper(substr($user_info['username'] ?? 'A', 0, 1));
 ?>
 <!DOCTYPE html>
 <html lang="en">
-<?php include "../includes/head.php"; ?>
+<?php include "../../includes/head.php"; ?>
 
 <body>
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
 
     <main class="main-content">
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
 
         <section class="page-content">
 

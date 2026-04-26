@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
+require_once __DIR__ . '../../../autoload.php';
 
 if (isset($_POST['supplier_id'])) {
     $supplier_id = $_POST['supplier_id'];
@@ -30,19 +30,19 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php" ?>
+<?php include "../../includes/head.php" ?>
 
 <body>
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
     <main class='main-content'>
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
         <section class="page-content">
             <div class="tool-bar">
                 <a href="suppliers.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>
             </div>
 
             <div class="edit-content">
-                <form action="../validation/suppliers/edit_supplier.php" method="POST">
+                <form action="../../validation/suppliers/edit_supplier.php" method="POST">
 
 
                     <i class="fa-solid fa-pen-to-square"></i>

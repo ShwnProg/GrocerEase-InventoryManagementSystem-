@@ -10,7 +10,7 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
 
 <div class="side-bar">
     <div class="logo">
-        <img src="../images/page-logo.png" alt="Grocer Ease Logo">
+        <img src="../../images/page-logo.png" alt="Grocer Ease Logo">
         <p>Grocer Ease</p>
     </div>
 
@@ -27,7 +27,7 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
             <span>Products</span>
         </a>
 
-        <a href="category.php" class="menu-btn <?= $current == 'categories.php' ? 'active' : '' ?>">
+        <a href="category.php" class="menu-btn <?= $current == 'category.php' ? 'active' : '' ?>">
             <i class="fa-solid fa-table-cells"></i>
             <span>Categories</span>
         </a>

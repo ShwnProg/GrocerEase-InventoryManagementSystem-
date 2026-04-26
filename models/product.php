@@ -137,7 +137,8 @@ class Product
         return $stmt->rowCount() > 0;
     }
 
-    public function RestoreProduct($id){
+    public function RestoreProduct($id)
+    {
         $stmt = $this->conn->prepare("UPDATE products SET is_deleted = 0 WHERE product_id_pk = :id");
         $stmt->execute(['id' => $id]);
 
@@ -166,8 +167,9 @@ class Product
             return false;
         }
     }
-    public function SearchProduct($search){
-        $stmt= $this->conn->prepare("SELECT p.product_id_pk,
+    public function SearchProduct($search)
+    {
+        $stmt = $this->conn->prepare("SELECT p.product_id_pk,
                                              p.product_name,
                                              c.category_name,
                                              ps.cost_price,
@@ -188,11 +190,14 @@ class Product
 
         return $stmt->fetchAll();
     }
-    public function GetTotalProducts(){
-        $stmt= $this->conn->prepare("SELECT COUNT(*) AS total_products FROM products WHERE is_deleted = 0");
+    public function GetTotalProducts()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total_products FROM products WHERE is_deleted = 0 AND status = 1");
         $stmt->execute();
 
-        return $stmt->fetch();
+        return $stmt->fetchColumn();
     }
+
+
 }
 ?>

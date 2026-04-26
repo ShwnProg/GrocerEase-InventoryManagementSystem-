@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($errors)) {
         $_SESSION['errors'] = ['add' => $errors];
         $_SESSION['old'] = $_POST;
-        header("Location: ../../pages/products.php");
+        header("Location: ../../views/inventory/products.php");
         exit;
     }
 
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['old'] = $_POST;
     }
 
-    header("Location: ../../pages/products.php");
+    header("Location: ../../views/inventory/products.php");
     exit;
 }
 ?>

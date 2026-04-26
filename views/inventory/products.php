@@ -1,9 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
+require_once __DIR__ . '../../../autoload.php';
 
-
-include "../includes/auth_check.php";
+include "../../includes/auth_check.php";
 
 $_SESSION['page_title'] = "PRODUCTS";
 
@@ -30,13 +29,13 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php" ?>
+<?php include "../../includes/head.php" ?>
 
 <body>
 
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
     <main class="main-content">
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
 
         <section class="page-content">
             <div class="toolbar">
@@ -145,7 +144,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
 
             <!-- ADD MODAL -->
             <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
-                <form action="../validation/products/add_product_process.php" method="POST">
+                <form action="../../validation/products/add_product_process.php" method="POST">
                     <div class="header">
 
                         <i class="fas fa-plus"></i>
@@ -252,6 +251,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
         </section>
     </main>
 </body>
-<script src="../scripts/pages.js"></script>
+<script src="../../scripts/pages.js"></script>
 
 </html>

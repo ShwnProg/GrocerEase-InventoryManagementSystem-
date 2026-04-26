@@ -128,4 +128,11 @@ class Supplier
 
         return $stmt->fetchAll();
     }
+    public function GetTotalSupplier(){
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total_supplier FROM suppliers WHERE is_deleted = 0");
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
 }

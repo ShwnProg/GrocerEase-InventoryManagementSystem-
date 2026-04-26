@@ -1,5 +1,5 @@
 <?php
-require_once '../models/user.php';
+require_once '../../models/user.php';
 
 $page_title = $_SESSION['page_title'] ?? "Dashboard";
 

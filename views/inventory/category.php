@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
+require_once __DIR__ . '../../../autoload.php';
 
 
-include "../includes/auth_check.php";
+include "../../includes/auth_check.php";
 
 $_SESSION['page_title'] = "CATEGORY";
 
@@ -37,13 +37,13 @@ unset($_SESSION['success'], $_SESSION['errors']);
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php" ?>
+<?php include "../../includes/head.php" ?>
 
 <body>
 
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
     <main class="main-content">
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
 
         <section class="page-content">
             <div class="toolbar">
@@ -120,7 +120,7 @@ unset($_SESSION['success'], $_SESSION['errors']);
             <!-- Add Category Modal -->
             <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
 
-                <form action="../validation/categories/add_category.php" method="POST">
+                <form action="../../validation/categories/add_category.php" method="POST">
                     <div class="header">
 
                         <i class="fas fa-plus"></i>
@@ -161,6 +161,6 @@ unset($_SESSION['success'], $_SESSION['errors']);
         </section>
     </main>
 </body>
-<script src="../scripts/pages.js"></script>
+<script src="../../scripts/pages.js"></script>
 
 </html>

@@ -2,11 +2,11 @@
 session_start();
 require_once '../../autoload.php';
 
-$redirect = "../../pages/profile.php";
+$redirect = "../../views/inventory/profile.php";
 
 $user_id = $_SESSION['id'] ?? null;
 if (!$user_id) {
-    header("Location: ../../.../index.php");
+    header("Location: ../../../index.php");
     exit;
 }
 

@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['errors'] = /*['delete' => "Failed to delete product. Please try again."]*/ $result;
     }
 
-    header("Location: ../../pages/products.php");
+    header("Location: ../../views/inventory/products.php");
     exit;
 }
 ?>

@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($error)) {
         $_SESSION['edit_error_msg'] = $error;
         $_SESSION['edit_old_inputs'] = $_POST;
-        header("Location: ../../pages/edit_category.php?category_id=$category_id");
+        header("Location: ../../views/inventory/edit_category.php?category_id=$category_id");
         exit;
     }
 
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['edit_error_msg'] = 'Failed to edit category. Please try again.';
     }
 
-    header("Location: ../../pages/edit_category.php?category_id=$category_id");
+    header("Location: ../../views/inventory/edit_category.php?category_id=$category_id");
     exit;
 }
 // CHECK IF NO CHANGES

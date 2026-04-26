@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($error)) {
         $_SESSION['edit_error_msg'] = $error;
         $_SESSION['edit_old_inputs'] = $_POST;
-        header("Location: ../../pages/edit_supplier.php?supplier_id=$supplier_id");
+        header("Location: ../../views/inventory/edit_supplier.php?supplier_id=$supplier_id");
         exit;
     }
 
@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['edit_error_msg'] = 'Failed to edit supplier. Please try again.';
     }
 
-    header("Location: ../../pages/edit_supplier.php?supplier_id=$supplier_id");
+    header("Location: ../../views/inventory/edit_supplier.php?supplier_id=$supplier_id");
     exit;
 }
 function IsSameData($original, $supplier_name, $contact_person, $phone_number, $email, $address, $company_name)

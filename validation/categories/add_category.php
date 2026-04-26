@@ -35,7 +35,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(!empty($error)){
         $_SESSION['add_category_error'] = $error;
         $_SESSION['old_inputs'] = $_POST;
-        header('Location: ../../pages/category.php');
+        header('Location: ../../views/inventory/category.php');
         exit;
     }
     // SANITIZE INPUT (security)
@@ -52,7 +52,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $_SESSION['error_msg'] = 'Failed to add category. Please try again.';
     }
 
-    header('Location: ../../pages/category.php');
+    header('Location: ../../views/inventory/category.php');
     exit;
 
 }

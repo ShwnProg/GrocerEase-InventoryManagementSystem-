@@ -30,7 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (!empty($error)) {
         $_SESSION["error"] = $error;
         $_SESSION["old"] = $_POST;
-        header("Location: ../../pages/manage_suppliers.php?product_id=" . $product_id);
+        header("Location: ../../views/inventory/manage_suppliers.php?product_id=" . $product_id);
         exit;
     }
 
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // echo $product_id;
     // echo $cost_price;
     // var_dump($result);
-    header("Location: ../../pages/manage_suppliers.php?product_id=" . $product_id);
+    header("Location: ../../views/inventory/manage_suppliers.php?product_id=" . $product_id);
     exit;
 }
 

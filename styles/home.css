@@ -1427,3 +1427,116 @@ body {
         margin-left: calc(48px + 16px);
     }
 }
+
+/* DASHBOARD KPI */
+
+.kpi-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.kpi-grid .grid {
+    flex: 1 1 0;
+    min-width: 0;
+    background: #fff;
+    border-left: 3px solid #32702b;
+    border-radius: 10px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: default;
+}
+
+.kpi-grid .grid:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* Label */
+.kpi-grid .grid span {
+    font-size: 10px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+/* Value */
+.kpi-grid .grid p {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1c5515;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -0.5px;
+}
+
+/* Warning Low Stock */
+.kpi-grid .grid:nth-child(5) p {
+    color: #d97706;
+}
+
+.kpi-grid .grid:nth-child(5) {
+    background: #fffbeb;
+    border-color: rgba(217, 119, 6, 0.15);
+}
+
+/* Danger  Out of Stock */
+.kpi-grid .grid:nth-child(6) p {
+    color: #c82828;
+}
+
+.kpi-grid .grid:nth-child(6) {
+    background: rgba(200, 40, 40, 0.04);
+    border-color: rgba(200, 40, 40, 0.12);
+}
+
+.kpi-grid .grid .card-icon {
+    width: 30px;
+    height: 30px;
+    background: rgba(28, 85, 21, .08);
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: #1c5515;
+    flex-shrink: 0;
+}
+
+/* Empty state — yung fallback text */
+.kpi-grid .grid p small {
+    font-size: 12px;
+    font-weight: 500;
+    color: #d1d5db;
+    letter-spacing: 0;
+    font-style: italic;
+}
+
+/* Icon tint para sa warning/danger cards */
+.kpi-grid .grid:nth-child(5) .card-icon {
+    background: rgba(217, 119, 6, .1);
+    color: #d97706;
+}
+
+.kpi-grid .grid:nth-child(6) .card-icon {
+    background: rgba(200, 40, 40, .08);
+    color: #c82828;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .kpi-grid .grid {
+        flex: 1 1 140px;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-grid .grid {
+        flex: 1 1 100%;
+    }
+}

@@ -1,7 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
-
+require_once __DIR__ . '../../../autoload.php';
 
 if (isset($_POST['product_id'])) {
     $product_id = $_POST['product_id'];
@@ -30,19 +29,19 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php" ?>
+<?php include "../../includes/head.php" ?>
 
 <body>
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
     <main class='main-content'>
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
         <section class="page-content">
             <div class="tool-bar">
                 <a href="products.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>
             </div>
 
             <div class="edit-content">
-                <form action="../validation/products/edit_process.php" method="POST">
+                <form action="../../validation/products/edit_process.php" method="POST">
 
 
                     <i class="fa-solid fa-pen-to-square"></i>

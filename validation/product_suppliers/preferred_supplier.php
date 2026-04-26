@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['error'] = ["preferred" => "Failed to update preferred supplier."];
     }
 
-    header("Location: ../../pages/manage_suppliers.php?product_id=$product_id");
+    header("Location: ../../views/inventory/manage_suppliers.php?product_id=$product_id");
     exit;
 }
 ?>

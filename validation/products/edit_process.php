@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!empty($errors)) {
         $_SESSION['error'] = $errors;
         $_SESSION['old'] = $_POST;
-        header("Location: ../../pages/edit_product.php?product_id=$product_id");
+        header("Location: ../../views/inventory/edit_product.php?product_id=$product_id");
         exit;
     }
     // var_dump($is_true);

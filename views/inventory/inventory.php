@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
+require_once __DIR__ . '../../../autoload.php';
 
-include "../includes/auth_check.php";
+include "../../includes/auth_check.php";
 
 $_SESSION['page_title'] = "INVENTORY LOGS";
 
@@ -14,14 +14,14 @@ $stock_movements = $movement->GetStockMovements();
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php" ?>
+<?php include "../../includes/head.php" ?>
 
 
 <body>
 
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
     <main class="main-content">
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
         <section class="page-content">
 
             <div class="toolbar">
@@ -98,5 +98,5 @@ $stock_movements = $movement->GetStockMovements();
         </section>
     </main>
 </body>
-<script src="../scripts/pages.js"></script>
+<script src="../../scripts/pages.js"></script>
 </html>

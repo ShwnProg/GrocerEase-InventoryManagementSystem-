@@ -1,8 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
+require_once __DIR__ . '../../../autoload.php';
 
-include "../includes/auth_check.php";
+
+include "../../includes/auth_check.php";
 
 $_SESSION['page_title'] = "STOCK";
 
@@ -62,13 +63,13 @@ unset(
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php" ?>
+<?php include "../../includes/head.php" ?>
 
 <body>
 
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
     <main class="main-content">
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
         <section class="page-content">
 
             <div class="toolbar">
@@ -135,7 +136,7 @@ unset(
 
             <!-- STOCK IN MODAL -->
             <div class="add-modal <?= $open_modal_stockin ? 'active' : '' ?>" id="stock-in-modal">
-                <form action="../validation/stock/stock_in_process.php" method="POST">
+                <form action="../../validation/stock/stock_in_process.php" method="POST">
                     <div class="header">
                         <i class="fa-solid fa-circle-plus"></i>
                         <p>Stock IN &mdash; <b id="stock-in-product-name" style="color:#1c5515; font-weight:600;">
@@ -183,7 +184,7 @@ unset(
 
             <!-- STOCK OUT MODAL -->
             <div class="add-modal <?= $open_modal_stockout ? 'active' : '' ?>" id="stock-out-modal">
-                <form action="../validation/stock/stock_out_process.php" method="POST">
+                <form action="../../validation/stock/stock_out_process.php" method="POST">
                     <div class="header">
                         <i class="fa-solid fa-circle-minus" style="background:rgba(200,40,40,0.08); color:#c82828;"></i>
                         <p>Stock OUT &mdash; <b id="stock-out-product-name" style="color:#c82828; font-weight:600;">
@@ -233,6 +234,6 @@ unset(
         </section>
     </main>
 </body>
-<script src="../scripts/pages.js"></script>
+<script src="../../scripts/pages.js"></script>
 
 </html>

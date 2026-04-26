@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($errors)) {
         $_SESSION['errors'] = ['add' => $errors];
         $_SESSION['old'] = $_POST;
-        header("Location: ../../pages/suppliers.php");
+        header("Location: ../../views/inventory/suppliers.php");
         exit;
     }
 
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($supplier->checkDuplicateSupplier($name)) {
         $_SESSION['errors'] = ['add' => ['supplier_name' => "Supplier already exists."]];
         $_SESSION['old'] = $_POST;
-        header("Location: ../../pages/suppliers.php");
+        header("Location: ../../views/inventory/suppliers.php");
         exit;
     }
 
@@ -47,6 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['old'] = $_POST;
     }
 
-    header("Location: ../../pages/suppliers.php");
+    header("Location: ../../views/inventory/suppliers.php");
     exit;
 }

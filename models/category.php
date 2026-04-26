@@ -145,4 +145,13 @@ class Category
 
         return $stmt->fetchAll();
     }
+
+    public function GetTotalCategories()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as total_categories FROM categories WHERE is_deleted = 0");
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+
+    }
 }

@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['logged_in'] = true;
     $_SESSION['id'] = $id;
 
-    header("Location: ../pages/dashboard.php");
+    header("Location: ../views/inventory/dashboard.php");
     exit;
 }
 ?>

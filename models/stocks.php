@@ -88,7 +88,29 @@ class Stocks
 
         return $stmt->fetchAll();
     }
+    public function GetTotalStockQuantity()
+    {
+        $stmt = $this->conn->prepare("SELECT SUM(quantity) as total_quantity FROM stocks");
 
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+    public function GetTotalLowStockItems()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM stocks INNER JOIN products on product_id_fk = product_id_pk 
+                                      WHERE quantity <= 10");
+
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+    public function GetTotalOutOfStockItems()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM stocks INNER JOIN products on product_id_fk = product_id_pk
+                                      WHERE quantity <= 0");
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
 
 }
 

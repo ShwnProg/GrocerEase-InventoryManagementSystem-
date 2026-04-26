@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once __DIR__ . '../../autoload.php';
+require_once __DIR__ . '../../../autoload.php';
 
 
-include "../includes/auth_check.php";
+include "../../includes/auth_check.php";
 
 $current = basename($_SERVER['PHP_SELF']);
 $tab = $_GET['tab'] ?? 'products'; 
@@ -21,12 +21,12 @@ $supplier = $suppliers->GetDeletedSuppliers();
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include "../includes/head.php" ?>
+<?php include "../../includes/head.php" ?>
 
 <body>
-    <?php include '../includes/sidebar.php'; ?>
+    <?php include '../../includes/sidebar.php'; ?>
     <div class="main-content">
-        <?php include '../includes/topbar.php'; ?>
+        <?php include '../../includes/topbar.php'; ?>
         <div class="page-content">
             <?php if (isset($_SESSION['archive_msg'])): ?>
                 <p class="<?= $_SESSION['archive_msg']['type'] === 'success' ? 'success-message' : 'error-message' ?>">
@@ -67,5 +67,5 @@ $supplier = $suppliers->GetDeletedSuppliers();
         </div>
     </div>
 </body>
-<script src="../scripts/pages.js"></script>
+<script src="../../scripts/pages.js"></script>
 </html>

@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'quantity'     => $quantity,
             'reason'       => $reason,
         ];
-        header("Location: ../../../pages/stock.php");
+        header("Location: ../../../views/inventory/stock.php");
         exit;
     }
 
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['error'] = ['out' => ['form' => 'Something went wrong']];
     }
 
-    header("Location: ../../../pages/stock.php");
+    header("Location: ../../../views/inventory/stock.php");
     exit;
 }
 
