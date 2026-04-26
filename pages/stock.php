@@ -88,7 +88,7 @@ unset(
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Product Name</th>
+                            <th>Product</th>
                             <th>Category</th>
                             <th>Quantity</th>
                             <th>Last Updated</th>

@@ -60,12 +60,12 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
                     <thead>
                         <tr>
                             <th>No.</th>
-                            <th>Product Name</th>
+                            <th>Product</th>
                             <th>Category</th>
                             <th>Cost Price</th>
                             <th>Selling Price</th>
                             <th>Description</th>
-                            <th>Preferred Supplier</th>
+                            <th>Supplier</th>
                             <th>Status</th>
                             <th>Actions</th>
                         </tr>
