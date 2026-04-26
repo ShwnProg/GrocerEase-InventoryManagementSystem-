@@ -25,7 +25,7 @@ $error = $_SESSION['edit_error_msg'] ?? '';
 $old_inputs = $_SESSION['edit_old_inputs'] ?? '';
 $success_msg = $_SESSION['edit_success_msg'] ?? '';
 
-unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'],$_SESSION['edit_success_msg']);
+unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit_success_msg']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,7 +59,7 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'],$_SESSION['edit_
                             <?= htmlspecialchars($error['no_changes']) ?>
                         </div>
                     <?php endif; ?>
-                        <input type="hidden" name = 'category_id' value = <?=  $category_id ?>>
+                    <input type="hidden" name='category_id' value=<?= $category_id ?>>
                     <!-- CATEGORY NAME -->
                     <div class="input">
                         <label for="category_name">Category Name</label>
@@ -86,6 +86,16 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'],$_SESSION['edit_
                             <?= htmlspecialchars($error['description']) ?>
                         </div>
                     <?php endif; ?>
+
+                    <!-- STATUS -->
+                    <div class="input">
+                        <label for="status">Status</label>
+                        <select name="status" id="">
+                            <option value="">Select a status</option>
+                            <option value="1" <?= ($old_inputs['status'] ?? $category_info['status'] ?? '') == '1' ? 'selected' : '' ?>>Active</option>
+                            <option value="0" <?= ($old_inputs['status'] ?? $category_info['status'] ?? '') == '0' ? 'selected' : '' ?>>Inactive</option>
+                        </select>
+                    </div>
 
                     <button type="submit" name="edit_btn">SAVE CHANGES</button>
                 </form>

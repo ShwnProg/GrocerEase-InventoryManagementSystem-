@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $reason       = trim(ucfirst($_POST['reason'] ?? ''));
 
     $error = [];
-    $stock  = new Stock();
+    $stock        = new Stock();
     $currentStock = $stock->GetQuantityByProductId($product_id);
 
     if (empty($quantity))
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit;
     }
 
-    $date = date("Y-m-d H:i:s");
+    $date   = date("Y-m-d H:i:s");
     $result = $stock->StockOut($product_id, $quantity, $date);
 
     if ($result) {
@@ -42,16 +42,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $date_movement  = date("Y-m-d");
 
         $movement_result = $stock_movement->AddStockMovements(
-            $quantity,
-            "OUT",
-            $reference_id,
-            $reason,
-            $date_movement,
-            $product_id
+            $quantity, "OUT", $reference_id, $reason, $date_movement, $product_id
         );
 
         if ($movement_result) {
             $_SESSION['success'] = ['out' => ['form' => 'Stock updated successfully']];
+            $_SESSION['old'] = [
+                'product_id'   => $product_id,
+                'product_name' => $product_name,
+            ];
         }
     } else {
         $_SESSION['error'] = ['out' => ['form' => 'Something went wrong']];

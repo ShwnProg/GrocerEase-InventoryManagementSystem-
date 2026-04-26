@@ -8,36 +8,26 @@ class Category
     public function __construct()
     {
         $database = new DB();
-        $this->conn = $database->conn; // database connection
+        $this->conn = $database->conn; 
     }
     public function AddCategory($name, $description)
     {
-        // prepared statement (safe from SQL injection)
         $stmt = $this->conn->prepare("INSERT INTO categories(category_name, category_description) 
         VALUES (:name, :description)");
-        $stmt->execute([':name' => $name, ':description' => $description]); // execute query
-        return $stmt->rowCount() > 0; // check if insert successful
+        $stmt->execute([':name' => $name, ':description' => $description]); 
+        return $stmt->rowCount() > 0; 
     }
     public function CheckDuplicateCategory($category_name)
     {
-        // check if category already exists
         $stmt = $this->conn->prepare('SELECT COUNT(*) FROM categories WHERE category_name = :name AND is_deleted = 0');
         $stmt->execute([':name' => $category_name]);
-        return $stmt->fetchColumn() > 0; // true if duplicate found
+        return $stmt->fetchColumn() > 0; 
     }
-    // public function CheckDuplicateCategoryById($category_name, $id)
-    // {
-    //     $stmt = $this->conn->prepare('SELECT COUNT(*) FROM categories WHERE category_name = :name AND is_deleted = 0 AND category_id_pk = :id');
-    //     $stmt->execute([':name' => $category_name, ':id' => $id]);
-    //     return $stmt->fetchColumn() > 0;
-    // }
-
     public function GetAllCategories()
     {
-        // get all categories 
-        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description,is_deleted FROM categories ORDER BY category_id_pk DESC");
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description,is_deleted,status FROM categories ORDER BY category_id_pk DESC");
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC); // return as array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
     }
 
     public function SoftDeleteCategory($id)
@@ -55,13 +45,13 @@ class Category
     public function GetCategoryById($id)
     {
         // get specific category info
-        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description FROM categories WHERE category_id_pk = :id;");
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description,status FROM categories WHERE category_id_pk = :id;");
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     public function GetDeletedCategories()
     {
-        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description 
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description,status 
                                       FROM categories WHERE is_deleted = 1 ORDER BY deleted_at DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -72,10 +62,10 @@ class Category
         $stmt->execute([':id' => $id]);
         return $stmt->fetchColumn();
     }
-    public function EditCategory($id, $name, $description)
+    public function EditCategory($id, $name, $description,$status)
     {
-        $stmt = $this->conn->prepare("UPDATE categories SET category_name = :name, category_description = :description WHERE category_id_pk = :id");
-        $stmt->execute([':name' => $name, ':description' => $description, ':id' => $id]);
+        $stmt = $this->conn->prepare("UPDATE categories SET category_name = :name, category_description = :description,status = :status WHERE category_id_pk = :id");
+        $stmt->execute([':name' => $name, ':description' => $description, ':status' => $status,':id' => $id]);
         return $stmt->rowCount() > 0; // check if updated
     }
     public function RestoreCategory($id){

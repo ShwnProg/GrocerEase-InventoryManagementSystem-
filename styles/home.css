@@ -20,6 +20,9 @@ body {
     box-shadow: 2px 0 5px #0000001a;
     transition: width 0.35s ease;
     overflow: hidden;
+    /* FIX 4 & 5: sidebar must be a flex column so .action-group's margin-top: auto works */
+    display: flex;
+    flex-direction: column;
 }
 
 /* SIDEWBAR LOGO */
@@ -52,8 +55,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    /* FIX 4 & 5: use flex: 1 so this fills the remaining sidebar height,
+       and switch margin to padding to avoid clipping in overflow: hidden sidebar */
+    flex: 1;
     padding: 12px 10px;
-    margin: 10px;
+    overflow-y: auto;
 }
 
 .side-bar-menu label {
@@ -102,6 +108,7 @@ body {
 }
 
 .side-bar-menu .action-group {
+    /* FIX 4: now that .side-bar-menu is flex with flex: 1, margin-top: auto works */
     margin-top: auto;
 }
 
@@ -352,10 +359,11 @@ body {
     background: #fff;
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.07);
-    overflow: hidden;
-    box-shadow: 0 0 5px #0000001a;
-    table-layout: fixed;
+    /* FIX 1: overflow: hidden on a scrollable container blocks scrolling.
+       Use overflow-x: hidden + overflow-y: auto instead. */
+    overflow-x: hidden;
     overflow-y: auto;
+    box-shadow: 0 0 5px #0000001a;
     max-height: 500px;
 }
 
@@ -363,6 +371,8 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
+    /* FIX 2: table-layout: fixed belongs on the <table>, not the wrapper <div> */
+    table-layout: fixed;
 }
 
 .menu-table thead {
@@ -785,8 +795,11 @@ body {
     inset: 0;
     background: rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
+    /* FIX 3: was align-items: flex-start with no padding-top,
+       causing the modal to appear flush against the top edge of the screen.
+       Changed to align-items: center so the modal is properly centered. */
 }
 
 .confirm-modal.active {

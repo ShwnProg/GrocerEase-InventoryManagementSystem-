@@ -17,10 +17,16 @@
             <tr>
                 <td><?= $no++ ?></td>
                 <td><?= htmlspecialchars($prod['product_name']) ?></td>
-                <td><?= htmlspecialchars($prod['category_name']) ?></td>
+                <td>
+                    <?= htmlspecialchars(
+                        isset($prod['category_name'])
+                        ? $prod['category_name'] . ($prod['category_status'] == 0 ? ' (Inactive)' : '')
+                        : 'Uncategorized'
+                    ) ?>
+                </td>
                 <td>₱<?= number_format($prod['cost_price'], 2) ?></td>
                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'N/A' : $prod['product_description']) ?>
+                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'No description available' : $prod['product_description']) ?>
                 </td>
                 <td>
                     <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
@@ -46,4 +52,3 @@
         <?php endforeach; ?>
     </tbody>
 </table>
-

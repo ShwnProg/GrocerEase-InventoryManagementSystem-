@@ -25,7 +25,7 @@ $error = $_SESSION['error'] ?? '';
 $old = $_SESSION['old'] ?? '';
 $success = $_SESSION['success'] ?? '';
 
-unset($_SESSION['error'], $_SESSION['old'],$_SESSION['success']);
+unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,14 +76,28 @@ unset($_SESSION['error'], $_SESSION['old'],$_SESSION['success']);
 
                     <!-- CATEGORY -->
                     <div class="input">
-                        <label for="">Category</label>
-                        <select name="category" id="">
+                        <label>Category</label>
+                        <select name="category">
                             <option value="">Select a category</option>
+
                             <?php foreach ($categories as $cat): ?>
-                                <?php if($cat['is_deleted'] == 1) continue;?>
-                                <option value="<?= $cat['category_id_pk'] ?>" <?= ($old['category'] ?? $product_info['category_id_pk'] ?? '') == $cat['category_id_pk'] ? 'selected' : '' ?>>
+                                <?php
+                                if ($cat['is_deleted'] == 1)
+                                    continue;
+
+                                $current = $old['category'] ?? ($product_info['category_id_pk'] ?? '');
+
+                                $isSelected = ($current != '' && $current == $cat['category_id_pk']);
+                                $isInactive = ($cat['status'] == 0);
+                                ?>
+
+                                <option value="<?= $cat['category_id_pk'] ?>" <?= $isSelected ? 'selected' : '' ?>
+                                    <?= (!$isSelected && $isInactive) ? 'disabled' : '' ?>>
+
                                     <?= htmlspecialchars($cat['category_name']) ?>
+                                    <?= $isInactive ? ' (Inactive)' : '' ?>
                                 </option>
+
                             <?php endforeach; ?>
                         </select>
                     </div>

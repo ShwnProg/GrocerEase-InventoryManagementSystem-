@@ -9,22 +9,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $category_name = ucfirst(trim($_POST['category_name'] ?? ''));
     $category_description = trim($_POST['category_description'] ?? '');
+    $status = trim($_POST['status'] ?? '');
 
     $error = [];
 
     if (empty($category_name)) {
         $error['category_name'] = 'Category name is required.';
     }
-
+    if ($status === '')
+        $errors['status'] = "Status is required.";
     $original = $category->GetCategoryById($category_id); // original data
     // var_dump($original);
 
     $isTrue = false;
     if (!empty($category_name)) {
-        $isTrue = IsSameData($original, $category_name, $category_description) ? true : false;
+        $isTrue = IsSameData($original, $category_name, $category_description,$status) ? true : false;
         // var_dump(IsSameData($original, $category_name, $category_id, $category_description));
     }
-// DUPLICATE CHECK (only if changed)
+    // DUPLICATE CHECK (only if changed)
     if (!$isTrue) {
         if ($category_name != $original['category_name']) {
             if ($category->CheckDuplicateCategory($category_name)) {
@@ -58,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $category_name = filter_var($category_name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $category_description = filter_var($category_description, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
-    $isEdited = $category->EditCategory($category_id, $category_name, $category_description);
+    $isEdited = $category->EditCategory($category_id, $category_name, $category_description,$status);
 
     if ($isEdited) {
         $_SESSION['edit_success_msg'] = 'Category edited successfully.';
@@ -70,12 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 // CHECK IF NO CHANGES
-function IsSameData($original, $category_name, $category_description)
+function IsSameData($original, $category_name, $category_description,$status)
 {
     if (
-        // check if same lahat ng data
         $category_name == $original['category_name'] &&
-        $category_description == $original['category_description']
+        $category_description == $original['category_description'] && 
+        $status == $original['status']
     ) {
         return true;
     }

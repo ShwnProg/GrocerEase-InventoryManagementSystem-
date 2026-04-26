@@ -58,6 +58,7 @@ unset($_SESSION['success'], $_SESSION['errors']);
                             <th>No.</th>
                             <th>Category Name</th>
                             <th>Description</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -71,7 +72,12 @@ unset($_SESSION['success'], $_SESSION['errors']);
                                 <!-- skip deleted categories -->
                                 <td><?= ++$num ?></td>
                                 <td><?= htmlspecialchars($categ['category_name']) ?></td>
-                                <td><?= htmlspecialchars($categ['category_description'] == '' ? 'N/A' : $categ['category_description']) ?>
+                                <td><?= htmlspecialchars($categ['category_description'] == '' ? 'No description available' : $categ['category_description']) ?>
+                                <td>
+                                    <span class="badge <?= $categ['status'] == 1 ? 'active' : 'inactive' ?>">
+                                        <?= $categ['status'] == 1 ? 'Active' : 'Inactive' ?>
+                                    </span>
+                                </td>
                                 </td>
                                 <td>
                                     <div class="actions">

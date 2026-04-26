@@ -38,6 +38,14 @@ class Supplier
     }
     public function SoftDeleteSupplier($id)
     {
+        $stmt0 = $this->conn->prepare("SELECT 1 FROM product_supplier WHERE supplier_id_fk = :id");
+
+        $stmt0->execute([':id'=> $id]);
+
+        if($stmt0->fetch()){
+            $stmt1 = $this->conn->prepare("UPDATE product_supplier SET supplier_id_fk = NULL WHERE supplier_id_fk = :id");
+            $stmt1->execute([':id'=>$id]);
+        }
         $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
         $stmt->execute([':id' => $id]);
         return $stmt->rowCount() > 0;

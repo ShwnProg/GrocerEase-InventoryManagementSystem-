@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $stock  = new Stock();
-    $date = date("Y-m-d H:i:s");
-    $result = $stock->StockIn($product_id, $quantity,$date );
+    $date   = date("Y-m-d H:i:s");
+    $result = $stock->StockIn($product_id, $quantity, $date);
 
     if ($result) {
         $reference_id   = GeneratedUniqueId();
@@ -44,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         if ($movement_result) {
             $_SESSION['success'] = ['in' => ['form' => 'Stock updated successfully']];
+            $_SESSION['old'] = [
+                'product_id'   => $product_id,
+                'product_name' => $product_name,
+            ];
         }
     } else {
         $_SESSION['error'] = ['in' => ['form' => 'Something went wrong']];
@@ -66,4 +70,3 @@ function GeneratedUniqueId()
 
     return $reference_id;
 }
-?>

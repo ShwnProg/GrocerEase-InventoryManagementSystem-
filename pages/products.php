@@ -72,14 +72,20 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <tr>
                                 <td><?= $count++ ?></td>
                                 <td><?= htmlspecialchars($prod['product_name']) ?></td>
-                                <td><?= htmlspecialchars($prod['category_name'] ?? 'N/A') ?></td>
+                                <td>
+                                    <?= htmlspecialchars(
+                                        isset($prod['category_name'])
+                                        ? $prod['category_name'] . ($prod['category_status'] == 0 ? ' (Inactive)' : '')
+                                        : 'Uncategorized'
+                                    ) ?>
+                                </td>
                                 <td>
                                     <?= $prod['cost_price']
                                         ? '₱' . number_format($prod['cost_price'], 2)
                                         : '<span style="color:#6b7280;">No cost price</span>' ?>
                                 </td>
                                 <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'N/A' : $prod['product_description']) ?>
+                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'No description available' : $prod['product_description']) ?>
                                 </td>
                                 <td style="color:#6b7280;">
                                     <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
@@ -99,8 +105,8 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                             </button>
                                         </form>
                                         <!-- DELETE ACTION -->
-                                        <button
-                                            class = "edit-btn" onclick="deleteProduct(<?= $prod['product_id_pk'] ?>, '<?= htmlspecialchars($prod['product_name']) ?>')">
+                                        <button class="edit-btn"
+                                            onclick="deleteProduct(<?= $prod['product_id_pk'] ?>, '<?= htmlspecialchars($prod['product_name']) ?>')">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                         <?php if ($prod['status'] == 1): ?>
@@ -161,19 +167,29 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 
                         <!-- CATEGORY -->
                         <div class="input">
-                            <label for="">Category</label>
-                            <select name="category" id="">
+                            <label>Category</label>
+                            <select name="category">
                                 <option value="">Select a category</option>
+
                                 <?php foreach ($categories as $cat): ?>
-                                    <?php if ($cat['is_deleted'] == 1)
-                                        continue; ?>
-                                    <option value="<?= $cat['category_id_pk'] ?>" <?= (isset($old['category']) && $old['category'] == $cat['category_id_pk']) ? 'selected' : '' ?>>
+                                    <?php
+                                    if ($cat['is_deleted'] == 1)
+                                        continue;
+
+                                    $isInactive = ($cat['status'] == 0);
+                                    $isSelected = (isset($old['category']) && $old['category'] == $cat['category_id_pk']);
+                                    ?>
+
+                                    <option value="<?= $cat['category_id_pk'] ?>" <?= $isSelected ? 'selected' : '' ?>
+                                        <?= $isInactive ? 'disabled' : '' ?>>
+
                                         <?= htmlspecialchars($cat['category_name']) ?>
+                                        <?= $isInactive ? ' (Inactive)' : '' ?>
                                     </option>
+
                                 <?php endforeach; ?>
                             </select>
                         </div>
-
                         <!-- SELLING PRICE -->
                         <div class="input">
                             <label for="selling price">Selling Price</label>

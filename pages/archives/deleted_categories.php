@@ -5,6 +5,7 @@
                 <th>No.</th>
                 <th>Category Name</th>
                 <th>Description</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -14,7 +15,13 @@
                 <tr>
                     <td><?= $no++ ?></td>
                     <td><?= htmlspecialchars($cat['category_name']) ?></td>
-                    <td><?= htmlspecialchars($cat['category_description'] == '' ? 'N/A' :$cat['category_description']) ?></td>
+                    <td><?= htmlspecialchars($cat['category_description'] == '' ? 'No description available' : $cat['category_description']) ?>
+                    </td>
+                    <td>
+                        <span class="badge <?= $cat['status'] == 1 ? 'active' : 'inactive' ?>">
+                            <?= $cat['status'] == 1 ? 'Active' : 'Inactive' ?>
+                        </span>
+                    </td>
                     <td>
                         <div class="actions">
                             <button type="button" class="edit-btn"
