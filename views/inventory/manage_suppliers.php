@@ -202,5 +202,5 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
         </section>
     </main>
 </body>
-<script src="../../assets/scripts/pages.js"></script>
+<script src="../../assets/js/pages.js"></script>
 </html>

@@ -251,5 +251,5 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
         </section>
     </main>
 </body>
-<script src="../../assets/scripts/pages.js"></script>
+<script src="../../assets/js/pages.js"></script>
 </html>
