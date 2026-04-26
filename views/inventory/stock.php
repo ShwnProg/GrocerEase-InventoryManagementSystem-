@@ -110,7 +110,7 @@ unset(
                                 <tr>
                                     <td><?= $no++ ?></td>
                                     <td><?= htmlspecialchars($stock['product_name']) ?></td>
-                                    <td><?= htmlspecialchars($stock['category_name'] ?? 'N/A') ?></td>
+                                    <td><?= htmlspecialchars($stock['category_name'] ?? 'Uncategorize') ?></td>
                                     <td><?= htmlspecialchars($stock['quantity']) ?></td>
                                     <td><?= htmlspecialchars($stock['last_updated']) ?></td>
                                     <td>
