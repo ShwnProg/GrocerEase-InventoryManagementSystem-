@@ -1528,7 +1528,6 @@ body {
     color: #c82828;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .kpi-grid .grid {
         flex: 1 1 140px;
