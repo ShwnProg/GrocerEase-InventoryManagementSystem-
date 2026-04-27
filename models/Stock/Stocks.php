@@ -111,6 +111,27 @@ class Stocks
 
         return $stmt->fetchColumn();
     }
+    public function GetTotalStockPerCategory()
+    {
+        $stmt = $this->conn->prepare("SELECT c.category_name, SUM(s.quantity) as total_stock FROM categories as c 
+                                      INNER JOIN products as p on p.category_id_fk = c.category_id_pk
+                                      INNER JOIN stocks as s on s.product_id_fk = p.product_id_pk
+                                      GROUP BY c.category_name");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+    public function GetStockStatus(){
+        $stmt = $this->conn->prepare("SELECT CASE WHEN quantity = 0 THEN 'Out of Stock'
+                                                  WHEN quantity BETWEEN 1 AND 10 THEN 'Low Stock'
+                                                  ELSE 'In Stock'
+                                                  END As stock_status, COUNT(*) AS total FROM stocks GROUP BY stock_status");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 
 }
 

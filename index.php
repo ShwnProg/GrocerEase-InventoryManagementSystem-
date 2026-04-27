@@ -26,7 +26,7 @@ unset($_SESSION['error'],$_SESSION['old']);
             <img src="../images/page-logo.png" alt="">
             <p>Grocer Ease</p>
         </div>
-        <form action="../validation/authentication.php" method="post">
+        <form action="../controllers/authentication.php" method="post">
 
             <!-- INVALID AUTHENTICATION -->
             <?php if (!empty($error['invalid'])): ?>

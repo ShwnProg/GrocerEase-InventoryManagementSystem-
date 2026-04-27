@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         $_SESSION['error'] = "Something went wrong";
     }
-    header("Location: ../../pages/edit_product.php?product_id=$product_id");
+    header("Location: ../../views/inventory/edit_product.php?product_id=$product_id");
     exit;   
 
 }

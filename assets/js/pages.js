@@ -332,3 +332,4 @@ if (stockOutModal) {
         if (e.target === stockOutModal) stockOutModal.classList.remove('active');
     });
 }
+

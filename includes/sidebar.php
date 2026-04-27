@@ -62,7 +62,7 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
                 <span>Profile</span>
             </a>
 
-            <a href="../validation/logout.php" class="action logout">
+            <a href="../../controllers/logout.php" class="action logout">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span>Logout</span>
             </a>

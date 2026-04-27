@@ -45,5 +45,15 @@ class StockMovements
 
         return $stmt->fetchAll();
     }
+    public function GetInventoryLogsTrend(){
+        $stmt = $this->conn->prepare("SELECT DATE(date) as date,
+                                      SUM(CASE WHEN reference_type = 'IN' THEN quantity ELSE 0 END) as stock_in,
+                                      SUM(CASE WHEN reference_type = 'OUT' THEN quantity ELSE 0 END) as stock_out
+                                      FROM stock_movements GROUP BY DATE(date) 
+                                      ORDER BY date ASC");
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }
 ?>

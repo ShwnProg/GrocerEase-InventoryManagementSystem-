@@ -1540,3 +1540,51 @@ body {
         flex: 1 1 100%;
     }
 }
+
+
+.charts-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 24px;
+}
+
+.chart-card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.chart-card h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111;
+    margin: 0 0 4px 0;
+}
+
+.chart-card p {
+    font-size: 11px;
+    color: #9ca3af;
+    margin: 0 0 14px 0;
+}
+
+
+.chart-card hr {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    margin: 0 0 16px 0;
+}
+
+
+.chart-wrap {
+    position: relative;
+    height: 210px;
+}
+
+@media (max-width: 700px) {
+    .charts-row {
+        flex-direction: column;
+    }
+}
