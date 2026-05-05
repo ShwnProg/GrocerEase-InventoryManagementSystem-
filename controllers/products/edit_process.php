@@ -1,5 +1,5 @@
 <?php
-require_once '../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 session_start();
 
@@ -46,10 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (empty($errors['product_name']) && strlen($product_name) > 100)
             $errors['product_name'] = "Product name must not exceed 100 characters.";
 
-        if (empty($errors['product_name']) && empty($errors['category']))
-            if ($product_name != $original['product_name'] && $category != $original['category_id_fk'])
-                if ($product->CheckDuplicateProduct($product_name, $category))
-                    $errors['product_name'] = "Product already exists in the selected category.";
+        // if (empty($errors['product_name']) && empty($errors['category']))
+        if ($product_name != $original['product_name'] || $category != $original['category_id_fk'])
+            if ($product->CheckDuplicateProduct($product_name, $category))
+                $errors['product_name'] = "Product already exists in the selected category.";
 
         if (empty($errors['selling_price'])) {
             if (!is_numeric($selling_price))
@@ -81,8 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $_SESSION['error'] = "Something went wrong";
     }
     header("Location: ../../views/inventory/edit_product.php?product_id=$product_id");
-    exit;   
-
+    exit;
 }
 function IsSameData($original, $product_name, $category, $selling_price, $description, $status)
 {
@@ -97,4 +96,3 @@ function IsSameData($original, $product_name, $category, $selling_price, $descri
     }
     return false;
 }
-?>

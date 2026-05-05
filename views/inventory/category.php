@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 
 include "../../includes/auth_check.php";
@@ -8,14 +8,20 @@ include "../../includes/auth_check.php";
 $_SESSION['page_title'] = "CATEGORY";
 
 $search = $_GET['search'] ?? '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10; // Categories per page
+$base_query = $search !== '' ? 'search=' . urlencode($search) : '';
 
 $category = new Category($db);
 
 if (!empty($search)) {
     $categories = $category->SearchCategorY($search);
+    $total_categories = count($categories);
+    $total_pages = 1;
 } else {
-
-    $categories = $category->GetAllCategories();
+    $categories = $category->GetPaginatedCategories($page, $limit);
+    $total_categories = $category->GetTotalActiveCategories();
+    $total_pages = ceil($total_categories / $limit);
 }
 
 // check if modal should open (error or success)
@@ -73,49 +79,81 @@ unset($_SESSION['success'], $_SESSION['errors']);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $num = 0; ?>
+                        <?php $num = ($page - 1) * $limit + 1;?>
                         <?php if (empty($categories)): ?>
-                            <tr>
+                            
                                 <td colspan="5" style="text-align:center; color:#6b7280;">
                                     No Categories found
                                 </td>
                             <?php else: ?>
                                 <?php foreach ($categories as $categ): ?>
-                                <tr>
+                            <tr>
 
-                                    <?php if ($categ['is_deleted'] == 1)
+                                <?php if ($categ['is_deleted'] == 1)
                                         continue; ?>
-                                    <!-- skip deleted categories -->
-                                    <td><?= ++$num ?></td>
-                                    <td><?= htmlspecialchars($categ['category_name']) ?></td>
-                                    <td><?= htmlspecialchars($categ['category_description'] == '' ?
+                                <!-- skip deleted categories -->
+                                <td><?= $num++ ?></td>
+                                <td><?= htmlspecialchars($categ['category_name']) ?></td>
+                                <td><?= htmlspecialchars($categ['category_description'] == '' ?
                                         'No description available' : $categ['category_description']) ?>
-                                    <td>
-                                        <span class="badge <?= $categ['status'] == 1 ? 'active' : 'inactive' ?>">
-                                            <?= $categ['status'] == 1 ? 'Active' : 'Inactive' ?>
-                                        </span>
-                                    </td>
-                                    </td>
-                                    <td>
-                                        <div class="actions">
-                                            <form action="edit_category.php" method="POST">
-                                                <input type="hidden" name="category_id" value="<?= $categ['category_id_pk'] ?>">
-                                                <button type="submit" class="edit-btn">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </form>
-                                            <!-- DELETE -->
-                                            <button class="edit-btn"
-                                                onclick="deleteCategory(<?= $categ['category_id_pk'] ?>, '<?= htmlspecialchars($categ['category_name']) ?>')">
-                                                <i class="fa-solid fa-trash"></i>
+                                <td>
+                                    <span class="badge <?= $categ['status'] == 1 ? 'active' : 'inactive' ?>">
+                                        <?= $categ['status'] == 1 ? 'Active' : 'Inactive' ?>
+                                    </span>
+                                </td>
+                                </td>
+                                <td>
+                                    <div class="actions">
+                                        <form action="edit_category.php" method="POST">
+                                            <input type="hidden" name="category_id" value="<?= $categ['category_id_pk'] ?>">
+                                            <button type="submit" class="edit-btn">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <span>Edit</span>
                                             </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                        </form>
+                                        <!-- DELETE -->
+                                        <button type="button" class="edit-btn"
+                                            onclick="deleteCategory(<?= $categ['category_id_pk'] ?>, '<?= htmlspecialchars($categ['category_name']) ?>')">
+                                            <i class="fa-solid fa-trash"></i>
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     </tbody>
                 </table>
+
+               <?php
+                $window = 10;
+                $current_chunk = (int) floor(($page - 1) / $window);
+                $start = $current_chunk * $window + 1;
+                $end = min($total_pages, $start + $window - 1);
+                ?>
+
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">&laquo; Prev</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">&laquo; Prev</span>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"
+                                class="page-btn <?= $i === $page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">Next &raquo;</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">Next &raquo;</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
             <!-- Add Category Modal -->
             <div class="add-modal <?php echo $open_modal ? 'active' : ''; ?>" id="add-modal">
@@ -161,6 +199,6 @@ unset($_SESSION['success'], $_SESSION['errors']);
         </section>
     </main>
 </body>
-<script src="../../assets/js/pages.js"></script>
+<script src="<?= ASSET_URL ?>/js/pages.js"></script>
 
 </html>

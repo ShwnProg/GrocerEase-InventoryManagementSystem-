@@ -24,6 +24,33 @@ class Supplier
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function GetPaginatedSuppliers($page = 1, $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT supplier_id_pk, 
+                                                 supplier_name, 
+                                                 contact_person,
+                                                 phone_number,
+                                                 email, 
+                                                 address, 
+                                                 company_name,is_deleted 
+                                      FROM suppliers 
+                                      WHERE is_deleted = 0
+                                      ORDER BY supplier_id_pk DESC
+                                      LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function GetTotalActiveSuppliers()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM suppliers WHERE is_deleted = 0");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
     public function GetSupplierById($id)
     {
         $stmt = $this->conn->prepare("SELECT supplier_id_pk, 
@@ -38,31 +65,54 @@ class Supplier
     }
     public function SoftDeleteSupplier($id)
     {
-        $stmt0 = $this->conn->prepare("SELECT 1 FROM product_supplier WHERE supplier_id_fk = :id");
+        try {
+            $this->conn->beginTransaction();
 
-        $stmt0->execute([':id' => $id]);
+            $stmt0 = $this->conn->prepare("SELECT 1 FROM product_supplier WHERE supplier_id_fk = :id");
 
-        if ($stmt0->fetch()) {
-            $stmt1 = $this->conn->prepare("UPDATE product_supplier SET supplier_id_fk = NULL WHERE supplier_id_fk = :id");
-            $stmt1->execute([':id' => $id]);
+            $stmt0->execute([':id' => $id]);
+
+            if ($stmt0->fetch()) {
+                $stmt1 = $this->conn->prepare("UPDATE product_supplier SET supplier_id_fk = NULL WHERE supplier_id_fk = :id");
+                $stmt1->execute([':id' => $id]);
+            }
+            $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
+            $stmt->execute([':id' => $id]);
+            return $stmt->rowCount() > 0;
+
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            return false;
         }
-        $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
-        $stmt->execute([':id' => $id]);
-        return $stmt->rowCount() > 0;
     }
-    public function GetDeletedSuppliers()
+
+    public function GetDeletedSuppliersPaginated($page = 1, $limit = 10)
     {
+        $offset = ($page - 1) * $limit;
         $stmt = $this->conn->prepare("SELECT supplier_id_pk, 
                                                  supplier_name, 
                                                  contact_person,
                                                  phone_number,
                                                  email, 
                                                  address, 
-                                                 company_name FROM suppliers WHERE is_deleted = 1 
-                                                 ORDER BY deleted_at DESC");
+                                                 company_name 
+                                      FROM suppliers 
+                                      WHERE is_deleted = 1
+                                      ORDER BY deleted_at DESC
+                                      LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function GetTotalDeletedSuppliers()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM suppliers WHERE is_deleted = 1");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public function CheckDuplicateSupplier($supplier_name)
     {
         $stmt = $this->conn->prepare('SELECT COUNT(*) FROM suppliers WHERE supplier_name = :name AND is_deleted = 0');
@@ -98,7 +148,7 @@ class Supplier
     }
     public function RestoreSupplier($id)
     {
-        $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 0 WHERE supplier_id_pk = :id");
+        $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 0, deleted_at = NULL WHERE supplier_id_pk = :id");
 
         $stmt->execute([':id' => $id]);
 
@@ -121,14 +171,15 @@ class Supplier
                                              email, 
                                              address, 
                                              company_name,is_deleted FROM suppliers 
-                                             WHERE supplier_name LIKE :search
+                                             WHERE is_deleted = 0 AND supplier_name LIKE :search 
                                              ORDER BY supplier_id_pk DESC");
 
         $stmt->execute([':search' => $search . '%']);
 
         return $stmt->fetchAll();
     }
-    public function GetTotalSupplier(){
+    public function GetTotalSupplier()
+    {
         $stmt = $this->conn->prepare("SELECT COUNT(*) as total_supplier FROM suppliers WHERE is_deleted = 0");
 
         $stmt->execute();

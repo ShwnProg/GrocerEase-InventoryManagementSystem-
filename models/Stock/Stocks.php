@@ -58,9 +58,10 @@ class Stocks
 
         return $stmt->rowCount() > 0;
     }
+    
     public function StockOut($product_id, $quantity, $date)
     {
-        $stmt = $this->conn->prepare("UPDATE stocks set quantity = quantity - :quantity,last_updated = :date WHERE product_id_fk = :id");
+        $stmt = $this->conn->prepare("UPDATE stocks set quantity = quantity - :quantity,last_updated = :date WHERE product_id_fk = :id AND quantity >= :quantity");
 
         $stmt->execute([
             ':quantity' => $quantity,
@@ -97,9 +98,7 @@ class Stocks
     }
     public function GetTotalLowStockItems()
     {
-        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM stocks INNER JOIN products on product_id_fk = product_id_pk 
-                                      WHERE quantity <= 10");
-
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM stocks INNER JOIN products on product_id_fk = product_id_pk  WHERE quantity > 0 AND quantity <= 10");
         $stmt->execute();
         return $stmt->fetchColumn();
     }
@@ -122,7 +121,8 @@ class Stocks
 
         return $stmt->fetchAll();
     }
-    public function GetStockStatus(){
+    public function GetStockStatus()
+    {
         $stmt = $this->conn->prepare("SELECT CASE WHEN quantity = 0 THEN 'Out of Stock'
                                                   WHEN quantity BETWEEN 1 AND 10 THEN 'Low Stock'
                                                   ELSE 'In Stock'
@@ -132,7 +132,38 @@ class Stocks
 
         return $stmt->fetchAll();
     }
+    public function GetStocksPaginated($limit, $offset)
+    {
+        $stmt = $this->conn->prepare("SELECT s.stock_id_pk,
+                                         s.product_id_fk,
+                                         p.product_name,
+                                         p.status,
+                                         s.quantity,
+                                         c.category_name,
+                                         p.is_deleted,
+                                         s.last_updated 
+                                  FROM stocks as s 
+                                  INNER JOIN products as p ON s.product_id_fk = p.product_id_pk
+                                  LEFT JOIN categories as c ON p.category_id_fk = c.category_id_pk AND c.is_deleted = 0
+                                  WHERE s.quantity >= 0 
+                                  AND p.is_deleted = 0
+                                  AND p.status = 1
+                                  ORDER BY stock_id_pk DESC
+                                  LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
+    public function GetTotalStocksCount()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) FROM stocks 
+                                  INNER JOIN products ON product_id_fk = product_id_pk
+                                  WHERE quantity >= 0
+                                  AND is_deleted = 0
+                                  AND status = 1");
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
 }
-
-?>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 if (isset($_POST['product_id'])) {
     $product_id = $_POST['product_id'];

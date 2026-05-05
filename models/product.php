@@ -32,6 +32,39 @@ class Product
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function GetPaginatedProducts($page = 1, $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT p.product_id_pk,
+                                             p.product_name,
+                                             c.category_name,
+                                             ps.cost_price,
+                                             p.selling_price,
+                                             p.product_description,
+                                             p.status,
+                                             p.is_deleted,
+                                             s.supplier_name as preferred_supplier_name,
+                                             c.status as category_status
+                                             FROM products p
+                                             LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk AND c.is_deleted = 0
+                                             LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
+                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
+                                             WHERE p.is_deleted = 0
+                                             ORDER BY p.product_id_pk DESC
+                                             LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function GetTotalActiveProducts()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM products WHERE is_deleted = 0");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public function AddProduct($name, $category, $selling_price, $description, $status)
     {
         $stmt = $this->conn->prepare("INSERT INTO products (product_name,category_id_fk,selling_price,product_description,status)
@@ -98,6 +131,39 @@ class Product
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function GetDeletedProductsPaginated($page = 1, $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT p.product_id_pk,
+                                             p.product_name,
+                                             c.category_name,
+                                             MIN(ps.cost_price) AS cost_price,
+                                             p.selling_price,
+                                             p.product_description,
+                                             p.status,
+                                             p.is_deleted,
+                                             c.status as category_status
+                                             FROM products p
+                                             LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk
+                                             LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
+                                             WHERE p.is_deleted = 1
+                                             GROUP BY p.product_id_pk
+                                             ORDER BY p.deleted_at DESC
+                                             LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function GetTotalDeletedProducts()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM products WHERE is_deleted = 1");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public function GetProductInfoById($product_id)
     {
         $stmt = $this->conn->prepare("SELECT p.product_name,
@@ -140,7 +206,7 @@ class Product
     public function RestoreProduct($id)
     {
         $stmt = $this->conn->prepare("UPDATE products SET is_deleted = 0 WHERE product_id_pk = :id");
-        $stmt->execute(['id' => $id]);
+        $stmt->execute([':id' => $id]);
 
         return $stmt->rowCount() > 0;
     }
@@ -183,7 +249,7 @@ class Product
                                              LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk AND c.is_deleted = 0
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
                                              LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
-                                             WHERE product_name LIKE :search
+                                             WHERE product_name LIKE :search AND is_deleted = 0
                                              ORDER BY product_id_pk DESC");
 
         $stmt->execute([':search' => $search . '%']);

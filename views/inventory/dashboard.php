@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 include "../../includes/auth_check.php";
 
@@ -67,7 +67,7 @@ if (!empty($inventory_logs)) {
         <?php include '../../includes/topbar.php'; ?>
 
         <section class="page-content">
-
+             
             <!-- KPI GRID -->
             <div class="kpi-grid">
                 <div class="grid">

@@ -1,19 +1,26 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 include "../../includes/auth_check.php";
 
 $_SESSION['page_title'] = "SUPPLIERS";
 
 $search = $_GET['search'] ?? '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10; // Suppliers per page
+$base_query = $search !== '' ? 'search=' . urlencode($search) : '';
 
 $supplier = new Supplier($db);
 
 if (!empty($search)) {
     $suppliers = $supplier->SearchSupplier($search);
+    $total_suppliers = count($suppliers);
+    $total_pages = 1;
 } else {
-    $suppliers = $supplier->GetAllSuppliers();
+    $suppliers = $supplier->GetPaginatedSuppliers($page, $limit);
+    $total_suppliers = $supplier->GetTotalActiveSuppliers();
+    $total_pages = ceil($total_suppliers / $limit);
 }
 
 $open_modal = isset($_SESSION['add_supplier_error']) || isset($_SESSION['success_msg']);
@@ -78,7 +85,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 1; ?>
+                        <?php $no = ($page - 1) * $limit + 1; ?>
                         <?php if (empty($suppliers)): ?>
                             <tr>
                                 <td colspan="8" style="text-align:center; color:#6b7280;">
@@ -88,45 +95,78 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                 <?php foreach ($suppliers as $sup): ?>
                                     <?php if ($sup['is_deleted'] == 1)
                                         continue; ?>
-                                <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
-                                    <td><?= htmlspecialchars($sup['contact_person']) ?></td>
-                                    <td><?= htmlspecialchars($sup['phone_number']) ?></td>
-                                    <td><?= htmlspecialchars($sup['address']) ?></td>
-                                    <td><?= htmlspecialchars($sup['company_name']) ?></td>
-                                    <td><?= htmlspecialchars($sup['email']) ?></td>
+                            <tr>
+                                <td><?= $no++ ?></td>
+                                <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
+                                <td><?= htmlspecialchars($sup['contact_person']) ?></td>
+                                <td><?= htmlspecialchars($sup['phone_number']) ?></td>
+                                <td><?= htmlspecialchars($sup['address']) ?></td>
+                                <td><?= htmlspecialchars($sup['company_name']) ?></td>
+                                <td class="email-cell"><?= htmlspecialchars($sup['email']) ?></td>
 
-                                    <!-- <td>
+                                <!-- <td>
                                      <span class="badge <?= $sup['status'] == 1 ? 'active' : 'inactive' ?>">
                                         <?= $sup['status'] == 1 ? 'Active' : 'Inactive' ?>
                                     </span>
                                 </td> -->
-                                    <td>
-                                        <!-- EDIT SUPPLIER -->
-                                        <div class="actions">
-                                            <!-- EDIT BUTTON -->
-                                            <form action="edit_supplier.php" method="GET">
-                                                <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
-                                                <button type="submit" class="edit-btn">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
-                                                </button>
-                                            </form>
-
-                                            <!-- DELETE BUTTON -->
-                                            <button type="button" class="edit-btn"
-                                                onclick="deleteSupplier('<?= $sup['supplier_id_pk'] ?>', '<?= htmlspecialchars($sup['supplier_name']) ?>')">
-                                                <i class="fa-solid fa-trash"></i>
+                                <td>
+                                    <!-- EDIT SUPPLIER -->
+                                    <div class="actions">
+                                        <!-- EDIT BUTTON -->
+                                        <form action="edit_supplier.php" method="GET">
+                                            <input type="hidden" name="supplier_id" value="<?= $sup['supplier_id_pk'] ?>">
+                                            <button type="submit" class="edit-btn">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <span>Edit</span>
                                             </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                        </form>
+
+                                        <!-- DELETE BUTTON -->
+                                        <button type="button" class="edit-btn"
+                                            onclick="deleteSupplier('<?= $sup['supplier_id_pk'] ?>', '<?= htmlspecialchars($sup['supplier_name']) ?>')">
+                                            <i class="fa-solid fa-trash"></i>
+                                            <span>Delete</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     </tbody>
                 </table>
-            </div>
+                <!-- PAGINATION -->
+               <?php
+                $window = 10;
+                $current_chunk = (int) floor(($page - 1) / $window);
+                $start = $current_chunk * $window + 1;
+                $end = min($total_pages, $start + $window - 1);
+                ?>
 
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">&laquo; Prev</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">&laquo; Prev</span>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"
+                                class="page-btn <?= $i === $page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">Next &raquo;</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">Next &raquo;</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+
+            </div>
 
             <!-- ADD SUPPLIER MODAL -->
             <div class="add-modal <?= $open_add_modal ? 'active' : '' ?>" id="add-modal">
@@ -221,5 +261,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
         </section>
     </main>
 </body>
-<script src="../../assets/js/pages.js"></script>
+<script src="<?= ASSET_URL ?>/js/pages.js"></script>
+
 </html>

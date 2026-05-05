@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 
 if (isset($_POST['category_id'])) {
@@ -33,9 +33,9 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
 <?php include "../../includes/head.php" ?>
 
 <body>
-    <?php include '../../includes/sidebar.php'; ?>
+    <?php include "../../includes/sidebar.php"; ?>
     <main class='main-content'>
-        <?php include '../../includes/topbar.php'; ?>
+        <?php include "../../includes/topbar.php"; ?>
         <section class="page-content">
             <div class="tool-bar">
                 <a href="category.php" class="back-btn"><i class="fas fa-arrow-left"></i> back</a>

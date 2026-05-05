@@ -358,7 +358,7 @@ body {
     background: #fff;
     border-radius: 5px;
     border: 1px solid rgba(0, 0, 0, 0.07);
-    overflow-x: hidden;
+    overflow-x: auto;
     overflow-y: auto;
     box-shadow: 0 0 5px #0000001a;
     max-height: 500px;
@@ -368,7 +368,8 @@ body {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
-    table-layout: fixed;
+    table-layout: auto;
+    min-width: 1000px;
 }
 
 .menu-table thead {
@@ -412,20 +413,28 @@ body {
 .menu-table td:nth-child(6) {
     white-space: normal;
     word-break: break-word;
-    overflow-wrap: break-word;
-    max-width: 180px;
+    overflow-wrap: anywhere;
+    max-width: 220px;
+}
+
+.menu-table td.email-cell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
 }
 
 /*  Actions column  */
 .menu-table th:last-child,
 .menu-table td:last-child {
     text-align: center;
-    width: 230px;
+    width: auto;
+    white-space: nowrap;
 }
 
 .menu-table .actions {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     gap: 6px;
@@ -460,7 +469,9 @@ body {
 /* ACTION BUTTONS */
 .actions {
     display: flex;
+    flex-wrap: nowrap;
     gap: 6px;
+    align-items: center;
 }
 
 .actions form {
@@ -475,6 +486,7 @@ body {
     border-radius: 6px;
     transition: background 0.15s;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .edit-btn:hover {
@@ -506,6 +518,7 @@ body {
     border-radius: 6px;
     transition: background 0.15s;
     font-size: 14px;
+    white-space: nowrap;
 }
 
 .manage-btn:hover {
@@ -891,6 +904,55 @@ body {
 .preferred-btn:disabled {
     cursor: not-allowed;
     opacity: 0.5;
+}
+
+.pagination,
+.pagination-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+}
+
+.page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 42px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #fff;
+    color: #111827;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.page-btn:hover:not(.disabled):not(.active) {
+    background: #f9fafb;
+}
+
+.page-btn.active,
+.page-btn.page-active {
+    background: #376b39;
+    border-color: #376b39;
+    color: #ffffff;
+}
+
+.page-btn.disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    background: #f3f4f6;
+    border-color: #e5e7eb;
+    color: #9ca3af;
+}
+
+.page-btn:active:not(.disabled) {
+    transform: scale(0.98);
 }
 
 /* EDIT */
@@ -1586,4 +1648,439 @@ body {
     .charts-row {
         flex-direction: column;
     }
+}
+
+/* topbar darkmode */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* pushes title left, actions right */
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* space between toggle and profile */
+    margin-left: auto;
+}
+
+#dark-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: inherit;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+#dark-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* ══════════════════════════════════════
+   DARK MODE — Green & Black Theme
+══════════════════════════════════════ */
+
+/* ── BASE ── */
+body.dark-mode {
+    background-color: #111827;
+    color: #d1d5db;
+}
+
+/* ── TOPBAR ── */
+body.dark-mode .topbar {
+    background-color: #1a2235;
+    border-bottom-color: #2a3a4a;
+}
+
+body.dark-mode .topbar-title p {
+    color: #d1d5db;
+}
+
+body.dark-mode .profile-dropdown {
+    color: #d1d5db;
+}
+
+body.dark-mode .profile-dropdown:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .profile-dropdown i {
+    color: #9ca3af;
+}
+
+body.dark-mode .profile-menu {
+    background: #1a2235;
+    border-color: #2a3a4a;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .profile-menu a {
+    color: #d1d5db;
+}
+
+body.dark-mode .profile-menu a:hover {
+    background: rgba(28, 85, 21, 0.15);
+    color: #6abf69;
+}
+
+body.dark-mode .profile-menu a:hover i {
+    color: #6abf69;
+}
+
+body.dark-mode .profile-menu .logout a {
+    color: #f87171;
+}
+
+body.dark-mode .profile-menu .logout {
+    border-top-color: #2a3a4a;
+}
+
+/* ── SIDEBAR ── */
+body.dark-mode .side-bar {
+    background-color: #1a2235;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .logo p {
+    color: #6abf69;
+}
+
+body.dark-mode .side-bar-menu label {
+    color: #6abf69;
+}
+
+body.dark-mode .menu-btn {
+    color: #b0bec5;
+}
+
+body.dark-mode .menu-btn:hover {
+    background: rgba(106, 191, 105, 0.08);
+    color: #d1d5db;
+}
+
+body.dark-mode .menu-btn.active {
+    background: rgba(106, 191, 105, 0.12);
+    color: #6abf69;
+}
+
+body.dark-mode .menu-btn i {
+    color: inherit;
+}
+
+body.dark-mode .side-bar-menu .action {
+    color: #b0bec5;
+}
+
+body.dark-mode .side-bar-menu .action:hover {
+    color: #d1d5db;
+}
+
+body.dark-mode .side-bar-menu .action.logout {
+    color: #f87171;
+}
+
+/* ── MAIN CONTENT ── */
+body.dark-mode .main-content,
+body.dark-mode .page-content {
+    background-color: #111827;
+}
+
+/* ── KPI CARDS ── */
+body.dark-mode .kpi-grid .grid {
+    background-color: #1a2235;
+    border-left-color: #3a7d3a;
+    color: #d1d5db;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .kpi-grid .grid span {
+    color: #8a9bb0;
+}
+
+body.dark-mode .kpi-grid .grid p {
+    color: #6abf69;
+}
+
+body.dark-mode .kpi-grid .grid .card-icon {
+    background: rgba(106, 191, 105, 0.1);
+    color: #6abf69;
+}
+
+body.dark-mode .kpi-grid .grid:nth-child(5) {
+    background: rgba(180, 100, 0, 0.12);
+    border-left-color: #c87d0a;
+}
+
+body.dark-mode .kpi-grid .grid:nth-child(5) p {
+    color: #e8a838;
+}
+
+body.dark-mode .kpi-grid .grid:nth-child(5) .card-icon {
+    background: rgba(200, 125, 10, 0.1);
+    color: #e8a838;
+}
+
+body.dark-mode .kpi-grid .grid:nth-child(6) {
+    background: rgba(180, 30, 30, 0.12);
+    border-left-color: #b52828;
+}
+
+body.dark-mode .kpi-grid .grid:nth-child(6) p {
+    color: #f47171;
+}
+
+body.dark-mode .kpi-grid .grid:nth-child(6) .card-icon {
+    background: rgba(180, 30, 30, 0.1);
+    color: #f47171;
+}
+
+/* ── CHART CARDS ── */
+body.dark-mode .chart-card {
+    background-color: #1a2235;
+    border-color: #2a3a4a;
+}
+
+body.dark-mode .chart-card h3 {
+    color: #d1d5db;
+}
+
+body.dark-mode .chart-card p {
+    color: #8a9bb0;
+}
+
+body.dark-mode .chart-card hr {
+    border-top-color: #2a3a4a;
+}
+
+/* ── TABLE ── */
+body.dark-mode .menu-table {
+    background-color: #1a2235;
+    border-color: #2a3a4a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .menu-table thead {
+    background-color: #151e2e;
+}
+
+body.dark-mode .menu-table thead th {
+    color: #8a9bb0;
+    border-bottom-color: #2a3a4a;
+}
+
+body.dark-mode .menu-table tbody tr {
+    border-bottom-color: #222e42;
+}
+
+body.dark-mode .menu-table tbody tr:hover {
+    background-color: #1f2e42;
+}
+
+body.dark-mode .menu-table tbody td {
+    color: #8a9bb0;
+}
+
+/* ── SEARCH ── */
+body.dark-mode .search-area form {
+    background: #1a2235;
+    border-color: #2a3a4a;
+}
+
+body.dark-mode .search-area form input {
+    color: #d1d5db;
+    background: transparent;
+}
+
+body.dark-mode .search-area form input::placeholder {
+    color: #5a6a7a;
+}
+
+body.dark-mode .search-area form i {
+    color: #3a7d3a;
+
+}
+
+/* ── PROFILE PAGE ── */
+body.dark-mode .profile-card,
+body.dark-mode .identity-card {
+    background-color: #1a2235;
+    border-color: #2a3a4a;
+}
+
+body.dark-mode .identity-name {
+    color: #d1d5db;
+}
+
+body.dark-mode .identity-email {
+    color: #8a9bb0;
+}
+
+body.dark-mode .card-section-label {
+    color: #6abf69;
+}
+
+body.dark-mode .form-field label {
+    color: #8a9bb0;
+}
+
+body.dark-mode .input-wrap input {
+    background: #111827;
+    border-color: #2a3a4a;
+    color: #d1d5db;
+}
+
+body.dark-mode .input-wrap input:focus {
+    border-color: #3a7d3a;
+    background: #111827;
+    box-shadow: 0 0 0 3px rgba(58, 125, 58, 0.15);
+}
+
+body.dark-mode .field-hint {
+    color: #5a6a7a;
+}
+
+/* ── BADGES ── */
+body.dark-mode .badge.active {
+    background: rgba(91, 105, 91, 0.12);
+    color: #6abf69;
+}
+
+body.dark-mode .badge.inactive {
+    background: rgba(244, 113, 113, 0.12);
+    color: #f47171;
+}
+
+/* ── SCROLLBAR ── */
+body.dark-mode ::-webkit-scrollbar {
+    width: 5px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+    background: #1a2235;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+    background: #2a3a4a;
+    border-radius: 3px;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: #3a7d3a;
+}
+
+/* DARK MODE — Header Buttons (Products / Categories / Suppliers) */
+body.dark-mode .header-btn {
+    background: #1a2235;
+    border-color: #2a3a4a;
+}
+
+body.dark-mode .header-btn a {
+    color: #8a9bb0;
+}
+
+body.dark-mode .header-btn a:hover {
+    color: #6abf69;
+    background: rgba(106, 191, 105, 0.08);
+}
+
+body.dark-mode .header-btn a.active {
+    color: #6abf69;
+    background: #111827;
+    border-color: #2a3a4a;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+/* DARK MODE — Edit, Delete, Manage button text */
+body.dark-mode .edit-btn,
+body.dark-mode .manage-btn {
+    color: #8a9bb0;
+}
+
+body.dark-mode .edit-btn .fa-pen-to-square {
+    color: #8a9bb0;
+}
+
+body.dark-mode .edit-btn .fa-trash {
+    color: rgba(200, 40, 40, 0.7);
+}
+
+body.dark-mode .edit-btn .fa-user-minus {
+    color: rgba(243, 156, 18, 0.7);
+}
+
+body.dark-mode .manage-btn .fa-truck {
+    color: #8a9bb0;
+}
+
+/* Hover states */
+body.dark-mode .edit-btn:hover {
+    color: #6abf69;
+    background: rgba(106, 191, 105, 0.08);
+}
+
+body.dark-mode .edit-btn:hover .fa-pen-to-square {
+    color: #6abf69;
+}
+
+body.dark-mode .manage-btn:hover {
+    color: #6abf69;
+    background: rgba(106, 191, 105, 0.08);
+}
+
+body.dark-mode .manage-btn:hover .fa-truck {
+    color: #6abf69;
+}
+/* DARK MODE — Stock In / Stock Out button text */
+body.dark-mode .btn-in {
+    color: #6abf69;
+    background: rgba(106, 191, 105, 0.08);
+}
+
+body.dark-mode .btn-in i {
+    color: #6abf69;
+}
+
+body.dark-mode .btn-in:hover {
+    background: rgba(106, 191, 105, 0.15);
+}
+
+body.dark-mode .btn-out {
+    color: #f47171;
+    background: rgba(200, 40, 40, 0.08);
+}
+
+body.dark-mode .btn-out i {
+    color: #f47171;
+}
+
+body.dark-mode .btn-out:hover {
+    background: rgba(200, 40, 40, 0.15);
+}
+/* DARK MODE — Pagination buttons */
+body.dark-mode .page-btn {
+    background: #1a2235;
+    border-color: #2a3a4a;
+    color: #8a9bb0;
+}
+
+body.dark-mode .page-btn:hover:not(.disabled):not(.active) {
+    background: #1f2e42;
+    border-color: #3a7d3a;
+    color: #6abf69;
+}
+
+body.dark-mode .page-btn.active,
+body.dark-mode .page-btn.page-active {
+    background: #1a2235;
+    border-color: #3a7d3a;
+    color: #6abf69;
+}
+
+body.dark-mode .page-btn.disabled {
+    background: #151e2e;
+    border-color: #2a3a4a;
+    color: #3a4a5a;
 }

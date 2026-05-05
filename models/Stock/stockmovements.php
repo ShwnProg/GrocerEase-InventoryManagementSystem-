@@ -45,6 +45,53 @@ class StockMovements
 
         return $stmt->fetchAll();
     }
+
+    public function GetStockMovementsPaginated($page = 1, $limit = 10, $search = '')
+    {
+        $offset = ($page - 1) * $limit;
+        $baseQuery = "SELECT p.product_name, m.quantity, m.reference_type, m.reference_id, m.reason, m.date 
+                      FROM stock_movements as m
+                      LEFT JOIN products as p ON m.product_id = p.product_id_pk";
+
+        if (!empty($search)) {
+            $baseQuery .= " WHERE p.product_name LIKE :search OR m.reference_id LIKE :search OR m.reason LIKE :search";
+        }
+
+        $baseQuery .= " ORDER BY movement_id_pk DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->conn->prepare($baseQuery);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+
+        if (!empty($search)) {
+            $query = '%' . $search . '%';
+            $stmt->bindParam(':search', $query, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    public function GetTotalStockMovements($search = '')
+    {
+        $baseQuery = "SELECT COUNT(*) FROM stock_movements as m
+                      LEFT JOIN products as p ON m.product_id = p.product_id_pk";
+
+        if (!empty($search)) {
+            $baseQuery .= " WHERE p.product_name LIKE :search OR m.reference_id LIKE :search OR m.reason LIKE :search";
+        }
+
+        $stmt = $this->conn->prepare($baseQuery);
+
+        if (!empty($search)) {
+            $query = '%' . $search . '%';
+            $stmt->bindParam(':search', $query, PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public function GetInventoryLogsTrend(){
         $stmt = $this->conn->prepare("SELECT DATE(date) as date,
                                       SUM(CASE WHEN reference_type = 'IN' THEN quantity ELSE 0 END) as stock_in,

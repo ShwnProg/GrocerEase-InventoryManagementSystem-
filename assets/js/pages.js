@@ -332,4 +332,25 @@ if (stockOutModal) {
         if (e.target === stockOutModal) stockOutModal.classList.remove('active');
     });
 }
+// PROFILE DROPDOWN TOGGLE
+// const profileDropdown = document.querySelector('.profile-dropdown');
+// const profileMenu     = document.querySelector('.profile-menu');
+
+// if (profileDropdown && profileMenu) {
+//     profileDropdown.addEventListener('click', function (e) {
+//         e.stopPropagation();
+//         const isVisible = profileMenu.style.display === 'block';
+//         profileMenu.style.display = isVisible ? 'none' : 'block';
+//     });
+
+//     // Close when clicking anywhere outside
+//     document.addEventListener('click', function () {
+//         profileMenu.style.display = 'none';
+//     });
+
+//     // Prevent closing when clicking inside the menu itself
+//     profileMenu.addEventListener('click', function (e) {
+//         e.stopPropagation();
+//     });
+// }
 

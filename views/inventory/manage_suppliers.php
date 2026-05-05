@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 include "../../includes/auth_check.php";
 
@@ -43,6 +43,16 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                     <button type="button" id="addbtn">Assign Supplier</button>
                 </div>
             </div>
+
+            <?php if (!empty($success['preferred'])): ?>
+                <div class="success-message">
+                    <?= htmlspecialchars($success['preferred']) ?>
+                </div>
+            <?php elseif (!empty($error['preferred'])): ?>
+                <div class="error-message">
+                    <?= htmlspecialchars($error['preferred']) ?>
+                </div>
+            <?php endif; ?>
 
             <div class="menu-table">
                 <table>
@@ -103,18 +113,20 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                                         <button
                                             type="button"
                                             class="edit-btn open-edit-modal"
+                                            style="display:flex; align-items:center; gap:3px; font-size:12px; padding:3px 6px;"
                                             data-product-id="<?= $product_id ?>"
                                             data-supplier-id="<?= $sup['supplier_id_pk'] ?>"
                                             data-supplier-name="<?= htmlspecialchars($sup['supplier_name'], ENT_QUOTES) ?>"
                                             data-cost-price="<?= htmlspecialchars($sup['cost_price'], ENT_QUOTES) ?>">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            <i class="fa-solid fa-pen-to-square"></i> Edit
                                         </button>
                                         <!-- REMOVE -->
                                         <button
                                             type="button"
                                             class="edit-btn"
+                                            style="display:flex; align-items:center; gap:3px; font-size:12px; padding:3px 6px;"
                                             onclick="removeSupplier(<?= $product_id ?>, <?= $sup['supplier_id_pk'] ?>, '<?= htmlspecialchars($sup['supplier_name'], ENT_QUOTES) ?>')">
-                                            <i class="fa-solid fa-user-minus"></i>
+                                            <i class="fa-solid fa-user-minus"></i> Remove
                                         </button>
                                     </div>
                                 </td>
@@ -202,5 +214,5 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
         </section>
     </main>
 </body>
-<script src="../../assets/js/pages.js"></script>
+<script src="<?= ASSET_URL ?>/js/pages.js"></script>
 </html>

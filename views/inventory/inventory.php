@@ -1,15 +1,20 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 include "../../includes/auth_check.php";
 
 $_SESSION['page_title'] = "INVENTORY LOGS";
 
 $movement = new StockMovements($db);
+$search = $_GET['search'] ?? '';
+$page = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+$limit = 10;
 
-$stock_movements = $movement->GetStockMovements();
-
+$stock_movements = $movement->GetStockMovementsPaginated($page, $limit, $search);
+$total_movements = $movement->GetTotalStockMovements($search);
+$total_pages = (int) ceil($total_movements / $limit);
+$base_query = $search !== '' ? 'search=' . urlencode($search) : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +33,7 @@ $stock_movements = $movement->GetStockMovements();
                 <div class="search-area">
                     <form action="">
                         <i class="fas fa-search"></i>
-                        <input type="text" name="search" id="search" placeholder="Search a inventory">
+                        <input type="text" name="search" id="search" placeholder="Search inventory" value="<?= htmlspecialchars($search) ?>">
                         <button type="submit">SEARCH</button>
                     </form>
                 </div>
@@ -64,7 +69,7 @@ $stock_movements = $movement->GetStockMovements();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $count = 1; ?>
+                        <?php $count = ($page - 1) * $limit + 1; ?>
                         <?php foreach ($stock_movements as $stocks): ?>
                             <tr>
                                 <td><?= $count++ ?></td>
@@ -86,17 +91,50 @@ $stock_movements = $movement->GetStockMovements();
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($stocks['reference_id']) ?></td>
-                                <td><?= htmlspecialchars($stocks['reason'] == ''? 'N/A' : $stocks['reason']) ?></td>
+                                <td><?= htmlspecialchars($stocks['reason'] == '' ? 'N/A' : $stocks['reason']) ?></td>
                                 <td><?= htmlspecialchars($stocks['date']) ?></td>
 
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <?php
+                $window = 5;
+                $half = floor($window / 2);
+                $start = max(1, $page - $half);
+                $end = min($total_pages, $start + $window - 1);
+                if ($end - $start + 1 < $window) {
+                    $start = max(1, $end - $window + 1);
+                }
+                ?>
+
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">&laquo; Prev</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">&laquo; Prev</span>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"
+                                class="page-btn <?= $i === $page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">Next &raquo;</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">Next &raquo;</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
         </section>
     </main>
 </body>
-<script src="../../assets/js/pages.js"></script>
+<script src="<?= ASSET_URL ?>/js/pages.js"></script>
+
 </html>

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 
 include "../../includes/auth_check.php";
@@ -10,10 +10,18 @@ $_SESSION['page_title'] = "STOCK";
 $stocks = new Stocks($db);
 $search = $_GET['search'] ?? '';
 
+$limit = 10;
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+if ($page < 1) $page = 1;
+
 if (!empty($search)) {
     $all_stocks = $stocks->SearchStock($search);
+    $total_records = count($all_stocks);
+    $total_pages = 1;
 } else {
-    $all_stocks = $stocks->GetAllStocks();
+    $all_stocks = $stocks->GetStocksPaginated($limit, ($page - 1) * $limit);
+    $total_records = $stocks->GetTotalStocksCount();
+    $total_pages = ceil($total_records / $limit);
 }
 
 $open_modal_stockin = isset($_SESSION['error']['in']) || isset($_SESSION['success']['in']);
@@ -97,41 +105,73 @@ unset(
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $no = 1; ?>
+                        <?php $no = ($page - 1) * $limit + 1; ?>
                         <?php if (empty($all_stocks)): ?>
                             <tr>
-                                <td colspan="6" style="text-align:center; color:#6b7280;">
+                                <td colspan="9" style="text-align:center; color:#6b7280;">
                                     No Stock found
                                 </td>
                             <?php else: ?>
                                 <?php foreach ($all_stocks as $stock): ?>
-                                    <?php if ($stock['is_deleted'] == 1 || $stock['status'] == 0)
-                                        continue; ?>
-                                <tr>
-                                    <td><?= $no++ ?></td>
-                                    <td><?= htmlspecialchars($stock['product_name']) ?></td>
-                                    <td><?= htmlspecialchars($stock['category_name'] ?? 'Uncategorize') ?></td>
-                                    <td><?= htmlspecialchars($stock['quantity']) ?></td>
-                                    <td><?= htmlspecialchars($stock['last_updated']) ?></td>
-                                    <td>
-                                        <div class="actions">
-                                            <button class="btn btn-in open-stock-in" data-id="<?= $stock['product_id_fk'] ?>"
-                                                data-name="<?= htmlspecialchars($stock['product_name'], ENT_QUOTES) ?>">
-                                                <i class="fa-solid fa-circle-plus"></i>
-                                                <span>Stock IN</span>
-                                            </button>
-                                            <button class="btn btn-out open-stock-out" data-id="<?= $stock['product_id_fk'] ?>"
-                                                data-name="<?= htmlspecialchars($stock['product_name'], ENT_QUOTES) ?>">
-                                                <i class="fa-solid fa-circle-minus"></i>
-                                                <span>Stock OUT</span>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                    <!-- <?php if ($stock['is_deleted'] == 1 || $stock['status'] == 0)
+                                        continue; ?> -->
+                            <tr>
+                                <td><?= $no++ ?></td>
+                                <td><?= htmlspecialchars($stock['product_name']) ?></td>
+                                <td><?= htmlspecialchars($stock['category_name'] ?? 'Uncategorize') ?></td>
+                                <td><?= htmlspecialchars($stock['quantity']) ?></td>
+                                <td><?= htmlspecialchars($stock['last_updated']) ?></td>
+                                <td>
+                                    <div class="actions">
+                                        <button class="btn btn-in open-stock-in" data-id="<?= $stock['product_id_fk'] ?>"
+                                            data-name="<?= htmlspecialchars($stock['product_name'], ENT_QUOTES) ?>">
+                                            <i class="fa-solid fa-circle-plus"></i>
+                                            <span>Stock IN</span>
+                                        </button>
+                                        <button class="btn btn-out open-stock-out" data-id="<?= $stock['product_id_fk'] ?>"
+                                            data-name="<?= htmlspecialchars($stock['product_name'], ENT_QUOTES) ?>">
+                                            <i class="fa-solid fa-circle-minus"></i>
+                                            <span>Stock OUT</span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     </tbody>
                 </table>
+                <?php
+                $window = 5;
+                $half = floor($window / 2);
+                $start = max(1, $page - $half);
+                $end = min($total_pages, $start + $window - 1);
+                if ($end - $start + 1 < $window) {
+                    $start = max(1, $end - $window + 1);
+                }
+                ?>
+
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">&laquo; Prev</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">&laquo; Prev</span>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"
+                                class="page-btn <?= $i === $page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">Next &raquo;</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">Next &raquo;</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <!-- STOCK IN MODAL -->
@@ -234,5 +274,6 @@ unset(
         </section>
     </main>
 </body>
-<script src="../../assets/js/pages.js"></script>
+<script src="<?= ASSET_URL ?>/js/pages.js"></script>
+
 </html>

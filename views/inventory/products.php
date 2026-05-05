@@ -1,18 +1,26 @@
 <?php
 session_start();
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 include "../../includes/auth_check.php";
 
 $_SESSION['page_title'] = "PRODUCTS";
 
 $search = $_GET['search'] ?? '';
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$limit = 10; // Products per page
+$base_query = $search !== '' ? 'search=' . urlencode($search) : '';
+
 $product = new Product($db);
 
 if (!empty($search)) {
     $products = $product->SearchProduct($search);
+    $total_products = count($products);
+    $total_pages = 1;
 } else {
-    $products = $product->GetAllProducts();
+    $products = $product->GetPaginatedProducts($page, $limit);
+    $total_products = $product->GetTotalActiveProducts();
+    $total_pages = ceil($total_products / $limit);
 }
 
 $category = new Category($db);
@@ -24,7 +32,7 @@ $errors = $_SESSION['errors']['add'] ?? [];
 $old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success']['add'] ?? '';
 
-unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
+unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -70,7 +78,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $count = 1; ?>
+                        <?php $count = ($page - 1) * $limit + 1; ?>
 
                         <?php if (empty($products)): ?>
                             <tr>
@@ -81,65 +89,101 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
                                 <?php foreach ($products as $prod): ?>
                                     <?php if ($prod['is_deleted'] == 1)
                                         continue; ?>
-                                <tr>
-                                    <td><?= $count++ ?></td>
-                                    <td><?= htmlspecialchars($prod['product_name']) ?></td>
-                                    <td>
-                                        <?= htmlspecialchars(
-                                            isset($prod['category_name'])
+                            <tr>
+                                <td><?= $count++ ?></td>
+                                <td><?= htmlspecialchars($prod['product_name']) ?></td>
+                                <td>
+                                    <?= htmlspecialchars(
+                                        isset($prod['category_name'])
                                             ? $prod['category_name'] . ($prod['category_status'] == 0 ? ' (Inactive)' : '')
                                             : 'Uncategorized'
-                                        ) ?>
-                                    </td>
-                                    <td>
-                                        <?= $prod['cost_price']
-                                            ? '₱' . number_format($prod['cost_price'], 2)
-                                            : '<span style="color:#6b7280;">No cost price</span>' ?>
-                                    </td>
-                                    <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
-                                    <td><?= htmlspecialchars($prod['product_description'] == '' ? 'No description available' : $prod['product_description']) ?>
-                                    </td>
-                                    <td style="color:#6b7280;">
-                                        <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
-                                    </td>
-                                    <td>
-                                        <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
-                                            <?= $prod['status'] == 1 ? 'Active' : 'Inactive' ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <!-- EDIT ACTION -->
-                                        <div class="actions">
-                                            <form action="edit_product.php" method="POST">
+                                    ) ?>
+                                </td>
+                                <td>
+                                    <?= $prod['cost_price']
+                                        ? '₱' . number_format($prod['cost_price'], 2)
+                                        : '<span style="color:#6b7280;">No cost price</span>' ?>
+                                </td>
+                                <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
+                                <td><?= htmlspecialchars($prod['product_description'] == '' ? 'No description available' : $prod['product_description']) ?>
+                                </td>
+                                <td style="color:#6b7280;">
+                                    <?= $prod['preferred_supplier_name'] ?? 'No preferred supplier' ?>
+                                </td>
+                                <td>
+                                    <span class="badge <?= $prod['status'] == 1 ? 'active' : 'inactive' ?>">
+                                        <?= $prod['status'] == 1 ? 'Active' : 'Inactive' ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <!-- EDIT ACTION -->
+                                    <div class="actions">
+                                        <form action="edit_product.php" method="POST">
+                                            <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
+                                            <button type="submit" class="edit-btn">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                                <span>Edit</span>
+                                            </button>
+                                        </form>
+                                        <!-- DELETE ACTION -->
+                                        <button class="edit-btn" type="button"
+                                            onclick="deleteProduct(<?= $prod['product_id_pk'] ?>, '<?= htmlspecialchars($prod['product_name']) ?>')">
+                                            <i class="fa-solid fa-trash"></i>
+                                            <span>Delete</span>
+                                        </button>
+                                        <?php if ($prod['status'] == 1): ?>
+                                            <form action="manage_suppliers.php" method="POST">
                                                 <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                                <button type="submit" class="edit-btn">
-                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                <button type="submit" class="manage-btn">
+                                                    <i class="fa-solid fa-truck"></i>
+                                                    <span>Manage</span>
                                                 </button>
                                             </form>
-                                            <!-- DELETE ACTION -->
-                                            <button class="edit-btn"
-                                                onclick="deleteProduct(<?= $prod['product_id_pk'] ?>, '<?= htmlspecialchars($prod['product_name']) ?>')">
-                                                <i class="fa-solid fa-trash"></i>
+                                        <?php elseif ($prod['status'] == 0): ?>
+                                            <button class="manage-btn" disabled style="opacity:0.5; cursor:not-allowed;">
+                                                <i class="fa-solid fa-truck"></i>
+                                                <span>Manage</span>
                                             </button>
-                                            <?php if ($prod['status'] == 1): ?>
-                                                <form action="manage_suppliers.php" method="POST">
-                                                    <input type="hidden" name="product_id" value="<?= $prod['product_id_pk'] ?>">
-                                                    <button type="submit" class="manage-btn">
-                                                        <i class="fa-solid fa-truck"></i>
-                                                    </button>
-                                                </form>
-                                            <?php elseif ($prod['status'] == 0): ?>
-                                                <button class="manage-btn" disabled style="opacity:0.5; cursor:not-allowed;">
-                                                    <i class="fa-solid fa-truck"></i>
-                                                </button>
-                                            <?php endif; ?>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
+                                        <?php endif; ?>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                     </tbody>
                 </table>
+
+                <?php
+                $window = 10;
+                $current_chunk = (int) floor(($page - 1) / $window);
+                $start = $current_chunk * $window + 1;
+                $end = min($total_pages, $start + $window - 1);
+                ?>
+
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($page > 1): ?>
+                            <a href="?page=<?= $page - 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">&laquo; Prev</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">&laquo; Prev</span>
+                        <?php endif; ?>
+
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"
+                                class="page-btn <?= $i === $page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($page < $total_pages): ?>
+                            <a href="?page=<?= $page + 1 ?>&search=<?= urlencode($search) ?>" class="page-btn">Next &raquo;</a>
+                        <?php else: ?>
+                            <span class="page-btn disabled">Next &raquo;</span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
             </div>
 
             <!-- ADD MODAL -->
@@ -251,5 +295,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $search);
         </section>
     </main>
 </body>
-<script src="../../assets/js/pages.js"></script>
+<script src="<?= ASSET_URL ?>/js/pages.js"></script>
+
 </html>

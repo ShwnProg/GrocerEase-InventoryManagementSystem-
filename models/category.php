@@ -41,6 +41,28 @@ class Category
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function GetPaginatedCategories($page = 1, $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description, 
+                                             is_deleted, status 
+                                      FROM categories 
+                                      WHERE is_deleted = 0
+                                      ORDER BY category_id_pk DESC
+                                      LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function GetTotalActiveCategories()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM categories WHERE is_deleted = 0");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public function SoftDeleteCategory($id)
     {
         try {
@@ -83,6 +105,28 @@ class Category
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function GetDeletedCategoriesPaginated($page = 1, $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, 
+                                             category_description, status 
+                                      FROM categories 
+                                      WHERE is_deleted = 1
+                                      ORDER BY deleted_at DESC
+                                      LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function GetTotalDeletedCategories()
+    {
+        $stmt = $this->conn->prepare("SELECT COUNT(*) AS total FROM categories WHERE is_deleted = 1");
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public function GetCategoryNameById($id)
     {
         $stmt = $this->conn->prepare("SELECT category_name FROM categories 
@@ -114,7 +158,7 @@ class Category
     public function RestoreCategory($id)
     {
         try {
-            $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 0 
+            $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 0, deleted_at = NULL 
                                           WHERE category_id_pk = :id");
             $stmt->execute([':id' => $id]);
             return $stmt->rowCount() > 0;
@@ -138,7 +182,7 @@ class Category
         $stmt = $this->conn->prepare("SELECT category_id_pk, category_name, category_description, 
                                       is_deleted, status 
                                       FROM categories 
-                                      WHERE category_name LIKE :search
+                                      WHERE is_deleted = 0 ANDcategory_name LIKE :search  
                                       ORDER BY category_id_pk DESC");
 
         $stmt->execute([':search' => $search . '%']);

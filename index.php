@@ -15,7 +15,7 @@ unset($_SESSION['error'],$_SESSION['old']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocer Ease</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
@@ -23,10 +23,10 @@ unset($_SESSION['error'],$_SESSION['old']);
     <div class="container">
         <!-- LOGO -->
         <div class="logo">
-            <img src="../images/page-logo.png" alt="">
+            <img src="images/page-logo.png" alt="">
             <p>Grocer Ease</p>
         </div>
-        <form action="../controllers/authentication.php" method="post">
+        <form action="controllers/authentication.php" method="post">
 
             <!-- INVALID AUTHENTICATION -->
             <?php if (!empty($error['invalid'])): ?>
@@ -63,6 +63,6 @@ unset($_SESSION['error'],$_SESSION['old']);
         </form>
     </div>
 </body>
-<script src="../scripts/script.js"></script>
+<script src="assets/js/script.js"></script>
 
 </html>
