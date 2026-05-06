@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 require_once __DIR__ . '/../../autoload.php';
 
 if (isset($_POST['supplier_id'])) {
