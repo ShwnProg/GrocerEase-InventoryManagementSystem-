@@ -43,7 +43,7 @@
     </table>
     <!-- PAGINATION -->
     <?php
-    $window = 10;
+    $window = 5;
     $current_chunk = (int) floor(($page - 1) / $window);
     $start = $current_chunk * $window + 1;
     $end = min($total_pages, $start + $window - 1);
