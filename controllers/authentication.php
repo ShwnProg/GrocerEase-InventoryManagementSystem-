@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 require_once __DIR__ . '../../autoload.php';
 
 $user = new User($db);
@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["error"] = $error;
         $_SESSION["old"] = $_POST;
 
-        header("Location: ../forms/index.php");
+        header("Location: ../index.php");
         exit;
     }
     $_SESSION['logged_in'] = true;

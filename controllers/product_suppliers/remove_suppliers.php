@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../autoload.php';
 
 header('Content-Type: application/json');
-session_start();
+// session_start();
 
 $product_id  = $_POST['product_id']  ?? null;
 $supplier_id = $_POST['supplier_id'] ?? null;
