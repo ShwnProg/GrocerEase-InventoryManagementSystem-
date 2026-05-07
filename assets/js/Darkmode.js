@@ -15,11 +15,12 @@
 
 (function () {
     const STORAGE_KEY = 'grocer-ease-theme';
-    const DARK_CLASS  = 'dark-mode';
+    const DARK_CLASS = 'dark-mode';
 
     // ── Apply saved theme BEFORE paint (avoids flash) ──────────
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === 'dark') {
+        document.documentElement.classList.add(DARK_CLASS);
         document.body.classList.add(DARK_CLASS);
     }
 
@@ -30,6 +31,7 @@
 
         btn.addEventListener('click', function () {
             const isNowDark = document.body.classList.toggle(DARK_CLASS);
+            document.documentElement.classList.toggle(DARK_CLASS, isNowDark);
             localStorage.setItem(STORAGE_KEY, isNowDark ? 'dark' : 'light');
         });
     });

@@ -141,7 +141,7 @@ unset(
                     </tbody>
                 </table>
                 <?php
-                $window = 5;
+                $window = 10;
                 $half = floor($window / 2);
                 $start = max(1, $page - $half);
                 $end = min($total_pages, $start + $window - 1);

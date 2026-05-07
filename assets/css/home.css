@@ -1683,7 +1683,10 @@ body {
 /* ══════════════════════════════════════
    DARK MODE — Green & Black Theme
 ══════════════════════════════════════ */
-
+/* ANTI-FLASH — ilagay sa pinaka-taas ng dark mode section */
+html.dark-mode {
+    background-color: #111827;
+}
 /* ── BASE ── */
 body.dark-mode {
     background-color: #111827;

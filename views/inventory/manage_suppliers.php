@@ -136,7 +136,7 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                 </table>
             </div>
 
-            <!-- ADD MODAL — unchanged: posts to add_supplier.php, session drives errors/success/old -->
+            <!-- ADD MODAL -->
             <div class="add-modal <?= $open_modal ? 'active' : '' ?>" id="add-modal">
                 <form action="../../controllers/product_suppliers/add_supplier.php" method="POST">
                     <div class="header">
