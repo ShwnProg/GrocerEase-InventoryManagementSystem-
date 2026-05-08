@@ -25,7 +25,7 @@ if (!empty($search)) {
 }
 
 // check if modal should open (error or success)
-$open_modal = isset($_SESSION['add_category_error']) || isset($_SESSION['success_msg']);
+$open_modal = isset($_SESSION['add_category_error']);
 $error = $_SESSION['add_category_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
 $success_msg = $_SESSION['success_msg'] ?? '';

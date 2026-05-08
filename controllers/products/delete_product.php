@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../autoload.php';
-session_start();
+// session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_id = $_POST['product_id'] ?? '';

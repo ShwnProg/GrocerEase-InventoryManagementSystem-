@@ -23,7 +23,7 @@ if (!empty($search)) {
     $total_pages = ceil($total_suppliers / $limit);
 }
 
-$open_modal = isset($_SESSION['add_supplier_error']) || isset($_SESSION['success_msg']);
+$open_modal = isset($_SESSION['add_supplier_error']);
 $error = $_SESSION['add_supplier_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
 $success_msg = $_SESSION['success_msg'] ?? '';

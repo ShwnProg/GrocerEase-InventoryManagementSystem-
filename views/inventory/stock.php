@@ -24,8 +24,8 @@ if (!empty($search)) {
     $total_pages = ceil($total_records / $limit);
 }
 
-$open_modal_stockin = isset($_SESSION['error']['in']) || isset($_SESSION['success']['in']);
-$open_modal_stockout = isset($_SESSION['error']['out']) || isset($_SESSION['success']['out']);
+$open_modal_stockin = isset($_SESSION['error']['in']);
+$open_modal_stockout = isset($_SESSION['error']['out']);
 
 $error_in = $_SESSION['error']['in'] ?? [];
 $error_out = $_SESSION['error']['out'] ?? [];

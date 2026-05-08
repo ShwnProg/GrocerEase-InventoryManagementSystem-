@@ -30,9 +30,9 @@ $user_info = $user->GetUserById($user_id);
                 <i class="fa-solid fa-lock"></i> Change Password
             </a> -->
                 <div class="logout">
-                    <a href="<?= BASE_URL ?>/controllers/logout.php">
+                    <button onclick="logout()" class="logout-btn">
                         <i class="fa-solid fa-right-from-bracket"></i> Logout
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>

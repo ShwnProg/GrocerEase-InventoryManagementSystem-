@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../autoload.php';
 
-session_start();
+// session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -43,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
 
         if ($movement_result) {
+            // Log transaction
+            $transactionLog = new TransactionLog($db);
+            $transactionLog->logTransaction($product_id, $quantity, 'add');
+
             $_SESSION['success'] = ['in' => ['form' => 'Stock updated successfully']];
             $_SESSION['old'] = [
                 'product_id'   => $product_id,

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../autoload.php';
 
 header('Content-Type: application/json');
-session_start();
+// session_start();
 
 // check request method
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

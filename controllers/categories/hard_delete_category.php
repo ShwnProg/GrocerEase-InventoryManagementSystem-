@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 require_once __DIR__ . '/../../autoload.php';
 
 header('Content-Type: application/json');

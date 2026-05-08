@@ -27,7 +27,7 @@ $category = new Category($db);
 $categories = $category->GetAllCategories();
 
 
-$open_modal = isset($_SESSION['errors']['add']) || isset($_SESSION['success']['add']);
+$open_modal = isset($_SESSION['errors']['add']);
 $errors = $_SESSION['errors']['add'] ?? [];
 $old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success']['add'] ?? '';

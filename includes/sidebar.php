@@ -53,6 +53,11 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
             <i class="fa-solid fa-box-archive"></i>
             <span>Archived Records</span>
         </a>
+
+        <a href="settings.php" class="menu-btn <?= $current == 'settings.php' ? 'active' : '' ?>">
+            <i class="fa-solid fa-cog"></i>
+            <span>Settings</span>
+        </a>
         <div class="action-group">
             <div class="sb-divider"></div>
             <label>Account</label>
@@ -62,10 +67,11 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
                 <span>Profile</span>
             </a>
 
-            <a href="<?= BASE_URL ?>/controllers/logout.php" class="action logout">
+            <a href="#" onclick="logout(); return false;" class="action logout">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span>Logout</span>
             </a>
         </div>
     </div>
 </div>
+

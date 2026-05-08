@@ -67,7 +67,7 @@ if (!empty($inventory_logs)) {
         <?php include '../../includes/topbar.php'; ?>
 
         <section class="page-content">
-             
+
             <!-- KPI GRID -->
             <div class="kpi-grid">
                 <div class="grid">
@@ -164,11 +164,22 @@ if (!empty($inventory_logs)) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false }
+                legend: {
+                    display: false
+                }
             },
             scales: {
-                x: { grid: { display: false } },
-                y: { grid: { color: 'rgba(0,0,0,0.05)' }, beginAtZero: true }
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    },
+                    beginAtZero: true
+                }
             }
         }
     });
@@ -208,8 +219,7 @@ if (!empty($inventory_logs)) {
         type: 'line',
         data: {
             labels: dateLabels,
-            datasets: [
-                {
+            datasets: [{
                     label: 'Stock In',
                     data: stockIn,
                     borderColor: 'rgba(28, 85, 21, 0.85)',
@@ -231,14 +241,26 @@ if (!empty($inventory_logs)) {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'top' }
+                legend: {
+                    position: 'top'
+                }
             },
             scales: {
-                x: { grid: { display: false } },
-                y: { grid: { color: 'rgba(0,0,0,0.05)' }, beginAtZero: true }
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    },
+                    beginAtZero: true
+                }
             }
         }
     });
 </script>
+<script src="<?= ASSET_URL ?>/js/pages.js"></script>
 
 </html>

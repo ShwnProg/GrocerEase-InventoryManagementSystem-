@@ -3,9 +3,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grocer Ease</title>
     <script>
-        if (localStorage.getItem('grocer-ease-theme') === 'dark') {
-            document.documentElement.classList.add('dark-mode');
-        }
+        (function () {
+            const STORAGE_KEY = 'grocer-ease-theme';
+            const DARK_CLASS = 'dark-mode';
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved === 'dark') {
+                document.documentElement.classList.add(DARK_CLASS);
+                document.body.classList.add(DARK_CLASS);
+            }
+        })();
     </script>
     <link rel="stylesheet" href="<?= ASSET_URL ?>/css/home.css">
 

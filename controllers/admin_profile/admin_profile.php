@@ -1,5 +1,5 @@
 <?php
-session_start();
+// session_start();
 require_once '../../autoload.php';
 
 $redirect = "../../views/inventory/profile.php";

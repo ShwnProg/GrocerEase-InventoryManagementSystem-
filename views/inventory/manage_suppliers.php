@@ -22,7 +22,7 @@ $old     = $_SESSION["old"]     ?? null;
 
 $has_add_error   = isset($error['supplier']) || isset($error['cost_price']);
 $has_add_success = isset($success['add_supplier']);
-$open_modal      = $has_add_error || $has_add_success;
+$open_modal      = $has_add_error;
 
 unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
 ?>

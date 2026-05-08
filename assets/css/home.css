@@ -135,11 +135,16 @@ body {
 }
 
 .side-bar-menu .action.logout {
-    color: rgba(255, 0, 0, 0.801);
+    color: rgba(200, 40, 40, 0.85);
 }
 
 .side-bar-menu .action.logout:hover {
-    color: #e77979;
+    color: #c82828;
+}
+
+.side-bar-menu .action.logout:focus {
+    outline: 2px solid #c82828;
+    outline-offset: -2px;
 }
 
 .main-content {
@@ -240,6 +245,42 @@ body {
 .profile-menu .logout a:hover {
     background: rgba(220, 50, 50, 0.05);
     color: #c82828;
+}
+
+.profile-menu .logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: rgba(200, 40, 40, 0.85);
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: inherit;
+    transition: background 0.15s;
+}
+
+.profile-menu .logout-btn:hover {
+    background: rgba(220, 50, 50, 0.05);
+    color: #c82828;
+}
+
+.profile-menu .logout-btn i {
+    font-size: 13px;
+    width: 14px;
+    color: #888;
+}
+
+.profile-menu .logout-btn:hover i {
+    color: #c82828;
+}
+
+.profile-menu .logout-btn:focus {
+    outline: 2px solid #1c5515;
+    outline-offset: -2px;
 }
 
 /* MAIN CONTENT */
@@ -1740,6 +1781,23 @@ body.dark-mode .profile-menu .logout a {
 
 body.dark-mode .profile-menu .logout {
     border-top-color: #2a3a4a;
+}
+
+body.dark-mode .profile-menu .logout-btn {
+    color: #f87171;
+}
+
+body.dark-mode .profile-menu .logout-btn:hover {
+    background: rgba(248, 113, 113, 0.1);
+    color: #fca5a5;
+}
+
+body.dark-mode .profile-menu .logout-btn i {
+    color: #9ca3af;
+}
+
+body.dark-mode .profile-menu .logout-btn:hover i {
+    color: #fca5a5;
 }
 
 /* ── SIDEBAR ── */

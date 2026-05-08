@@ -23,10 +23,10 @@ function clearFeedback(containerId) {
 
 //  ADD MODAL
 const addModal = document.getElementById('add-modal');
-const addBtn   = document.getElementById('addbtn');
+const addBtn = document.getElementById('addbtn');
 const closeBtn = document.getElementById('close-modal');
 
-if (addBtn)   addBtn.addEventListener('click', () => addModal.classList.add('active'));
+if (addBtn) addBtn.addEventListener('click', () => addModal.classList.add('active'));
 if (closeBtn) closeBtn.addEventListener('click', () => addModal.classList.remove('active'));
 if (addModal) {
     addModal.addEventListener('click', e => {
@@ -35,15 +35,15 @@ if (addModal) {
 }
 
 // EDIT MODAL
-const editModal    = document.getElementById('edit-modal');
+const editModal = document.getElementById('edit-modal');
 const closeEditBtn = document.getElementById('close-edit-modal');
-const confirmEdit  = document.getElementById('confirm-edit');
+const confirmEdit = document.getElementById('confirm-edit');
 
 function openEditModal(productId, supplierId, supplierName, costPrice) {
-    document.getElementById('edit-product-id').value      = productId;
-    document.getElementById('edit-supplier-id').value     = supplierId;
+    document.getElementById('edit-product-id').value = productId;
+    document.getElementById('edit-supplier-id').value = supplierId;
     document.getElementById('edit-supplier-label').textContent = supplierName;
-    document.getElementById('edit-cost-price').value      = costPrice;
+    document.getElementById('edit-cost-price').value = costPrice;
     clearFeedback('edit-feedback');
     editModal.classList.add('active');
 }
@@ -72,10 +72,10 @@ if (editModal) {
 
 if (confirmEdit) {
     confirmEdit.addEventListener('click', () => {
-        const productId    = document.getElementById('edit-product-id').value;
-        const supplierId   = document.getElementById('edit-supplier-id').value;
+        const productId = document.getElementById('edit-product-id').value;
+        const supplierId = document.getElementById('edit-supplier-id').value;
         const supplierName = document.getElementById('edit-supplier-label').textContent;
-        const costPrice    = document.getElementById('edit-cost-price').value.trim();
+        const costPrice = document.getElementById('edit-cost-price').value.trim();
 
         clearFeedback('edit-feedback');
 
@@ -102,7 +102,7 @@ if (confirmEdit) {
 document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
     if (editModal?.classList.contains('active')) closeEditModal();
-    if (addModal?.classList.contains('active'))  addModal.classList.remove('active');
+    if (addModal?.classList.contains('active')) addModal.classList.remove('active');
 });
 
 function removeSupplier(productId, supplierId, name) {
@@ -292,6 +292,49 @@ function hardDeleteSupplier(id, name) {
         });
     });
 }
+function logout() {
+    Swal.fire({
+        title: 'Logout?',
+        text: 'Are you sure you want to logout?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#155545',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Logout',
+        cancelButtonText: 'Cancel',
+    }).then(result => {
+        if (!result.isConfirmed) return;
+        $.ajax({
+            url: '../../controllers/logout.php',
+            type: 'POST',
+            dataType: 'json',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            success(res) {
+                if (res.status === 'success') {
+                    Swal.fire({
+                        title: 'Logged Out!',
+                        text: res.message,
+                        icon: 'success',
+                        confirmButtonColor: '#1c5515',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = '../../index.php';
+                    });
+                } else {
+                    Swal.fire('Error', res.message, 'error');
+                }
+            },
+            error() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Server Error',
+                    text: 'Something went wrong.'
+                });
+            },
+        });
+    });
+}
 
 //  STOCK IN MODAL 
 const stockInModal = document.getElementById('stock-in-modal');
@@ -332,25 +375,5 @@ if (stockOutModal) {
         if (e.target === stockOutModal) stockOutModal.classList.remove('active');
     });
 }
-// PROFILE DROPDOWN TOGGLE
-// const profileDropdown = document.querySelector('.profile-dropdown');
-// const profileMenu     = document.querySelector('.profile-menu');
 
-// if (profileDropdown && profileMenu) {
-//     profileDropdown.addEventListener('click', function (e) {
-//         e.stopPropagation();
-//         const isVisible = profileMenu.style.display === 'block';
-//         profileMenu.style.display = isVisible ? 'none' : 'block';
-//     });
-
-//     // Close when clicking anywhere outside
-//     document.addEventListener('click', function () {
-//         profileMenu.style.display = 'none';
-//     });
-
-//     // Prevent closing when clicking inside the menu itself
-//     profileMenu.addEventListener('click', function (e) {
-//         e.stopPropagation();
-//     });
-// }
 
