@@ -29,8 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["error"] = $error;
         $_SESSION["old"] = $_POST;
 
+
         header("Location: ../../index.php");
-        exit;
+
     }
     $_SESSION['logged_in'] = true;
     $_SESSION['id'] = $id;

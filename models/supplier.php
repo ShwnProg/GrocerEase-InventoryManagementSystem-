@@ -78,7 +78,10 @@ class Supplier
             }
             $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
             $stmt->execute([':id' => $id]);
+
+            $this->conn->commit();
             return $stmt->rowCount() > 0;
+            
 
         } catch (PDOException $e) {
             $this->conn->rollBack();
