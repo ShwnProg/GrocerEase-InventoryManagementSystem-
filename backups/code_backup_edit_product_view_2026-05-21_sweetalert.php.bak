@@ -23,31 +23,6 @@ $_SESSION['product_id'] = $product_id;
 $error = $_SESSION['error'] ?? '';
 $old = $_SESSION['old'] ?? '';
 $success = $_SESSION['success'] ?? '';
-$alert = null;
-
-if (!empty($success)) {
-    $alert = [
-        'icon' => 'success',
-        'title' => 'Product updated',
-        'text' => $success,
-    ];
-} elseif (!empty($error)) {
-    if (is_array($error) && !empty($error['no_changes'])) {
-        $alert = [
-            'icon' => 'info',
-            'title' => 'No changes made',
-            'text' => $error['no_changes'],
-        ];
-    } else {
-        $alert = [
-            'icon' => 'error',
-            'title' => 'Product not updated',
-            'html' => is_array($error)
-                ? implode('<br>', array_map('htmlspecialchars', array_values($error)))
-                : htmlspecialchars((string) $error),
-        ];
-    }
-}
 
 unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
 ?>
@@ -72,6 +47,18 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
                     <i class="fa-solid fa-pen-to-square"></i>
                     <p> EDIT PRODUCT </p>
 
+                    <?php if (!empty($success)): ?>
+                        <div class="success-message">
+                            <?= htmlspecialchars($success) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($error['no_changes'])): ?>
+                        <div class="no-changes">
+                            <?= htmlspecialchars($error['no_changes']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- PRODUCT NAME -->
                     <div class="input">
                         <label for="product_name">Product Name</label>
@@ -79,6 +66,12 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
                         <input type="text" name="product_name"
                             value="<?= htmlspecialchars($old['product_name'] ?? $product_info['product_name'] ?? '') ?>">
                     </div>
+
+                    <?php if (!empty($error['product_name'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['product_name']) ?>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- CATEGORY -->
                     <div class="input">
@@ -107,6 +100,12 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <?php if (!empty($error['category'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['category']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- SELLING PRICE -->
                     <div class="input">
                         <label for="selling_price">Selling Price</label>
@@ -114,6 +113,11 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
                         <input type="text" name="selling_price"
                             value="<?= htmlspecialchars($old['selling_price'] ?? $product_info['selling_price'] ?? '') ?>">
                     </div>
+                    <?php if (!empty($error['selling_price'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['selling_price']) ?>
+                        </div>
+                    <?php endif; ?>
                     <!-- DESCFRIPTION -->
                     <div class="input">
                         <label for="product_description">Description (OPTIONAL) </label>
@@ -121,6 +125,12 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
                         <textarea name="product_description"
                             id=""><?= htmlspecialchars($old['product_description'] ?? $product_info['product_description'] ?? '') ?></textarea>
                     </div>
+                    <?php if (!empty($error['description'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['description']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- STATUS -->
                     <div class="input">
                         <label for="status">Status</label>
@@ -130,16 +140,17 @@ unset($_SESSION['error'], $_SESSION['old'], $_SESSION['success']);
                             <option value="0" <?= ($old['status'] ?? $product_info['status'] ?? '') == '0' ? 'selected' : '' ?>>Inactive</option>
                         </select>
                     </div>
+                    <?php if (!empty($error['status'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['status']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <button type="submit" name="edit_btn">SAVE CHANGES</button>
                 </form>
             </div>
         </section>
     </main>
 </body>
-<?php if (!empty($alert)): ?>
-    <script>
-        Swal.fire(<?= json_encode($alert, JSON_UNESCAPED_SLASHES) ?>);
-    </script>
-<?php endif; ?>
 
 </html>

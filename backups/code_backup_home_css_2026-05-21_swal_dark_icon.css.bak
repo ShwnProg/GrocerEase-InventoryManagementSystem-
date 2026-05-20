@@ -2530,19 +2530,6 @@ body.dark-mode .swal2-content {
     color: #cbd5e1;
 }
 
-body.dark-mode .swal2-icon.swal2-success [class^="swal2-success-circular-line"],
-body.dark-mode .swal2-icon.swal2-success .swal2-success-fix {
-    background-color: #1a2235 !important;
-}
-
-body.dark-mode .swal2-icon.swal2-success .swal2-success-ring {
-    border-color: rgba(143, 212, 141, 0.35);
-}
-
-body.dark-mode .swal2-icon.swal2-success [class^="swal2-success-line"] {
-    background-color: #8fd48d;
-}
-
 @media (max-width: 900px) {
     .dashboard-backup-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));

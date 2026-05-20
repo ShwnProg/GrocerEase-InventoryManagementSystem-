@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errors = [];
 
     // VALIDATE
-    if (empty($name) || empty($person) || empty($number) || empty($email) || empty($address) || empty($company)) {
+    if (empty($name) && empty($person) && empty($number) && empty($email) && empty($address) && empty($company) && empty($errors)) {
         $errors['form'] = "All fields are required.";
     }
 

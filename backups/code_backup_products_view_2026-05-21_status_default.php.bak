@@ -266,13 +266,13 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         <div class="input">
                             <label for="status">Status</label>
                             <select name="status" id="status">
-                                <?php $selectedStatus = $old['status'] ?? '1'; ?>
+                                <option value="">Select a status</option>
 
-                                <option value="1" <?= $selectedStatus == '1' ? 'selected' : '' ?>>
+                                <option value="1" <?= isset($old['status']) && $old['status'] == 1 ? 'selected' : '' ?>>
                                     Active
                                 </option>
 
-                                <option value="0" <?= $selectedStatus == '0' ? 'selected' : '' ?>>
+                                <option value="0" <?= isset($old['status']) && $old['status'] == 0 ? 'selected' : '' ?>>
                                     Inactive
                                 </option>
 

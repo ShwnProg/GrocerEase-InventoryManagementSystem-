@@ -24,31 +24,6 @@ $_SESSION['supplier_id'] = $supplier_id;
 $error = $_SESSION['edit_error_msg'] ?? '';
 $old_inputs = $_SESSION['edit_old_inputs'] ?? '';
 $success_msg = $_SESSION['edit_success_msg'] ?? '';
-$alert = null;
-
-if (!empty($success_msg)) {
-    $alert = [
-        'icon' => 'success',
-        'title' => 'Supplier updated',
-        'text' => $success_msg,
-    ];
-} elseif (!empty($error)) {
-    if (is_array($error) && !empty($error['no_changes'])) {
-        $alert = [
-            'icon' => 'info',
-            'title' => 'No changes made',
-            'text' => $error['no_changes'],
-        ];
-    } else {
-        $alert = [
-            'icon' => 'error',
-            'title' => 'Supplier not updated',
-            'html' => is_array($error)
-                ? implode('<br>', array_map('htmlspecialchars', array_values($error)))
-                : htmlspecialchars((string) $error),
-        ];
-    }
-}
 
 unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit_success_msg']);
 ?>
@@ -73,6 +48,23 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                     <i class="fa-solid fa-pen-to-square"></i>
                     <p> EDIT SUPPLIER </p>
 
+                    <?php if (!empty($success_msg)): ?>
+                        <div class="success-message">
+                            <?= htmlspecialchars($success_msg) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($error['no_changes'])): ?>
+                        <div class="no-changes">
+                            <?= htmlspecialchars($error['no_changes']) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($error['form'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['form']) ?>
+                        </div>
+                    <?php endif; ?>
                     <input type="hidden" name="supplier_id" value=<?= htmlspecialchars($supplier_id) ?>>
                     <!-- SUPPLIER NAME -->
                     <div class="input">
@@ -82,6 +74,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                             value="<?= htmlspecialchars($old_inputs['supplier_name'] ?? $supplier_info['supplier_name'] ?? '') ?>">
                     </div>
 
+                    <?php if (!empty($error['supplier_name'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['supplier_name']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- CONTACT PERSON -->
                     <div class="input">
                         <label for="contact_person">Contact Person</label>
@@ -89,6 +87,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                         <input type="text" name="contact_person"
                             value="<?= htmlspecialchars($old_inputs['contact_person'] ?? $supplier_info['contact_person'] ?? '') ?>">
                     </div>
+
+                    <?php if (!empty($error['contact_person'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['contact_person']) ?>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- PHONE NUMBER -->
                     <div class="input">
@@ -98,6 +102,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                             value="<?= htmlspecialchars($old_inputs['phone_number'] ?? $supplier_info['phone_number'] ?? '') ?>">
                     </div>
 
+                    <?php if (!empty($error['phone_number'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['phone_number']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- EMAIL -->
                     <div class="input">
                         <label for="email">Email</label>
@@ -105,6 +115,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                         <input type="email" name="email"
                             value="<?= htmlspecialchars($old_inputs['email'] ?? $supplier_info['email'] ?? '') ?>">
                     </div>
+
+                    <?php if (!empty($error['email'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['email']) ?>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- ADDRESS -->
                     <div class="input">
@@ -114,6 +130,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                             value="<?= htmlspecialchars($old_inputs['address'] ?? $supplier_info['address'] ?? '') ?>">
                     </div>
 
+                    <?php if (!empty($error['address'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['address']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- COMPANY NAME -->
                     <div class="input">
                         <label for="company_name">Company Name</label>
@@ -122,16 +144,19 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                             value="<?= htmlspecialchars($old_inputs['company_name'] ?? $supplier_info['company_name'] ?? '') ?>">
                     </div>
 
+                    <?php if (!empty($error['company_name'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['company_name']) ?>
+                        </div>
+                    <?php endif; ?>
+
+
+
                     <button type="submit" name="edit_btn">SAVE CHANGES</button>
                 </form>
             </div>
         </section>
     </main>
 </body>
-<?php if (!empty($alert)): ?>
-    <script>
-        Swal.fire(<?= json_encode($alert, JSON_UNESCAPED_SLASHES) ?>);
-    </script>
-<?php endif; ?>
 
 </html>

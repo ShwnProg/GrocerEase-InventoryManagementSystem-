@@ -4,23 +4,14 @@
     <title>Grocer Ease</title>
     <script>
         (function () {
-            try {
-                var STORAGE_KEY = 'grocer-ease-theme';
-                var DARK_CLASS = 'dark-mode';
-                var saved = localStorage.getItem(STORAGE_KEY);
-
-                if (saved === 'dark') {
-                    document.documentElement.classList.add(DARK_CLASS);
-                    document.documentElement.setAttribute('data-theme', 'dark');
-
-                    var antiFlashStyle = document.createElement('style');
-                    antiFlashStyle.id = 'dark-mode-anti-flash';
-                    antiFlashStyle.textContent =
-                        'html.dark-mode,html.dark-mode body{background:#111827!important;color:#e5eaf0;}' +
-                        'html.dark-mode body:not(.dark-mode){visibility:hidden;}';
-                    document.head.appendChild(antiFlashStyle);
+            const STORAGE_KEY = 'grocer-ease-theme';
+            const DARK_CLASS = 'dark-mode';
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved === 'dark') {
+                document.documentElement.classList.add(DARK_CLASS);
+                if (document.body) {
+                    document.body.classList.add(DARK_CLASS);
                 }
-            } catch (e) {
             }
         })();
     </script>

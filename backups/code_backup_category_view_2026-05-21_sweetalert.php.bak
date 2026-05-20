@@ -29,28 +29,6 @@ $open_modal = isset($_SESSION['add_category_error']);
 $error = $_SESSION['add_category_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
 $success_msg = $_SESSION['success_msg'] ?? '';
-$failure_msg = $_SESSION['error_msg'] ?? '';
-$alert = null;
-
-if (!empty($success_msg)) {
-    $alert = [
-        'icon' => 'success',
-        'title' => 'Category added',
-        'text' => $success_msg,
-    ];
-} elseif (!empty($failure_msg)) {
-    $alert = [
-        'icon' => 'error',
-        'title' => 'Category not saved',
-        'text' => $failure_msg,
-    ];
-} elseif (!empty($error)) {
-    $alert = [
-        'icon' => 'error',
-        'title' => 'Category not saved',
-        'html' => implode('<br>', array_map('htmlspecialchars', array_values($error))),
-    ];
-}
 
 
 $confirm_delete = false;
@@ -58,7 +36,7 @@ $delete_category_id = '';
 $delete_category_name = '';
 
 // echo "hello $user_info[username]";
-unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg'], $_SESSION['error_msg']);
+unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
 unset($_SESSION['success'], $_SESSION['errors']);
 
 ?>
@@ -189,17 +167,29 @@ unset($_SESSION['success'], $_SESSION['errors']);
 
                     </div>
                     <div class="body">
+                        <!-- SUCCESS MESSAGE -->
+                        <?php if (!empty($success_msg)): ?>
+                            <div class="success-message">
+                                <p><?= htmlspecialchars($success_msg) ?></p>
+                            </div>
+                        <?php endif; ?>
+
                         <div class="input">
                             <label for="">Category Name</label>
                             <i class="fas fa-tag"></i>
-                            <input type="text" name="category_name" placeholder="Category Name"
-                                value="<?= htmlspecialchars($old_inputs['category_name'] ?? '') ?>">
+                            <input type="text" name="category_name" placeholder="Category Name">
                         </div>
+
+                        <?php if (!empty($error['category_name'])): ?>
+                            <div class="error-message">
+                                <p><?= htmlspecialchars($error['category_name']) ?></p>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="input">
                             <label for="">Description (OPTIONAL) </label>
                             <i class="fas fa-align-left"></i>
-                            <textarea name="category_description" placeholder="Category Description"><?= htmlspecialchars($old_inputs['category_description'] ?? '') ?></textarea>
+                            <textarea name="category_description" placeholder="Category Description"></textarea>
                         </div>
 
                         <button type="submit">Add Category</button>
@@ -209,11 +199,6 @@ unset($_SESSION['success'], $_SESSION['errors']);
         </section>
     </main>
 </body>
-<?php if (!empty($alert)): ?>
-    <script>
-        Swal.fire(<?= json_encode($alert, JSON_UNESCAPED_SLASHES) ?>);
-    </script>
-<?php endif; ?>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
 
 </html>

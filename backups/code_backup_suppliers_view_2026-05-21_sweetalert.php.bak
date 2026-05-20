@@ -33,35 +33,8 @@ $delete_supplier_id = '';
 $errors = $_SESSION['errors']['add'] ?? [];
 $old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success'] ?? [];
-$alert = null;
 
 $open_add_modal = !empty($errors);
-
-if (!empty($success['add'])) {
-    $alert = [
-        'icon' => 'success',
-        'title' => 'Supplier added',
-        'text' => $success['add'],
-    ];
-} elseif (!empty($errors)) {
-    $alert = [
-        'icon' => 'error',
-        'title' => 'Supplier not saved',
-        'html' => implode('<br>', array_map('htmlspecialchars', array_values($errors))),
-    ];
-} elseif (!empty($success_msg)) {
-    $alert = [
-        'icon' => 'success',
-        'title' => 'Supplier added',
-        'text' => $success_msg,
-    ];
-} elseif (!empty($error)) {
-    $alert = [
-        'icon' => 'error',
-        'title' => 'Supplier not saved',
-        'html' => implode('<br>', array_map('htmlspecialchars', array_values($error))),
-    ];
-}
 
 
 // echo "hello $user_info[username]";
@@ -205,18 +178,29 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                     </div>
                     <div class="body">
 
+                        <?php if (!empty($errors['form'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['form']) ?></div>
+                        <?php endif; ?>
+
                         <div class="input">
                             <label>Supplier Name</label>
                             <i class="fas fa-user"></i>
                             <input type="text" name="supplier_name" placeholder="Supplier Name"
                                 value="<?= htmlspecialchars($old['supplier_name'] ?? '') ?>">
                         </div>
+                        <?php if (!empty($errors['supplier_name'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['supplier_name']) ?></div>
+                        <?php endif; ?>
+
                         <div class="input">
                             <label>Contact Person</label>
                             <i class="fas fa-user-tie"></i>
                             <input type="text" name="contact_person" placeholder="Contact Person"
                                 value="<?= htmlspecialchars($old['contact_person'] ?? '') ?>">
                         </div>
+                        <!-- <?php if (!empty($errors['contact_person'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['contact_person']) ?></div>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Phone Number</label>
@@ -224,6 +208,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="text" name="phone_number" placeholder="Phone Number"
                                 value="<?= htmlspecialchars($old['phone_number'] ?? '') ?>">
                         </div>
+                        <!-- <?php if (!empty($errors['phone_number'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['phone_number']) ?></div>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Email</label>
@@ -231,6 +218,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="email" name="email" placeholder="Email"
                                 value="<?= htmlspecialchars($old['email'] ?? '') ?>">
                         </div>
+                        <!-- <?php if (!empty($errors['email'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['email']) ?></div>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Address</label>
@@ -238,6 +228,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="text" name="address" placeholder="Address"
                                 value="<?= htmlspecialchars($old['address'] ?? '') ?>">
                         </div>
+                        <!-- <?php if (!empty($errors['address'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['address']) ?></div>
+                        <?php endif; ?> -->
 
                         <div class="input">
                             <label>Company Name</label>
@@ -245,6 +238,21 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                             <input type="text" name="company_name" placeholder="Company Name"
                                 value="<?= htmlspecialchars($old['company_name'] ?? '') ?>">
                         </div>
+                        <!-- <?php if (!empty($errors['company_name'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['company_name']) ?></div>
+                        <?php endif; ?> -->
+
+                        <!-- <div class="input">
+                            <label>Status</label>
+                            <select name="status">
+                                <option value="">Select a status</option>
+                                <option value="1" <?= ($old['status'] ?? '') === '1' ? 'selected' : '' ?>>Active</option>
+                                <option value="0" <?= ($old['status'] ?? '') === '0 ' ? 'selected' : '' ?>>Inactive</option>
+                            </select>
+                        </div> -->
+                        <!-- <?php if (!empty($errors['status'])): ?>
+                            <div class="error-message"><?= htmlspecialchars($errors['status']) ?></div>
+                        <?php endif; ?> -->
 
                         <button type="submit">Add Supplier</button>
                     </div>
@@ -253,11 +261,6 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
         </section>
     </main>
 </body>
-<?php if (!empty($alert)): ?>
-    <script>
-        Swal.fire(<?= json_encode($alert, JSON_UNESCAPED_SLASHES) ?>);
-    </script>
-<?php endif; ?>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
 
 </html>

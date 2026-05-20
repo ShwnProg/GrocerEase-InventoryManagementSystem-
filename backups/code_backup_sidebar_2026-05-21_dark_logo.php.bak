@@ -10,12 +10,7 @@ $archived_active = in_array($current, ['archived.php', 'deleted_products.php', '
 
 <div class="side-bar">
     <div class="logo">
-        <img
-            src="<?= IMAGE_URL ?>/page-logo.png"
-            data-light-logo="<?= IMAGE_URL ?>/page-logo.png"
-            data-dark-logo="<?= IMAGE_URL ?>/logo_light.png"
-            alt="Grocer Ease Logo"
-            id="system-logo">
+        <img src="<?= IMAGE_URL ?>/page-logo.png" alt="Grocer Ease Logo">
         <p>Grocer Ease</p>
     </div>
 

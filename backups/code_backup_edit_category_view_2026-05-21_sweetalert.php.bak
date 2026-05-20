@@ -24,31 +24,6 @@ $_SESSION['category_id'] = $category_id;
 $error = $_SESSION['edit_error_msg'] ?? '';
 $old_inputs = $_SESSION['edit_old_inputs'] ?? '';
 $success_msg = $_SESSION['edit_success_msg'] ?? '';
-$alert = null;
-
-if (!empty($success_msg)) {
-    $alert = [
-        'icon' => 'success',
-        'title' => 'Category updated',
-        'text' => $success_msg,
-    ];
-} elseif (!empty($error)) {
-    if (is_array($error) && !empty($error['no_changes'])) {
-        $alert = [
-            'icon' => 'info',
-            'title' => 'No changes made',
-            'text' => $error['no_changes'],
-        ];
-    } else {
-        $alert = [
-            'icon' => 'error',
-            'title' => 'Category not updated',
-            'html' => is_array($error)
-                ? implode('<br>', array_map('htmlspecialchars', array_values($error)))
-                : htmlspecialchars((string) $error),
-        ];
-    }
-}
 
 unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit_success_msg']);
 ?>
@@ -73,6 +48,17 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                     <i class="fa-solid fa-pen-to-square"></i>
                     <p> EDIT CATEGORY </p>
 
+                    <?php if (!empty($success_msg)): ?>
+                        <div class="success-message">
+                            <?= htmlspecialchars($success_msg) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($error['no_changes'])): ?>
+                        <div class="no-changes">
+                            <?= htmlspecialchars($error['no_changes']) ?>
+                        </div>
+                    <?php endif; ?>
                     <input type="hidden" name='category_id' value=<?= $category_id ?>>
                     <!-- CATEGORY NAME -->
                     <div class="input">
@@ -82,6 +68,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                             value="<?= htmlspecialchars($old_inputs['category_name'] ?? $category_info['category_name'] ?? '') ?>">
                     </div>
 
+                    <?php if (!empty($error['category_name'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['category_name']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- DESCFRIPTION -->
                     <div class="input">
                         <label for="category_description">Description (OPTIONAL) </label>
@@ -89,6 +81,12 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
                         <textarea name="category_description"
                             id=""><?= htmlspecialchars($old_inputs['category_description'] ?? $category_info['category_description'] ?? '') ?></textarea>
                     </div>
+                    <?php if (!empty($error['category_description'])): ?>
+                        <div class="error-message">
+                            <?= htmlspecialchars($error['description']) ?>
+                        </div>
+                    <?php endif; ?>
+
                     <!-- STATUS -->
                     <div class="input">
                         <label for="status">Status</label>
@@ -105,10 +103,5 @@ unset($_SESSION['edit_error_msg'], $_SESSION['edit_old_inputs'], $_SESSION['edit
         </section>
     </main>
 </body>
-<?php if (!empty($alert)): ?>
-    <script>
-        Swal.fire(<?= json_encode($alert, JSON_UNESCAPED_SLASHES) ?>);
-    </script>
-<?php endif; ?>
 
 </html>
