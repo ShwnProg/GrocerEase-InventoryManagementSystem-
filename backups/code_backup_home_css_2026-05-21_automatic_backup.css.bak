@@ -2212,7 +2212,7 @@ body.dark-mode .btn-out i {
 /* Dashboard backup widgets and quick actions */
 .dashboard-backup-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 14px;
     margin-top: 18px;
 }
@@ -2417,122 +2417,9 @@ body.dark-mode .quick-action.danger:hover {
     background: rgba(252, 165, 165, 0.16);
 }
 
-/* Shared dark mode readability coverage for forms, modals, empty states, and inline legacy UI */
-body.dark-mode .add-modal form,
-body.dark-mode .add-modal .header,
-body.dark-mode .confirm-modal form,
-body.dark-mode .edit-content form {
-    background: #1a2235;
-    border-color: #2a3a4a;
-    color: #e5eaf0;
-}
-
-body.dark-mode .add-modal .header,
-body.dark-mode .confirm-modal .header {
-    border-bottom-color: #2a3a4a;
-}
-
-body.dark-mode .add-modal .header p,
-body.dark-mode .edit-content form > p,
-body.dark-mode .stock-product-name,
-body.dark-mode .menu-table tbody td b,
-body.dark-mode .menu-table tbody td strong,
-body.dark-mode .success-message {
-    color: #eef2f7;
-}
-
-body.dark-mode .add-modal .input label,
-body.dark-mode .edit-content .input label,
-body.dark-mode .modal-subtitle,
-body.dark-mode .menu-table tbody td span[style*="#6b7280"],
-body.dark-mode .menu-table tbody td[style*="#6b7280"],
-body.dark-mode .menu-table td[style*="color:#6b7280"],
-body.dark-mode .menu-table td[style*="color: #6b7280"] {
-    color: #b4becd !important;
-}
-
-body.dark-mode .add-modal .input input,
-body.dark-mode .add-modal .input select,
-body.dark-mode .add-modal .input textarea,
-body.dark-mode .edit-content .input input,
-body.dark-mode .edit-content .input select,
-body.dark-mode .edit-content .input textarea,
-body.dark-mode select,
-body.dark-mode input,
-body.dark-mode textarea {
-    background: #111827;
-    border-color: #334155;
-    color: #eef2f7;
-}
-
-body.dark-mode .add-modal .input input::placeholder,
-body.dark-mode .add-modal .input textarea::placeholder,
-body.dark-mode .edit-content .input input::placeholder,
-body.dark-mode .edit-content .input textarea::placeholder,
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder {
-    color: #94a3b8;
-}
-
-body.dark-mode .add-modal .input input:focus,
-body.dark-mode .add-modal .input select:focus,
-body.dark-mode .add-modal .input textarea:focus,
-body.dark-mode .edit-content .input input:focus,
-body.dark-mode .edit-content .input select:focus,
-body.dark-mode .edit-content .input textarea:focus,
-body.dark-mode input:focus,
-body.dark-mode select:focus,
-body.dark-mode textarea:focus {
-    background: #111827;
-    border-color: #8fd48d;
-    box-shadow: 0 0 0 3px rgba(143, 212, 141, 0.12);
-}
-
-body.dark-mode .add-modal .header span {
-    color: #b4becd;
-}
-
-body.dark-mode .add-modal .header span:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #eef2f7;
-}
-
-body.dark-mode .error-message,
-body.dark-mode .error-text {
-    color: #fca5a5;
-}
-
-body.dark-mode .success-message {
-    color: #8fd48d;
-}
-
-body.dark-mode .preferred-btn i {
-    color: #b4becd;
-}
-
-body.dark-mode .preferred-btn i.active,
-body.dark-mode .preferred-btn:hover i {
-    color: #8fd48d;
-}
-
-body.dark-mode .swal2-popup,
-body.dark-mode .Swal2-popup {
-    background: #1a2235;
-    color: #eef2f7;
-}
-
-body.dark-mode .swal2-title {
-    color: #eef2f7;
-}
-
-body.dark-mode .swal2-html-container,
-body.dark-mode .swal2-content {
-    color: #cbd5e1;
-}
-
 @media (max-width: 900px) {
     .dashboard-backup-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;
     }
 
     .quick-actions-panel {
@@ -2546,10 +2433,6 @@ body.dark-mode .swal2-content {
 }
 
 @media (max-width: 560px) {
-    .dashboard-backup-grid {
-        grid-template-columns: 1fr;
-    }
-
     .quick-actions,
     .quick-action {
         width: 100%;

@@ -81,8 +81,7 @@ $_SESSION['page_title'] = "SETTINGS";
                             </div>
                             <select id="backup-type-filter" aria-label="Filter by backup type">
                                 <option value="all">All types</option>
-                                <option value="Manual Backup">Manual backup</option>
-                                <option value="Automatic Backup">Automatic backup</option>
+                                <option value="Full Backup">Full backup</option>
                                 <option value="Safety Backup">Safety backup</option>
                             </select>
                             <select id="backup-status-filter" aria-label="Filter by backup status">
@@ -118,91 +117,6 @@ $_SESSION['page_title'] = "SETTINGS";
                     </div>
                 </div>
             </div>
-
-            <div class="chart-card automatic-backup-card">
-                <div class="automatic-backup-header">
-                    <div class="backup-card-header">
-                        <div class="backup-icon">
-                            <i class="fa-solid fa-calendar-check"></i>
-                        </div>
-                        <div>
-                            <h3>Automatic Backup Settings</h3>
-                            <p>Configure scheduled database backups using cron_backup.php.</p>
-                        </div>
-                    </div>
-                    <span class="auto-status-pill disabled" id="auto-status-pill">Disabled</span>
-                </div>
-
-                <div class="automatic-backup-layout">
-                    <form class="automatic-backup-form" id="automatic-backup-form">
-                        <label class="auto-toggle-row" for="auto-backup-enabled">
-                            <input type="checkbox" id="auto-backup-enabled" name="auto_backup_enabled" value="1">
-                            <span class="auto-toggle-visual" aria-hidden="true"></span>
-                            <span>
-                                <strong>Enable automatic backup</strong>
-                                <small>Server cron must call cron_backup.php regularly.</small>
-                            </span>
-                        </label>
-
-                        <div class="auto-form-grid">
-                            <label class="auto-field">
-                                <span>Frequency</span>
-                                <select id="auto-backup-frequency" name="auto_backup_frequency">
-                                    <option value="daily">Daily</option>
-                                    <option value="weekly">Weekly</option>
-                                </select>
-                            </label>
-
-                            <label class="auto-field" id="auto-backup-day-field">
-                                <span>Day</span>
-                                <select id="auto-backup-day" name="auto_backup_day">
-                                    <option value="monday">Monday</option>
-                                    <option value="tuesday">Tuesday</option>
-                                    <option value="wednesday">Wednesday</option>
-                                    <option value="thursday">Thursday</option>
-                                    <option value="friday">Friday</option>
-                                    <option value="saturday">Saturday</option>
-                                    <option value="sunday">Sunday</option>
-                                </select>
-                            </label>
-
-                            <label class="auto-field">
-                                <span>Time</span>
-                                <input type="time" id="auto-backup-time" name="auto_backup_time" value="00:00" required>
-                            </label>
-                        </div>
-
-                        <button type="submit" class="backup-command primary auto-save-button" id="save-auto-backup">
-                            <i class="fa-solid fa-floppy-disk"></i>
-                            <span>Save settings</span>
-                        </button>
-                    </form>
-
-                    <div class="automatic-backup-status" aria-live="polite">
-                        <div class="auto-status-item">
-                            <span>Current status</span>
-                            <strong id="auto-status-text">Disabled</strong>
-                        </div>
-                        <div class="auto-status-item">
-                            <span>Schedule</span>
-                            <strong id="auto-schedule-text">Daily at 12:00 AM</strong>
-                        </div>
-                        <div class="auto-status-item">
-                            <span>Last automatic backup</span>
-                            <strong id="auto-last-run-text">No automatic backup yet</strong>
-                        </div>
-                        <div class="auto-status-item">
-                            <span>Next automatic backup</span>
-                            <strong id="auto-next-run-text">Not scheduled</strong>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="auto-cron-note">
-                    <i class="fa-solid fa-circle-info"></i>
-                    <span>For actual hosting, configure the server cron job to run cron_backup.php every few minutes or every hour. The script checks the saved schedule before creating a backup.</span>
-                </div>
-            </div>
         </section>
     </main>
 
@@ -218,18 +132,6 @@ $_SESSION['page_title'] = "SETTINGS";
         const backupTypeFilter = document.getElementById('backup-type-filter');
         const backupStatusFilter = document.getElementById('backup-status-filter');
         const backupFilterReset = document.getElementById('backup-filter-reset');
-        const automaticBackupForm = document.getElementById('automatic-backup-form');
-        const autoBackupEnabled = document.getElementById('auto-backup-enabled');
-        const autoBackupFrequency = document.getElementById('auto-backup-frequency');
-        const autoBackupDay = document.getElementById('auto-backup-day');
-        const autoBackupDayField = document.getElementById('auto-backup-day-field');
-        const autoBackupTime = document.getElementById('auto-backup-time');
-        const autoStatusPill = document.getElementById('auto-status-pill');
-        const autoStatusText = document.getElementById('auto-status-text');
-        const autoScheduleText = document.getElementById('auto-schedule-text');
-        const autoLastRunText = document.getElementById('auto-last-run-text');
-        const autoNextRunText = document.getElementById('auto-next-run-text');
-        const saveAutoBackupButton = document.getElementById('save-auto-backup');
 
         let selectedRestoreFile = null;
         let backupHistory = [];
@@ -253,94 +155,6 @@ $_SESSION['page_title'] = "SETTINGS";
             validationPanel.className = `validation-panel ${type}`;
             validationPanel.innerHTML = `<i class="fa-solid ${type === 'valid' ? 'fa-circle-check' : type === 'invalid' ? 'fa-triangle-exclamation' : 'fa-circle-info'}"></i><span>${message}</span>`;
         };
-
-        const titleCase = (value) => String(value || '')
-            .replace(/_/g, ' ')
-            .replace(/\b\w/g, (letter) => letter.toUpperCase());
-
-        const formatScheduleTime = (time) => {
-            const [hourRaw, minute = '00'] = String(time || '00:00').split(':');
-            const hour = Number(hourRaw);
-            const suffix = hour >= 12 ? 'PM' : 'AM';
-            const normalizedHour = hour % 12 || 12;
-            return `${normalizedHour}:${minute} ${suffix}`;
-        };
-
-        const renderAutomaticBackupSettings = (settings) => {
-            const enabled = Boolean(settings.auto_backup_enabled ?? settings.auto_backup);
-            const frequency = settings.auto_backup_frequency || settings.frequency || 'daily';
-            const day = settings.auto_backup_day || settings.weekly_day || 'monday';
-            const time = settings.auto_backup_time || '00:00';
-            const lastRun = settings.last_auto_backup_at || settings.last_run || '';
-            const nextRun = settings.next_auto_backup_at || '';
-
-            autoBackupEnabled.checked = enabled;
-            autoBackupFrequency.value = frequency;
-            autoBackupDay.value = day;
-            autoBackupTime.value = time;
-            toggleAutoDayField();
-
-            autoStatusPill.textContent = enabled ? 'Enabled' : 'Disabled';
-            autoStatusPill.className = `auto-status-pill ${enabled ? 'enabled' : 'disabled'}`;
-            autoStatusText.textContent = enabled ? 'Enabled' : 'Disabled';
-            autoScheduleText.textContent = frequency === 'weekly'
-                ? `Every ${titleCase(day)} at ${formatScheduleTime(time)}`
-                : `Daily at ${formatScheduleTime(time)}`;
-            autoLastRunText.textContent = lastRun || 'No automatic backup yet';
-            autoNextRunText.textContent = enabled ? (nextRun || 'Calculating next run') : 'Not scheduled';
-        };
-
-        const toggleAutoDayField = () => {
-            const isWeekly = autoBackupFrequency.value === 'weekly';
-            autoBackupDayField.hidden = !isWeekly;
-            autoBackupDay.disabled = !isWeekly;
-        };
-
-        async function loadAutomaticBackupSettings() {
-            try {
-                const response = await fetch('../../controllers/backup.php?action=settings');
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    renderAutomaticBackupSettings(result.settings || {});
-                }
-            } catch (error) {
-                autoStatusText.textContent = 'Settings unavailable';
-                autoNextRunText.textContent = 'Unable to load';
-            }
-        }
-
-        autoBackupFrequency.addEventListener('change', toggleAutoDayField);
-        automaticBackupForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData();
-            formData.append('action', 'save_settings');
-            formData.append('auto_backup_enabled', autoBackupEnabled.checked ? '1' : '0');
-            formData.append('auto_backup_frequency', autoBackupFrequency.value);
-            formData.append('auto_backup_day', autoBackupDay.value);
-            formData.append('auto_backup_time', autoBackupTime.value);
-
-            setLoading(saveAutoBackupButton, true, 'Saving...');
-            try {
-                const response = await fetch('../../controllers/backup.php', {
-                    method: 'POST',
-                    body: formData,
-                });
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    renderAutomaticBackupSettings(data.settings || {});
-                    await Swal.fire('Settings saved', 'Automatic backup schedule was updated.', 'success');
-                } else {
-                    Swal.fire('Settings not saved', data.message || 'Unable to save automatic backup settings.', 'error');
-                }
-            } catch (error) {
-                Swal.fire('Settings not saved', 'The server returned an unexpected response.', 'error');
-            } finally {
-                setLoading(saveAutoBackupButton, false, '');
-            }
-        });
 
         [backupSearchInput, backupTypeFilter, backupStatusFilter].forEach((control) => {
             control.addEventListener('input', renderBackupHistory);
@@ -659,7 +473,6 @@ $_SESSION['page_title'] = "SETTINGS";
         }
 
         loadBackupHistory();
-        loadAutomaticBackupSettings();
     </script>
 
     <style>
@@ -913,198 +726,6 @@ $_SESSION['page_title'] = "SETTINGS";
             min-width: 840px;
         }
 
-        .automatic-backup-card {
-            margin-top: 18px;
-            border-radius: 8px;
-            padding: 20px;
-        }
-
-        .automatic-backup-header {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            align-items: flex-start;
-        }
-
-        .auto-status-pill {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 999px;
-            padding: 5px 10px;
-            font-size: 11px;
-            font-weight: 800;
-            white-space: nowrap;
-        }
-
-        .auto-status-pill.enabled {
-            color: #1c5515;
-            background: rgba(28, 85, 21, 0.09);
-        }
-
-        .auto-status-pill.disabled {
-            color: #6b7280;
-            background: #f3f4f6;
-        }
-
-        .automatic-backup-layout {
-            display: grid;
-            grid-template-columns: minmax(320px, 1fr) minmax(320px, 0.9fr);
-            gap: 18px;
-            align-items: start;
-        }
-
-        .automatic-backup-form {
-            display: grid;
-            gap: 14px;
-        }
-
-        .auto-toggle-row {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 11px;
-            align-items: center;
-            cursor: pointer;
-            margin: 0;
-        }
-
-        .auto-toggle-row input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .auto-toggle-visual {
-            width: 42px;
-            height: 24px;
-            border-radius: 999px;
-            background: #d1d5db;
-            position: relative;
-            transition: background 0.18s ease;
-        }
-
-        .auto-toggle-visual::after {
-            content: '';
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            left: 3px;
-            top: 3px;
-            border-radius: 50%;
-            background: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            transition: transform 0.18s ease;
-        }
-
-        .auto-toggle-row input:checked + .auto-toggle-visual {
-            background: #1c5515;
-        }
-
-        .auto-toggle-row input:checked + .auto-toggle-visual::after {
-            transform: translateX(18px);
-        }
-
-        .auto-toggle-row strong,
-        .auto-toggle-row small {
-            display: block;
-        }
-
-        .auto-toggle-row strong {
-            color: #111827;
-            font-size: 13px;
-        }
-
-        .auto-toggle-row small {
-            margin-top: 3px;
-            color: #8a8f98;
-            font-size: 11px;
-            line-height: 1.4;
-        }
-
-        .auto-form-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .auto-field {
-            display: grid;
-            gap: 6px;
-            margin: 0;
-        }
-
-        .auto-field span {
-            color: #6b7280;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .auto-field select,
-        .auto-field input {
-            height: 38px;
-            border: 1px solid rgba(28, 85, 21, 0.12);
-            border-radius: 8px;
-            background: #f4f7f4;
-            color: #374151;
-            font-size: 12px;
-            padding: 0 10px;
-            outline: none;
-        }
-
-        .auto-save-button {
-            width: fit-content;
-            min-width: 150px;
-        }
-
-        .automatic-backup-status {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .auto-status-item {
-            min-height: 76px;
-            border: 1px solid rgba(28, 85, 21, 0.09);
-            border-radius: 8px;
-            background: #f7faf5;
-            padding: 12px;
-        }
-
-        .auto-status-item span,
-        .auto-status-item strong {
-            display: block;
-        }
-
-        .auto-status-item span {
-            color: #8a8f98;
-            font-size: 10px;
-            font-weight: 800;
-            letter-spacing: 0.4px;
-            text-transform: uppercase;
-        }
-
-        .auto-status-item strong {
-            margin-top: 7px;
-            color: #111827;
-            font-size: 13px;
-            line-height: 1.4;
-            overflow-wrap: anywhere;
-        }
-
-        .auto-cron-note {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            margin-top: 14px;
-            padding: 11px 12px;
-            border-radius: 8px;
-            background: #f4f7f2;
-            color: #4f5f44;
-            font-size: 12px;
-            line-height: 1.45;
-        }
-
         .backup-file-name {
             color: #1f2937;
             font-weight: 600;
@@ -1211,19 +832,14 @@ $_SESSION['page_title'] = "SETTINGS";
         body.dark-mode .backup-card-header h3,
         body.dark-mode .backup-file-name,
         body.dark-mode .restore-file-copy strong,
-        body.dark-mode .backup-empty-state strong,
-        body.dark-mode .auto-toggle-row strong,
-        body.dark-mode .auto-status-item strong {
+        body.dark-mode .backup-empty-state strong {
             color: #eef2f7;
         }
 
         body.dark-mode .backup-card-header p,
         body.dark-mode .restore-file-copy span,
         body.dark-mode .backup-empty-cell,
-        body.dark-mode .backup-empty-state,
-        body.dark-mode .auto-toggle-row small,
-        body.dark-mode .auto-field span,
-        body.dark-mode .auto-status-item span {
+        body.dark-mode .backup-empty-state {
             color: #b4becd;
         }
 
@@ -1238,36 +854,10 @@ $_SESSION['page_title'] = "SETTINGS";
         body.dark-mode .backup-search,
         body.dark-mode .backup-history-filters select,
         body.dark-mode .backup-filter-reset,
-        body.dark-mode .validation-panel,
-        body.dark-mode .auto-field select,
-        body.dark-mode .auto-field input,
-        body.dark-mode .auto-cron-note {
+        body.dark-mode .validation-panel {
             background: #111827;
             border-color: #334155;
             color: #d7dee8;
-        }
-
-        body.dark-mode .auto-status-item {
-            background: #111827;
-            border-color: #334155;
-        }
-
-        body.dark-mode .auto-status-pill.enabled {
-            color: #8fd48d;
-            background: rgba(143, 212, 141, 0.12);
-        }
-
-        body.dark-mode .auto-status-pill.disabled {
-            color: #cbd5e1;
-            background: #26364b;
-        }
-
-        body.dark-mode .auto-toggle-visual {
-            background: #475569;
-        }
-
-        body.dark-mode .auto-toggle-row input:checked + .auto-toggle-visual {
-            background: #8fd48d;
         }
 
         body.dark-mode .backup-search input {
@@ -1338,21 +928,13 @@ $_SESSION['page_title'] = "SETTINGS";
             }
 
             .backup-action-stack,
-            .backup-history-filters,
-            .automatic-backup-layout,
-            .auto-form-grid,
-            .automatic-backup-status {
+            .backup-history-filters {
                 grid-template-columns: 1fr;
             }
 
             .backup-command,
-            .backup-filter-reset,
-            .auto-save-button {
+            .backup-filter-reset {
                 width: 100%;
-            }
-
-            .automatic-backup-header {
-                flex-direction: column;
             }
         }
     </style>

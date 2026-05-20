@@ -151,7 +151,7 @@ class BackupManager
             $backups[] = [
                 'filename' => basename($file),
                 'date' => date('Y-m-d H:i:s', filemtime($file)),
-                'type' => $this->backupTypeFromFilename(basename($file)),
+                'type' => str_starts_with(basename($file), 'pre_restore_') ? 'Safety Backup' : 'Full Backup',
                 'size' => filesize($file),
                 'readable_size' => $this->formatBytes((int) filesize($file)),
                 'valid' => $this->validateBackupFile($file)['valid'],
@@ -230,105 +230,68 @@ class BackupManager
         ];
     }
 
-    public function getAutomaticBackupStatus(?int $now = null): array
-    {
-        $now ??= time();
-        $settings = $this->getBackupSettings();
-
-        return [
-            'settings' => $settings,
-            'enabled' => $settings['auto_backup_enabled'],
-            'frequency' => $settings['auto_backup_frequency'],
-            'day' => $settings['auto_backup_day'],
-            'time' => $settings['auto_backup_time'],
-            'last_auto_backup_at' => $settings['last_auto_backup_at'],
-            'next_auto_backup_at' => $settings['auto_backup_enabled']
-                ? $this->formatTimestamp($this->nextScheduledTimestamp($settings, $now))
-                : null,
-        ];
-    }
-
     public function shouldRunAutomaticBackup(?int $now = null): array
     {
         $now ??= time();
         $settings = $this->getBackupSettings();
 
-        if (!$settings['auto_backup_enabled']) {
+        if (!$settings['auto_backup']) {
             return [
                 'should_run' => false,
                 'reason' => 'Automatic backup is disabled.',
                 'settings' => $settings,
-                'next_auto_backup_at' => null,
             ];
         }
 
-        $scheduledAt = $this->currentScheduledTimestamp($settings, $now);
-        $nextAt = $this->nextScheduledTimestamp($settings, $now);
+        $lastRun = $settings['last_run'] ?? null;
+        $today = date('Y-m-d', $now);
 
-        if ($scheduledAt === null || $now < $scheduledAt) {
+        if ($settings['frequency'] === 'weekly') {
+            $currentDay = strtolower(date('l', $now));
+            if ($currentDay !== $settings['weekly_day']) {
+                return [
+                    'should_run' => false,
+                    'reason' => 'Today is not the selected weekly backup day.',
+                    'settings' => $settings,
+                ];
+            }
+
+            if ($lastRun && date('o-W', strtotime($lastRun)) === date('o-W', $now)) {
+                return [
+                    'should_run' => false,
+                    'reason' => 'Weekly automatic backup already ran this week.',
+                    'settings' => $settings,
+                ];
+            }
+
             return [
-                'should_run' => false,
-                'reason' => 'Automatic backup is not due yet.',
+                'should_run' => true,
+                'reason' => 'Weekly automatic backup is due.',
                 'settings' => $settings,
-                'next_auto_backup_at' => $this->formatTimestamp($nextAt),
             ];
         }
 
-        $lastRun = !empty($settings['last_auto_backup_at']) ? strtotime($settings['last_auto_backup_at']) : false;
-        if ($lastRun !== false && $lastRun >= $scheduledAt) {
+        if ($lastRun && date('Y-m-d', strtotime($lastRun)) === $today) {
             return [
                 'should_run' => false,
-                'reason' => 'Automatic backup already ran for this scheduled period.',
+                'reason' => 'Daily automatic backup already ran today.',
                 'settings' => $settings,
-                'next_auto_backup_at' => $this->formatTimestamp($this->nextScheduledTimestamp($settings, $now + 60)),
             ];
         }
 
         return [
             'should_run' => true,
-            'reason' => ucfirst($settings['auto_backup_frequency']) . ' automatic backup is due.',
+            'reason' => 'Daily automatic backup is due.',
             'settings' => $settings,
-            'scheduled_at' => $this->formatTimestamp($scheduledAt),
-            'next_auto_backup_at' => $this->formatTimestamp($nextAt),
         ];
     }
 
     public function markAutomaticBackupRun(?int $time = null): array
     {
-        $runAt = $time ?? time();
         $settings = $this->getBackupSettings();
-        $settings['last_auto_backup_at'] = $this->formatTimestamp($runAt);
-        $settings['last_run'] = $settings['last_auto_backup_at'];
-        $settings['next_auto_backup_at'] = $settings['auto_backup_enabled']
-            ? $this->formatTimestamp($this->nextScheduledTimestamp($settings, $runAt + 60))
-            : null;
+        $settings['last_run'] = date('Y-m-d H:i:s', $time ?? time());
 
         return $this->saveBackupSettings($settings);
-    }
-
-    public function validateAutomaticBackupInput(array $settings): array
-    {
-        $frequency = strtolower((string) ($settings['auto_backup_frequency'] ?? $settings['frequency'] ?? 'daily'));
-        if (!in_array($frequency, ['daily', 'weekly'], true)) {
-            return ['valid' => false, 'message' => 'Frequency must be daily or weekly.'];
-        }
-
-        $time = (string) ($settings['auto_backup_time'] ?? $settings['backup_time'] ?? '00:00');
-        if (!preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $time)) {
-            return ['valid' => false, 'message' => 'Backup time must use HH:MM format.'];
-        }
-
-        if ($frequency === 'weekly') {
-            $day = strtolower((string) ($settings['auto_backup_day'] ?? $settings['weekly_day'] ?? ''));
-            if (!in_array($day, $this->validWeekdays(), true)) {
-                return [
-                    'valid' => false,
-                    'message' => 'Weekly backup day must be Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, or Sunday.',
-                ];
-            }
-        }
-
-        return ['valid' => true, 'message' => 'Automatic backup settings are valid.'];
     }
 
     public function resolveBackupPath(string $filename): ?string
@@ -575,13 +538,7 @@ class BackupManager
     private function defaultBackupSettings(): array
     {
         return [
-            'auto_backup_enabled' => false,
-            'auto_backup_frequency' => 'daily',
-            'auto_backup_day' => 'monday',
-            'auto_backup_time' => '00:00',
-            'last_auto_backup_at' => null,
-            'next_auto_backup_at' => null,
-            'auto_backup' => false,
+            'auto_backup' => true,
             'frequency' => 'daily',
             'weekly_day' => 'monday',
             'backup_location' => 'local',
@@ -591,118 +548,24 @@ class BackupManager
 
     private function normalizeBackupSettings(array $settings): array
     {
-        $frequency = strtolower((string) ($settings['auto_backup_frequency'] ?? $settings['frequency'] ?? 'daily'));
+        $frequency = strtolower((string) ($settings['frequency'] ?? 'daily'));
         if (!in_array($frequency, ['daily', 'weekly'], true)) {
             $frequency = 'daily';
         }
 
-        $weeklyDay = strtolower((string) ($settings['auto_backup_day'] ?? $settings['weekly_day'] ?? 'monday'));
-        if (!in_array($weeklyDay, $this->validWeekdays(), true)) {
+        $weeklyDay = strtolower((string) ($settings['weekly_day'] ?? 'monday'));
+        $validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        if (!in_array($weeklyDay, $validDays, true)) {
             $weeklyDay = 'monday';
         }
 
-        $time = (string) ($settings['auto_backup_time'] ?? $settings['backup_time'] ?? '00:00');
-        if (!preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $time)) {
-            $time = '00:00';
-        }
-
-        $enabledSource = !empty($settings['auto_backup_enabled'])
-            ? $settings['auto_backup_enabled']
-            : ($settings['auto_backup'] ?? false);
-        $enabled = filter_var($enabledSource, FILTER_VALIDATE_BOOLEAN);
-        $lastRun = $settings['last_auto_backup_at'] ?? $settings['last_run'] ?? null;
-        $lastRun = !empty($lastRun) ? (string) $lastRun : null;
-        $normalized = [
-            'auto_backup_enabled' => $enabled,
-            'auto_backup_frequency' => $frequency,
-            'auto_backup_day' => $weeklyDay,
-            'auto_backup_time' => $time,
-            'last_auto_backup_at' => $lastRun,
-            'next_auto_backup_at' => null,
-            'backup_location' => 'local',
-        ];
-        $normalized['next_auto_backup_at'] = $enabled
-            ? $this->formatTimestamp($this->nextScheduledTimestamp($normalized))
-            : null;
-
         return [
-            'auto_backup_enabled' => $normalized['auto_backup_enabled'],
-            'auto_backup_frequency' => $normalized['auto_backup_frequency'],
-            'auto_backup_day' => $normalized['auto_backup_day'],
-            'auto_backup_time' => $normalized['auto_backup_time'],
-            'last_auto_backup_at' => $normalized['last_auto_backup_at'],
-            'next_auto_backup_at' => $normalized['next_auto_backup_at'],
-            'auto_backup' => $normalized['auto_backup_enabled'],
-            'frequency' => $normalized['auto_backup_frequency'],
-            'weekly_day' => $normalized['auto_backup_day'],
+            'auto_backup' => filter_var($settings['auto_backup'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'frequency' => $frequency,
+            'weekly_day' => $weeklyDay,
             'backup_location' => 'local',
-            'last_run' => $normalized['last_auto_backup_at'],
+            'last_run' => !empty($settings['last_run']) ? (string) $settings['last_run'] : null,
         ];
-    }
-
-    private function backupTypeFromFilename(string $filename): string
-    {
-        if (str_starts_with($filename, 'pre_restore_')) {
-            return 'Safety Backup';
-        }
-
-        if (str_starts_with($filename, 'auto_backup_')) {
-            return 'Automatic Backup';
-        }
-
-        return 'Manual Backup';
-    }
-
-    private function currentScheduledTimestamp(array $settings, ?int $now = null): ?int
-    {
-        $now ??= time();
-        [$hour, $minute] = array_map('intval', explode(':', $settings['auto_backup_time']));
-
-        if ($settings['auto_backup_frequency'] === 'weekly') {
-            $currentDay = strtolower(date('l', $now));
-            if ($currentDay !== $settings['auto_backup_day']) {
-                return null;
-            }
-        }
-
-        return mktime($hour, $minute, 0, (int) date('n', $now), (int) date('j', $now), (int) date('Y', $now));
-    }
-
-    private function nextScheduledTimestamp(array $settings, ?int $now = null): int
-    {
-        $now ??= time();
-        [$hour, $minute] = array_map('intval', explode(':', $settings['auto_backup_time']));
-
-        if ($settings['auto_backup_frequency'] === 'weekly') {
-            $targetDay = ucfirst($settings['auto_backup_day']);
-            $candidate = strtotime($targetDay . ' ' . sprintf('%02d:%02d:00', $hour, $minute), $now);
-            if ($candidate === false) {
-                $candidate = $now;
-            }
-
-            if ($candidate <= $now) {
-                $candidate = strtotime('next ' . $targetDay . ' ' . sprintf('%02d:%02d:00', $hour, $minute), $now);
-            }
-
-            return (int) $candidate;
-        }
-
-        $candidate = mktime($hour, $minute, 0, (int) date('n', $now), (int) date('j', $now), (int) date('Y', $now));
-        if ($candidate <= $now) {
-            $candidate = strtotime('+1 day', $candidate);
-        }
-
-        return (int) $candidate;
-    }
-
-    private function formatTimestamp(?int $timestamp): ?string
-    {
-        return $timestamp !== null ? date('Y-m-d H:i:s', $timestamp) : null;
-    }
-
-    private function validWeekdays(): array
-    {
-        return ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     }
 
     private function formatBytes(int $bytes): string

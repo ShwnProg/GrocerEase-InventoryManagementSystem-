@@ -21,17 +21,8 @@ $low_stock = $stock->GetTotalLowStockItems();
 $out_of_stock = $stock->GetTotalOutOfStockItems();
 $backupManager = new BackupManager($db, __DIR__ . '/../../backups/');
 $backupList = $backupManager->getBackupList();
-$automaticBackup = $backupManager->getAutomaticBackupStatus();
 $totalBackups = count($backupList);
 $latestBackup = $backupList[0]['date'] ?? 'No backup yet';
-$autoEnabled = $automaticBackup['enabled'];
-$autoFrequency = $automaticBackup['frequency'];
-$autoDay = $automaticBackup['day'];
-$autoTime = $automaticBackup['time'];
-$autoLastRun = $automaticBackup['last_auto_backup_at'] ?: 'No automatic backup yet';
-$autoSchedule = $autoFrequency === 'weekly'
-    ? 'Every ' . ucfirst($autoDay) . ' at ' . date('g:i A', strtotime($autoTime))
-    : 'Daily at ' . date('g:i A', strtotime($autoTime));
 
 // Chart data
 $stocks_per_category = $stock->GetTotalStockPerCategory();
@@ -144,19 +135,6 @@ if (!empty($inventory_logs)) {
                         <span>Restore Protection</span>
                         <strong>Safety backup enabled</strong>
                         <small>Restore validates files and creates a safety copy first</small>
-                    </div>
-                </div>
-                <div class="dashboard-backup-card dashboard-auto-backup-card">
-                    <div class="dashboard-backup-icon">
-                        <i class="fa-solid fa-calendar-check"></i>
-                    </div>
-                    <div>
-                        <span>Automatic Backup</span>
-                        <strong id="dashboard-auto-backup-status"><?= $autoEnabled ? 'Enabled' : 'Disabled' ?></strong>
-                        <small id="dashboard-auto-backup-detail">
-                            <?= htmlspecialchars($autoSchedule) ?><br>
-                            Last: <?= htmlspecialchars($autoLastRun) ?>
-                        </small>
                     </div>
                 </div>
             </div>
@@ -405,35 +383,6 @@ if (!empty($inventory_logs)) {
         } catch (error) {
         }
     }
-
-    async function loadDashboardAutomaticBackupStatus() {
-        try {
-            const response = await fetch('../../controllers/backup.php?action=settings');
-            const result = await response.json();
-            if (result.status !== 'success') {
-                return;
-            }
-
-            const settings = result.settings || {};
-            const enabled = Boolean(settings.auto_backup_enabled ?? settings.auto_backup);
-            const frequency = settings.auto_backup_frequency || settings.frequency || 'daily';
-            const day = settings.auto_backup_day || settings.weekly_day || 'monday';
-            const time = settings.auto_backup_time || '00:00';
-            const lastRun = settings.last_auto_backup_at || settings.last_run || 'No automatic backup yet';
-            const [hourRaw, minute = '00'] = time.split(':');
-            const hour = Number(hourRaw);
-            const scheduleTime = `${hour % 12 || 12}:${minute} ${hour >= 12 ? 'PM' : 'AM'}`;
-            const schedule = frequency === 'weekly'
-                ? `Every ${day.charAt(0).toUpperCase() + day.slice(1)} at ${scheduleTime}`
-                : `Daily at ${scheduleTime}`;
-
-            document.getElementById('dashboard-auto-backup-status').textContent = enabled ? 'Enabled' : 'Disabled';
-            document.getElementById('dashboard-auto-backup-detail').innerHTML = `${schedule}<br>Last: ${lastRun}`;
-        } catch (error) {
-        }
-    }
-
-    loadDashboardAutomaticBackupStatus();
 </script>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
 

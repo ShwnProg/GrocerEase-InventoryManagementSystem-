@@ -22,28 +22,6 @@ function requireLogin(): void
     }
 }
 
-function requireAdmin(PDO $db): void
-{
-    $userId = $_SESSION['id'] ?? null;
-    if ($userId === null) {
-        respondJson([
-            'status' => 'error',
-            'message' => 'Admin access is required.',
-        ], 403);
-    }
-
-    $stmt = $db->prepare('SELECT role FROM users WHERE user_id = :id LIMIT 1');
-    $stmt->execute([':id' => $userId]);
-    $role = $stmt->fetchColumn();
-
-    if ($role !== 'admin') {
-        respondJson([
-            'status' => 'error',
-            'message' => 'Only administrators can use Backup and Recovery.',
-        ], 403);
-    }
-}
-
 function requireMethod(string $method): void
 {
     if ($_SERVER['REQUEST_METHOD'] !== $method) {
@@ -55,7 +33,6 @@ function requireMethod(string $method): void
 }
 
 requireLogin();
-requireAdmin($db);
 
 $action = $_REQUEST['action'] ?? '';
 if ($action === '') {
@@ -167,20 +144,11 @@ switch ($action) {
         respondJson([
             'status' => 'success',
             'settings' => $manager->getBackupSettings(),
-            'automatic_backup' => $manager->getAutomaticBackupStatus(),
         ]);
         break;
 
     case 'save_settings':
         requireMethod('POST');
-        $validation = $manager->validateAutomaticBackupInput($_POST);
-        if (!$validation['valid']) {
-            respondJson([
-                'status' => 'error',
-                'message' => $validation['message'],
-            ], 422);
-        }
-
         respondJson($manager->saveBackupSettings($_POST));
         break;
 

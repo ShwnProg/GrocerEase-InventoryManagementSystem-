@@ -1,5 +1,24 @@
 <?php
-// Run this file from Windows Task Scheduler or cron for automatic full backups.
+/*
+ * Automatic Backup runner for GrocerEaseIMS.
+ *
+ * The Backup and Recovery UI saves the automatic backup schedule. This script
+ * reads those settings, checks whether the saved schedule is due, and creates
+ * an automatic SQL backup only when needed. It prevents duplicate backups for
+ * the same daily or weekly scheduled period.
+ *
+ * Server cron setup examples:
+ * Linux hosting, every 5 minutes:
+ *   /usr/bin/php /absolute/path/to/GrocerEaseIMS/cron_backup.php
+ *
+ * Windows Task Scheduler:
+ *   Program: C:\path\to\php.exe
+ *   Arguments: C:\path\to\GrocerEaseIMS\cron_backup.php
+ *
+ * Automatic backup does not run by itself unless the server calls this file
+ * regularly. Running it every few minutes or every hour is acceptable because
+ * this script decides whether a backup is actually due.
+ */
 
 require_once __DIR__ . '/autoload.php';
 
