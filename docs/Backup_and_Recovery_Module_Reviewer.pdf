@@ -1,0 +1,567 @@
+%PDF-1.4
+1 0 obj
+<< /Length 1064 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F2 22 Tf 54 610 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F2 13 Tf 54 576 Td (Code Review and Technical Documentation Guide) Tj ET
+0.85 w 54 559 m 558 559 l S
+BT /F1 10 Tf 54 539 Td (This reviewer explains the implemented Backup and Recovery module of GrocerEaseIMS. It is) Tj ET
+BT /F1 10 Tf 54 525 Td (written for student presentation, defense preparation, and technical review.) Tj ET
+BT /F1 10 Tf 54 506 Td (The document focuses only on the implemented manual features: Create Backup, Restore Backup,) Tj ET
+BT /F1 10 Tf 54 492 Td (View Backup History, and Download Backup. Delete Backup is discussed as a requested feature) Tj ET
+BT /F1 10 Tf 54 478 Td (that is not implemented in the current backup code.) Tj ET
+BT /F1 10 Tf 54 459 Td (Automatic Backup is intentionally not included in this reviewer because it is outside the) Tj ET
+BT /F1 10 Tf 54 445 Td (requested scope.) Tj ET
+endstream
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R 14 0 R 16 0 R 18 0 R 20 0 R 22 0 R 24 0 R 26 0 R] /Count 11 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 1 0 R >>
+endobj
+7 0 obj
+<< /Length 3714 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F2 15 Tf 54 682 Td (1. Module Overview) Tj ET
+0.85 w 54 663 m 558 663 l S
+BT /F1 10 Tf 54 648 Td (The Backup and Recovery module protects the system database by creating full SQL backup) Tj ET
+BT /F1 10 Tf 54 634 Td (files and allowing an administrator to restore data from a selected SQL backup. In simple) Tj ET
+BT /F1 10 Tf 54 620 Td (terms, it gives the administrator a way to save the current database state and recover it) Tj ET
+BT /F1 10 Tf 54 606 Td (later if records are damaged, deleted, or changed incorrectly.) Tj ET
+BT /F1 10 Tf 54 587 Td (In this system, backups are stored as .sql files inside the local /backups folder. The) Tj ET
+BT /F1 10 Tf 54 573 Td (module is important because GrocerEaseIMS manages products, categories, suppliers, stocks,) Tj ET
+BT /F1 10 Tf 54 559 Td (and transaction-related records. If the database becomes corrupted or important data is) Tj ET
+BT /F1 10 Tf 54 545 Td (accidentally changed, a valid backup can help bring the system back to an earlier working) Tj ET
+BT /F1 10 Tf 54 531 Td (state.) Tj ET
+BT /F1 10 Tf 54 512 Td (The implemented backup module is mainly composed of a frontend page in) Tj ET
+BT /F1 10 Tf 54 498 Td (views/inventory/settings.php, a backend controller in controllers/backup.php, and a reusable) Tj ET
+BT /F1 10 Tf 54 484 Td (model class in models/BackupManager.php.) Tj ET
+BT /F2 15 Tf 54 457 Td (2. Features Covered) Tj ET
+0.85 w 54 438 m 558 438 l S
+BT /F2 12 Tf 54 416 Td (Create Backup) Tj ET
+BT /F1 10 Tf 54 396 Td (- Purpose: Creates a full SQL copy of the current MySQL database.) Tj ET
+BT /F1 10 Tf 54 382 Td (- User/Admin action: Admin clicks Backup now and confirms the SweetAlert prompt.) Tj ET
+BT /F1 10 Tf 54 368 Td (- System action: The frontend sends POST controllers/backup.php?action=backup. The) Tj ET
+BT /F1 10 Tf 54 354 Td (controller calls BackupManager::createBackup\(\).) Tj ET
+BT /F1 10 Tf 54 340 Td (- Expected result: A file named backup_YYYY-MM-DD_HH-MM-SS.sql is created in /backups) Tj ET
+BT /F1 10 Tf 54 326 Td (and the backup history refreshes.) Tj ET
+BT /F1 10 Tf 54 312 Td (- Possible errors: Expired session, invalid request method, unwritable backup folder, no) Tj ET
+BT /F1 10 Tf 54 298 Td (database tables found, invalid generated SQL, or unexpected server response.) Tj ET
+BT /F2 12 Tf 54 277 Td (Restore Backup) Tj ET
+BT /F1 10 Tf 54 257 Td (- Purpose: Replaces the current database content by executing SQL statements from a) Tj ET
+BT /F1 10 Tf 54 243 Td (valid backup file.) Tj ET
+BT /F1 10 Tf 54 229 Td (- User/Admin action: Admin either uploads a .sql file or selects a valid backup from) Tj ET
+BT /F1 10 Tf 54 215 Td (history and confirms restore.) Tj ET
+BT /F1 10 Tf 54 201 Td (- System action: The selected file is validated, a pre_restore safety backup is created,) Tj ET
+BT /F1 10 Tf 54 187 Td (foreign key checks are disabled, SQL statements are executed, and foreign key checks are) Tj ET
+BT /F1 10 Tf 54 173 Td (enabled again.) Tj ET
+BT /F1 10 Tf 54 159 Td (- Expected result: The database is restored and the system shows the safety backup) Tj ET
+BT /F1 10 Tf 54 145 Td (filename.) Tj ET
+BT /F1 10 Tf 54 131 Td (- Possible errors: Invalid file, unreadable or empty backup, file does not look like) Tj ET
+BT /F1 10 Tf 54 117 Td (SQL, safety backup creation fails, SQL execution fails, or server returns non-JSON) Tj ET
+BT /F1 10 Tf 54 103 Td (output.) Tj ET
+BT /F2 12 Tf 54 82 Td (View Backup History) Tj ET
+BT /F1 10 Tf 54 62 Td (- Purpose: Shows available local backup files so the admin can inspect, download, or) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 3925 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F1 10 Tf 54 690 Td (restore them.) Tj ET
+BT /F1 10 Tf 54 676 Td (- User/Admin action: Admin opens the Settings backup page.) Tj ET
+BT /F1 10 Tf 54 662 Td (- System action: JavaScript calls GET controllers/backup.php?action=list. BackupManager) Tj ET
+BT /F1 10 Tf 54 648 Td (scans /backups/*.sql files and returns filename, date, type, size, readable size, and) Tj ET
+BT /F1 10 Tf 54 634 Td (valid status.) Tj ET
+BT /F1 10 Tf 54 620 Td (- Expected result: The table displays backup files sorted by newest date first.) Tj ET
+BT /F1 10 Tf 54 606 Td (- Possible errors: Controller path is wrong, session expired, JSON parsing fails, backup) Tj ET
+BT /F1 10 Tf 54 592 Td (folder cannot be scanned, or no files exist.) Tj ET
+BT /F2 12 Tf 54 571 Td (Download Backup) Tj ET
+BT /F1 10 Tf 54 551 Td (- Purpose: Allows the admin to download an existing SQL backup file.) Tj ET
+BT /F1 10 Tf 54 537 Td (- User/Admin action: Admin clicks the download icon in the backup history table.) Tj ET
+BT /F1 10 Tf 54 523 Td (- System action: Browser navigates to) Tj ET
+BT /F1 10 Tf 54 509 Td (controllers/backup.php?action=download&file=filename. The controller resolves the safe) Tj ET
+BT /F1 10 Tf 54 495 Td (path and streams the SQL file.) Tj ET
+BT /F1 10 Tf 54 481 Td (- Expected result: The selected .sql file is downloaded.) Tj ET
+BT /F1 10 Tf 54 467 Td (- Possible errors: File is missing, filename is invalid, path validation fails, session) Tj ET
+BT /F1 10 Tf 54 453 Td (expired, or the controller returns 404 File not found.) Tj ET
+BT /F2 12 Tf 54 432 Td (Delete Backup) Tj ET
+BT /F1 10 Tf 54 412 Td (- Purpose requested: Remove an old or unwanted backup file from storage.) Tj ET
+BT /F1 10 Tf 54 398 Td (- Actual current status: Not implemented in the backup module code reviewed. There is no) Tj ET
+BT /F1 10 Tf 54 384 Td (delete action in controllers/backup.php, no deleteBackup method in BackupManager.php,) Tj ET
+BT /F1 10 Tf 54 370 Td (and no delete button in views/inventory/settings.php.) Tj ET
+BT /F1 10 Tf 54 356 Td (- Expected result if implemented later: Admin confirms delete, controller validates) Tj ET
+BT /F1 10 Tf 54 342 Td (filename inside /backups, deletes the file with unlink\(\), returns JSON, and refreshes) Tj ET
+BT /F1 10 Tf 54 328 Td (history.) Tj ET
+BT /F1 10 Tf 54 314 Td (- Possible errors if implemented later: Invalid filename, missing file, permission) Tj ET
+BT /F1 10 Tf 54 300 Td (denied, attempt to delete outside /backups, or unauthorized request.) Tj ET
+BT /F2 15 Tf 54 278 Td (3. Workflow Explanation) Tj ET
+0.85 w 54 259 m 558 259 l S
+BT /F1 10 Tf 54 244 Td (The flow starts when the administrator opens the Backup and Recovery area in the Settings) Tj ET
+BT /F1 10 Tf 54 230 Td (page. The page displays backup status cards, action buttons, restore file controls, and a) Tj ET
+BT /F1 10 Tf 54 216 Td (backup history table. The admin then chooses an action: create backup, restore backup, view) Tj ET
+BT /F1 10 Tf 54 202 Td (history, or download backup. Delete backup should only be shown in the flow as not) Tj ET
+BT /F1 10 Tf 54 188 Td (implemented unless the code is updated.) Tj ET
+BT /F2 12 Tf 54 162 Td (Backup Flow) Tj ET
+BT /F1 10 Tf 54 142 Td (1. Admin clicks Backup now.) Tj ET
+BT /F1 10 Tf 54 128 Td (2. System shows confirmation asking if the admin wants to create a database backup.) Tj ET
+BT /F1 10 Tf 54 114 Td (3. If cancelled, the flow ends with no change.) Tj ET
+BT /F1 10 Tf 54 100 Td (4. If confirmed, the frontend sends POST controllers/backup.php?action=backup.) Tj ET
+BT /F1 10 Tf 54 86 Td (5. The controller checks if the admin session is valid and if the request method is) Tj ET
+BT /F1 10 Tf 54 72 Td (POST.) Tj ET
+BT /F1 10 Tf 54 58 Td (6. BackupManager exports the full database into a SQL file.) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 3614 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F1 10 Tf 54 690 Td (7. The generated SQL file is validated.) Tj ET
+BT /F1 10 Tf 54 676 Td (8. If backup creation fails, the UI shows an error message.) Tj ET
+BT /F1 10 Tf 54 662 Td (9. If successful, the SQL file is saved in /backups and history is refreshed.) Tj ET
+BT /F2 12 Tf 54 637 Td (Recovery Flow) Tj ET
+BT /F1 10 Tf 54 617 Td (1. Admin chooses a backup source: upload a .sql file or restore an existing file from) Tj ET
+BT /F1 10 Tf 54 603 Td (backup history.) Tj ET
+BT /F1 10 Tf 54 589 Td (2. The system validates the selected file extension, readability, file size, and) Tj ET
+BT /F1 10 Tf 54 575 Td (SQL-like content.) Tj ET
+BT /F1 10 Tf 54 561 Td (3. If invalid, the system shows a validation error.) Tj ET
+BT /F1 10 Tf 54 547 Td (4. If valid, the admin confirms the restore warning.) Tj ET
+BT /F1 10 Tf 54 533 Td (5. If cancelled, restore stops.) Tj ET
+BT /F1 10 Tf 54 519 Td (6. If confirmed, the system creates a pre_restore safety backup first.) Tj ET
+BT /F1 10 Tf 54 505 Td (7. The system reads and splits SQL statements, disables foreign key checks, executes the) Tj ET
+BT /F1 10 Tf 54 491 Td (restore, and enables foreign key checks again.) Tj ET
+BT /F1 10 Tf 54 477 Td (8. If restore fails, the system shows an error and includes the safety backup filename) Tj ET
+BT /F1 10 Tf 54 463 Td (when available.) Tj ET
+BT /F1 10 Tf 54 449 Td (9. If restore succeeds, the system shows a success message and refreshes backup history.) Tj ET
+BT /F2 12 Tf 54 424 Td (Backup History Flow) Tj ET
+BT /F1 10 Tf 54 404 Td (1. Settings page calls GET controllers/backup.php?action=list.) Tj ET
+BT /F1 10 Tf 54 390 Td (2. BackupManager scans the local /backups folder for .sql files.) Tj ET
+BT /F1 10 Tf 54 376 Td (3. Each file is checked for filename, date, type, size, and valid status.) Tj ET
+BT /F1 10 Tf 54 362 Td (4. The frontend displays rows with Download and Restore buttons.) Tj ET
+BT /F1 10 Tf 54 348 Td (5. Download streams the file through the backup controller.) Tj ET
+BT /F1 10 Tf 54 334 Td (6. Delete is not part of the current backup history UI.) Tj ET
+BT /F2 12 Tf 54 309 Td (Decision Box Meanings) Tj ET
+BT /F1 10 Tf 54 289 Td (- Admin chooses backup and recovery action: User chooses backup, restore, history,) Tj ET
+BT /F1 10 Tf 54 275 Td (download, or requested delete.) Tj ET
+BT /F1 10 Tf 54 261 Td (- Is the database connection valid: The PDO connection must be available from) Tj ET
+BT /F1 10 Tf 54 247 Td (config/db.php and autoload.php.) Tj ET
+BT /F1 10 Tf 54 233 Td (- Was the backup created successfully: BackupManager must create and validate a) Tj ET
+BT /F1 10 Tf 54 219 Td (non-empty SQL file.) Tj ET
+BT /F1 10 Tf 54 205 Td (- Does the admin confirm restore: SweetAlert confirmation must be accepted before) Tj ET
+BT /F1 10 Tf 54 191 Td (restore continues.) Tj ET
+BT /F1 10 Tf 54 177 Td (- Is the selected backup file valid: The file must be .sql, readable, non-empty, and) Tj ET
+BT /F1 10 Tf 54 163 Td (SQL-like.) Tj ET
+BT /F1 10 Tf 54 149 Td (- Was the restore completed successfully: SQL statements must execute without exception.) Tj ET
+BT /F1 10 Tf 54 135 Td (- Admin chooses backup history action: Current code supports download and restore;) Tj ET
+BT /F1 10 Tf 54 121 Td (delete is not implemented.) Tj ET
+BT /F2 15 Tf 54 99 Td (4. Code Review) Tj ET
+0.85 w 54 80 m 558 80 l S
+BT /F3 8 Tf 54 62 Td (File                       | Purpose                                 | Important Functions        ) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 11 0 R >>
+endobj
+13 0 obj
+<< /Length 5174 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F3 8 Tf 54 690 Td (  ) Tj ET
+BT /F3 8 Tf 54 678 Td (-----------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 8 Tf 54 661 Td (models/BackupManager.php   | Core backup logic. Creates SQL backups, | createBackup, restoreBackup,  ) Tj ET
+BT /F3 8 Tf 54 649 Td (                           | restores SQL, validates files, lists    | getBackupList,                ) Tj ET
+BT /F3 8 Tf 54 637 Td (                           | backup history, resolves safe paths.    | resolveBackupPath,            ) Tj ET
+BT /F3 8 Tf 54 625 Td (                           |                                         | validateBackupFile, dumpTable,) Tj ET
+BT /F3 8 Tf 54 613 Td (                           |                                         | splitSqlStatements            ) Tj ET
+BT /F3 8 Tf 54 598 Td (controllers/backup.php     | Authenticated HTTP endpoint for backup  | respondJson, requireLogin,    ) Tj ET
+BT /F3 8 Tf 54 586 Td (                           | module actions. Returns JSON for most   | requireMethod, switch actions:) Tj ET
+BT /F3 8 Tf 54 574 Td (                           | actions and streams SQL for download.   | backup, restore,              ) Tj ET
+BT /F3 8 Tf 54 562 Td (                           |                                         | restore_specific, validate,   ) Tj ET
+BT /F3 8 Tf 54 550 Td (                           |                                         | list, download                ) Tj ET
+BT /F3 8 Tf 54 535 Td (views/inventory/settings.p | Frontend UI for backup controls,        | backupButton click handler,   ) Tj ET
+BT /F3 8 Tf 54 523 Td (                           | restore upload, backup history,         | restore file validation,      ) Tj ET
+BT /F3 8 Tf 54 511 Td (                           | download, and restore from history.     | loadBackupHistory,            ) Tj ET
+BT /F3 8 Tf 54 499 Td (                           |                                         | downloadBackup,               ) Tj ET
+BT /F3 8 Tf 54 487 Td (                           |                                         | restoreSpecific               ) Tj ET
+BT /F3 8 Tf 54 472 Td (views/inventory/dashboard. | Contains a quick action that can        | backupFromDashboard           ) Tj ET
+BT /F3 8 Tf 54 460 Td (                           | trigger backup creation from the        |                               ) Tj ET
+BT /F3 8 Tf 54 448 Td (                           | dashboard.                              |                               ) Tj ET
+BT /F3 8 Tf 54 433 Td (autoload.php               | Starts session, loads database config,  | spl_autoload_register, DB     ) Tj ET
+BT /F3 8 Tf 54 421 Td (                           | registers model autoloading, creates    | connection creation           ) Tj ET
+BT /F3 8 Tf 54 409 Td (                           | PDO connection.                         |                               ) Tj ET
+BT /F3 8 Tf 54 394 Td (config/db.php              | Defines MySQL connection credentials    | DB::GetConnection             ) Tj ET
+BT /F3 8 Tf 54 382 Td (                           | and creates a PDO connection.           |                               ) Tj ET
+BT /F1 10 Tf 54 361 Td (Data moves from frontend to backend through fetch requests. For backup and list, the action) Tj ET
+BT /F1 10 Tf 54 347 Td (can be in the query string. For restore and validate, FormData is used because files or) Tj ET
+BT /F1 10 Tf 54 333 Td (filenames are sent through POST. The controller returns JSON objects with status and) Tj ET
+BT /F1 10 Tf 54 319 Td (message. The frontend reads data.status and shows SweetAlert success or error messages.) Tj ET
+BT /F2 15 Tf 54 292 Td (5. How the Code Works) Tj ET
+0.85 w 54 273 m 558 273 l S
+BT /F2 12 Tf 54 251 Td (Create Backup Technical Process) Tj ET
+BT /F1 10 Tf 54 231 Td (1. Admin clicks Backup now in settings.php or uses the dashboard quick action.) Tj ET
+BT /F1 10 Tf 54 217 Td (2. JavaScript shows SweetAlert confirmation.) Tj ET
+BT /F1 10 Tf 54 203 Td (3. If confirmed, JavaScript sends POST ../../controllers/backup.php?action=backup.) Tj ET
+BT /F1 10 Tf 54 189 Td (4. controllers/backup.php requires login and POST method.) Tj ET
+BT /F1 10 Tf 54 175 Td (5. The controller calls BackupManager::createBackup\(\).) Tj ET
+BT /F1 10 Tf 54 161 Td (6. createBackup builds a timestamped filename and opens it in /backups.) Tj ET
+BT /F1 10 Tf 54 147 Td (7. It reads all base tables using SHOW FULL TABLES WHERE Table_type = BASE TABLE.) Tj ET
+BT /F1 10 Tf 54 133 Td (8. For each table it writes DROP TABLE IF EXISTS, CREATE TABLE SQL, and INSERT INTO) Tj ET
+BT /F1 10 Tf 54 119 Td (rows.) Tj ET
+BT /F1 10 Tf 54 105 Td (9. It writes SQL settings including SET FOREIGN_KEY_CHECKS=0 at the start and SET) Tj ET
+BT /F1 10 Tf 54 91 Td (FOREIGN_KEY_CHECKS=1 at the end.) Tj ET
+BT /F1 10 Tf 54 77 Td (10. It validates the generated SQL file and returns JSON status, message, filename,) Tj ET
+BT /F1 10 Tf 54 63 Td (size, and table count.) Tj ET
+endstream
+endobj
+14 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 13 0 R >>
+endobj
+15 0 obj
+<< /Length 4100 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F1 10 Tf 54 690 Td (11. The frontend shows Backup created or Backup failed and refreshes backup history on) Tj ET
+BT /F1 10 Tf 54 676 Td (success.) Tj ET
+BT /F2 12 Tf 54 651 Td (Restore Backup Technical Process) Tj ET
+BT /F1 10 Tf 54 631 Td (1. Available backup files are loaded by loadBackupHistory through action=list.) Tj ET
+BT /F1 10 Tf 54 617 Td (2. Admin can upload a .sql file or restore a valid file from the backup history table.) Tj ET
+BT /F1 10 Tf 54 603 Td (3. Uploaded files are checked first by extension in JavaScript, then by action=validate) Tj ET
+BT /F1 10 Tf 54 589 Td (in the controller.) Tj ET
+BT /F1 10 Tf 54 575 Td (4. BackupManager::validateBackupFile checks existence, .sql extension, readability,) Tj ET
+BT /F1 10 Tf 54 561 Td (non-empty file size, and SQL-like content.) Tj ET
+BT /F1 10 Tf 54 547 Td (5. Before restore, SweetAlert warns the admin that current database state will be) Tj ET
+BT /F1 10 Tf 54 533 Td (replaced.) Tj ET
+BT /F1 10 Tf 54 519 Td (6. For uploaded restore, action=restore sends backup_file through FormData.) Tj ET
+BT /F1 10 Tf 54 505 Td (7. For history restore, action=restore_specific sends the selected filename.) Tj ET
+BT /F1 10 Tf 54 491 Td (8. The controller resolves stored filenames safely through) Tj ET
+BT /F1 10 Tf 54 477 Td (BackupManager::resolveBackupPath.) Tj ET
+BT /F1 10 Tf 54 463 Td (9. BackupManager::restoreBackup validates the file again, creates a pre_restore safety) Tj ET
+BT /F1 10 Tf 54 449 Td (backup, reads SQL content, splits statements, disables foreign key checks, executes each) Tj ET
+BT /F1 10 Tf 54 435 Td (statement, and re-enables foreign key checks.) Tj ET
+BT /F1 10 Tf 54 421 Td (10. On success, JSON includes status success and safety_backup. On failure, JSON) Tj ET
+BT /F1 10 Tf 54 407 Td (includes an error message and the safety backup filename when it was created.) Tj ET
+BT /F2 12 Tf 54 382 Td (Backup History, Download, and Delete Technical Process) Tj ET
+BT /F1 10 Tf 54 362 Td (- Backup history is not stored in a database table. It is built dynamically by scanning) Tj ET
+BT /F1 10 Tf 54 348 Td (/backups/*.sql files.) Tj ET
+BT /F1 10 Tf 54 334 Td (- getBackupList returns filename, file modification date, type, raw size, readable size,) Tj ET
+BT /F1 10 Tf 54 320 Td (and valid status.) Tj ET
+BT /F1 10 Tf 54 306 Td (- Download uses action=download and file=filename. The controller validates the filename) Tj ET
+BT /F1 10 Tf 54 292 Td (path and streams the SQL file with application/sql headers.) Tj ET
+BT /F1 10 Tf 54 278 Td (- If a file is missing during download, the controller returns HTTP 404 and plain text) Tj ET
+BT /F1 10 Tf 54 264 Td (File not found.) Tj ET
+BT /F1 10 Tf 54 250 Td (- Delete backup is not currently implemented. There is no action=delete case in) Tj ET
+BT /F1 10 Tf 54 236 Td (controllers/backup.php and no frontend function that deletes a backup file.) Tj ET
+BT /F2 15 Tf 54 214 Td (6. Database Involvement) Tj ET
+0.85 w 54 195 m 558 195 l S
+BT /F1 10 Tf 54 180 Td (- Database used: MySQL database named grocer_easedb, connected through PDO in) Tj ET
+BT /F1 10 Tf 54 166 Td (config/db.php.) Tj ET
+BT /F1 10 Tf 54 152 Td (- Tables involved: The backup process includes all MySQL base tables returned by SHOW) Tj ET
+BT /F1 10 Tf 54 138 Td (FULL TABLES. This means products, categories, suppliers, stock, product-supplier) Tj ET
+BT /F1 10 Tf 54 124 Td (relation tables, transaction logs, users, and other base tables are included if present) Tj ET
+BT /F1 10 Tf 54 110 Td (in the database.) Tj ET
+BT /F1 10 Tf 54 96 Td (- Backup history storage: There is no database table for backup history. History is) Tj ET
+BT /F1 10 Tf 54 82 Td (based on actual SQL files in the /backups folder.) Tj ET
+BT /F1 10 Tf 54 68 Td (- Filename and date handling: The filename uses a prefix and date/time format. The date) Tj ET
+BT /F1 10 Tf 54 54 Td (displayed in history is the file modification time from filemtime\(\).) Tj ET
+endstream
+endobj
+16 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 15 0 R >>
+endobj
+17 0 obj
+<< /Length 4699 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F1 10 Tf 54 690 Td (- Status handling: Valid status is calculated each time by validating the backup file.) Tj ET
+BT /F1 10 Tf 54 676 Td (It is not permanently stored in the database.) Tj ET
+BT /F1 10 Tf 54 662 Td (- File path handling: Stored backup filenames are sanitized with basename and a regex,) Tj ET
+BT /F1 10 Tf 54 648 Td (then resolved with realpath to ensure they stay inside /backups.) Tj ET
+BT /F1 10 Tf 54 634 Td (- During restore: SQL statements from the backup are executed against the current MySQL) Tj ET
+BT /F1 10 Tf 54 620 Td (database. Existing tables may be dropped and recreated based on the backup content.) Tj ET
+BT /F2 15 Tf 54 598 Td (7. Frontend and Backend Connection) Tj ET
+0.85 w 54 579 m 558 579 l S
+BT /F3 8 Tf 54 561 Td (UI Action             | JavaScript               | Endpoint                         | Response    ) Tj ET
+BT /F3 8 Tf 54 549 Td (         ) Tj ET
+BT /F3 8 Tf 54 537 Td (------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 8 Tf 54 520 Td (Backup now            | backupButton click       | POST                             | JSON success/error    ) Tj ET
+BT /F3 8 Tf 54 508 Td (                      |                          | controllers/backup.php?action=ba |                       ) Tj ET
+BT /F3 8 Tf 54 493 Td (Upload restore file   | restoreFileInput change  | POST controllers/backup.php      | JSON validation result) Tj ET
+BT /F3 8 Tf 54 481 Td (                      |                          | action=validate                  |                       ) Tj ET
+BT /F3 8 Tf 54 466 Td (Restore uploaded file | restoreUploadedButton    | POST controllers/backup.php      | JSON success/error    ) Tj ET
+BT /F3 8 Tf 54 454 Td (                      | click                    | action=restore                   | with safety_backup    ) Tj ET
+BT /F3 8 Tf 54 439 Td (Load history          | loadBackupHistory        | GET                              | JSON list data        ) Tj ET
+BT /F3 8 Tf 54 427 Td (                      |                          | controllers/backup.php?action=li |                       ) Tj ET
+BT /F3 8 Tf 54 412 Td (Download backup       | downloadBackup           | GET                              | SQL file stream or 404) Tj ET
+BT /F3 8 Tf 54 400 Td (                      |                          | controllers/backup.php?action=do |                       ) Tj ET
+BT /F3 8 Tf 54 385 Td (Restore from history  | restoreSpecific          | POST controllers/backup.php      | JSON success/error    ) Tj ET
+BT /F3 8 Tf 54 373 Td (                      |                          | action=restore_specific          | with safety_backup    ) Tj ET
+BT /F3 8 Tf 54 358 Td (Delete backup         | Not present              | Not present                      | Not implemented       ) Tj ET
+BT /F2 12 Tf 54 330 Td (Common Error Causes) Tj ET
+BT /F1 10 Tf 54 310 Td (- 404 Not Found for backup controller: wrong relative path, controller file missing, app) Tj ET
+BT /F1 10 Tf 54 296 Td (installed in a different folder, server rewrite/path issue, or request sent from a page) Tj ET
+BT /F1 10 Tf 54 282 Td (with a different nesting level.) Tj ET
+BT /F1 10 Tf 54 268 Td (- Unexpected token '<': JavaScript expected JSON but received HTML. Common causes are) Tj ET
+BT /F1 10 Tf 54 254 Td (PHP fatal error page, login page due to expired session, 404 HTML page, or) Tj ET
+BT /F1 10 Tf 54 240 Td (warning/notice printed before JSON.) Tj ET
+BT /F1 10 Tf 54 226 Td (- Backup button not working: JavaScript error, SweetAlert not loaded, wrong controller) Tj ET
+BT /F1 10 Tf 54 212 Td (path, session expired, POST blocked, database connection failure, or /backups folder not) Tj ET
+BT /F1 10 Tf 54 198 Td (writable.) Tj ET
+BT /F1 10 Tf 54 184 Td (- Restore not working: invalid .sql file, file upload error, PHP upload limit, failed) Tj ET
+BT /F1 10 Tf 54 170 Td (safety backup, SQL statement error, permission problem, or foreign key/data) Tj ET
+BT /F1 10 Tf 54 156 Td (incompatibility.) Tj ET
+BT /F1 10 Tf 54 142 Td (- History not loading: action=list fails, session expired, controller returns HTML,) Tj ET
+BT /F1 10 Tf 54 128 Td (/backups folder missing or unreadable, JSON parse error, or JavaScript rendering error.) Tj ET
+BT /F2 15 Tf 54 106 Td (8. Security and Safety Review) Tj ET
+0.85 w 54 87 m 558 87 l S
+BT /F1 10 Tf 54 72 Td (- Admin-only access: controllers/backup.php calls requireLogin\(\), so actions require a) Tj ET
+BT /F1 10 Tf 54 58 Td (logged-in session.) Tj ET
+endstream
+endobj
+18 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 17 0 R >>
+endobj
+19 0 obj
+<< /Length 5905 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F1 10 Tf 54 690 Td (- Method restrictions: backup, restore, restore_specific, and validate require POST;) Tj ET
+BT /F1 10 Tf 54 676 Td (list and download require GET.) Tj ET
+BT /F1 10 Tf 54 662 Td (- Restore file validation: files must be .sql, readable, non-empty, and must contain) Tj ET
+BT /F1 10 Tf 54 648 Td (SQL-like markers such as CREATE TABLE, INSERT INTO, GrocerEaseIMS Backup, or MySQL dump.) Tj ET
+BT /F1 10 Tf 54 634 Td (- Path validation: resolveBackupPath uses basename, a strict filename regex, realpath,) Tj ET
+BT /F1 10 Tf 54 620 Td (and a directory containment check.) Tj ET
+BT /F1 10 Tf 54 606 Td (- Safety backup: restore creates a pre_restore backup before applying SQL changes.) Tj ET
+BT /F1 10 Tf 54 592 Td (- Risk: SQL files are stored under a project folder. If the web server exposes /backups) Tj ET
+BT /F1 10 Tf 54 578 Td (directly, users may access database dumps if they know or list filenames.) Tj ET
+BT /F1 10 Tf 54 564 Td (- Risk: Any valid-looking SQL file can be restored by an authenticated admin. A bad SQL) Tj ET
+BT /F1 10 Tf 54 550 Td (file can overwrite or damage the database.) Tj ET
+BT /F1 10 Tf 54 536 Td (- Risk: There is no audit log table recording who created, restored, downloaded, or) Tj ET
+BT /F1 10 Tf 54 522 Td (attempted backup actions.) Tj ET
+BT /F1 10 Tf 54 508 Td (- Risk: Delete backup is not implemented, so old backups must be removed manually unless) Tj ET
+BT /F1 10 Tf 54 494 Td (another process handles cleanup.) Tj ET
+BT /F1 10 Tf 54 480 Td (- Recommended improvements: protect /backups with server rules, move backups outside) Tj ET
+BT /F1 10 Tf 54 466 Td (public web root, add CSRF protection, add role-based admin checks, add audit logs, add) Tj ET
+BT /F1 10 Tf 54 452 Td (delete with confirmation and path validation, use transactions where possible, and test) Tj ET
+BT /F1 10 Tf 54 438 Td (restore on a staging copy before production use.) Tj ET
+BT /F2 15 Tf 54 416 Td (9. Problems Found and Fix Suggestions) Tj ET
+0.85 w 54 397 m 558 397 l S
+BT /F3 8 Tf 54 379 Td (Problem Found          | Location             | Why It Is A Problem         | Suggested Fix       ) Tj ET
+BT /F3 8 Tf 54 367 Td (         | Priorit) Tj ET
+BT /F3 8 Tf 54 355 Td (---------------------------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 8 Tf 54 338 Td (Delete backup feature  | controllers/backup.p | The reviewer/flow includes  | Add deleteBackup method,      | High   ) Tj ET
+BT /F3 8 Tf 54 326 Td (requested but not      | BackupManager.php,   | Delete Backup, but no       | action=delete, SweetAlert     |        ) Tj ET
+BT /F3 8 Tf 54 314 Td (implemented            | settings.php         | endpoint, model method, or  | confirmation, POST only, path |        ) Tj ET
+BT /F3 8 Tf 54 302 Td (                       |                      | UI button exists.           | validation, and refresh       |        ) Tj ET
+BT /F3 8 Tf 54 290 Td (                       |                      |                             | history.                      |        ) Tj ET
+BT /F3 8 Tf 54 275 Td (Backups may be         | /backups folder      | SQL files may contain full  | Move backups outside public   | High   ) Tj ET
+BT /F3 8 Tf 54 263 Td (publicly accessible    |                      | database data including     | web root or add server deny   |        ) Tj ET
+BT /F3 8 Tf 54 251 Td (                       |                      | sensitive records.          | rules such as .htaccess or    |        ) Tj ET
+BT /F3 8 Tf 54 239 Td (                       |                      |                             | web server config.            |        ) Tj ET
+BT /F3 8 Tf 54 224 Td (No audit logging       | No backup audit      | Cannot prove who created,   | Create backup_audit_logs      | Medium ) Tj ET
+BT /F3 8 Tf 54 212 Td (                       | table/code           | restored, downloaded, or    | table and insert action,      |        ) Tj ET
+BT /F3 8 Tf 54 200 Td (                       |                      | attempted backup actions.   | admin id, filename, status,   |        ) Tj ET
+BT /F3 8 Tf 54 188 Td (                       |                      |                             | IP, and timestamp.            |        ) Tj ET
+BT /F3 8 Tf 54 173 Td (No CSRF token on       | settings.php and     | A logged-in admin could be  | Add CSRF token to forms/fetch | High   ) Tj ET
+BT /F3 8 Tf 54 161 Td (backup/restore         | backup.php           | tricked into sending a      | requests and verify in        |        ) Tj ET
+BT /F3 8 Tf 54 149 Td (requests               |                      | backup/restore request.     | controller.                   |        ) Tj ET
+BT /F3 8 Tf 54 134 Td (Restore executes       | BackupManager::resto | A malicious or wrong SQL    | Restrict restore to trusted   | High   ) Tj ET
+BT /F3 8 Tf 54 122 Td (uploaded SQL           |                      | file can damage the         | generated backups or add      |        ) Tj ET
+BT /F3 8 Tf 54 110 Td (                       |                      | database if accepted.       | stricter signature/header     |        ) Tj ET
+BT /F3 8 Tf 54 98 Td (                       |                      |                             | checks.                       |        ) Tj ET
+BT /F3 8 Tf 54 83 Td (Download returns plain | controllers/backup.p | Normal for file download,   | Keep as is for browser        | Low    ) Tj ET
+BT /F3 8 Tf 54 71 Td (text 404 instead of    | download action      | but inconsistent for        | download, or add optional     |        ) Tj ET
+BT /F3 8 Tf 54 59 Td (JSON                   |                      | AJAX-style error handling.  | JSON error mode for           |        ) Tj ET
+endstream
+endobj
+20 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 19 0 R >>
+endobj
+21 0 obj
+<< /Length 4094 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F3 8 Tf 54 690 Td (                       |                      |                             | fetch-based UI.               |        ) Tj ET
+BT /F3 8 Tf 54 675 Td (Backup history not     | BackupManager::getBa | History depends only on     | Optional: add backup_records  | Low    ) Tj ET
+BT /F3 8 Tf 54 663 Td (stored in database     |                      | files, so deleted/moved     | table if persistent           |        ) Tj ET
+BT /F3 8 Tf 54 651 Td (                       |                      | files remove history.       | audit/history is required.    |        ) Tj ET
+BT /F3 8 Tf 54 636 Td (Database credentials   | config/db.php        | Credentials in source code  | Move credentials to           | Medium ) Tj ET
+BT /F3 8 Tf 54 624 Td (are hardcoded          |                      | are risky if repository is  | environment config or a local |        ) Tj ET
+BT /F3 8 Tf 54 612 Td (                       |                      | shared.                     | ignored config file.          |        ) Tj ET
+BT /F2 15 Tf 54 583 Td (10. Presentation Guide) Tj ET
+0.85 w 54 564 m 558 564 l S
+BT /F2 12 Tf 54 542 Td (Opening Script) Tj ET
+BT /F1 10 Tf 54 522 Td (Good day. This part of GrocerEaseIMS is the Backup and Recovery module. Its purpose is to) Tj ET
+BT /F1 10 Tf 54 508 Td (protect the inventory database by allowing an administrator to create a full SQL backup,) Tj ET
+BT /F1 10 Tf 54 494 Td (restore a valid backup, view backup history, and download backup files.) Tj ET
+BT /F2 12 Tf 54 468 Td (Create Backup Script) Tj ET
+BT /F1 10 Tf 54 448 Td (When the admin clicks Backup now, the system asks for confirmation. After confirmation, the) Tj ET
+BT /F1 10 Tf 54 434 Td (frontend sends a POST request to the backup controller. The controller calls BackupManager,) Tj ET
+BT /F1 10 Tf 54 420 Td (which exports all database tables into a timestamped SQL file inside the /backups folder. If) Tj ET
+BT /F1 10 Tf 54 406 Td (the SQL file is valid, the system shows a success message and refreshes the backup history.) Tj ET
+BT /F2 12 Tf 54 380 Td (Restore Backup Script) Tj ET
+BT /F1 10 Tf 54 360 Td (For restore, the admin can upload a SQL file or select a valid file from backup history. The) Tj ET
+BT /F1 10 Tf 54 346 Td (system validates the file before allowing restore. Before changing the database, it creates) Tj ET
+BT /F1 10 Tf 54 332 Td (a pre_restore safety backup. Then it executes the SQL backup into the MySQL database. If) Tj ET
+BT /F1 10 Tf 54 318 Td (successful, the system shows the safety backup filename.) Tj ET
+BT /F2 12 Tf 54 292 Td (View History, Download, and Delete Script) Tj ET
+BT /F1 10 Tf 54 272 Td (Backup history is displayed by scanning the local /backups folder. The table shows filename,) Tj ET
+BT /F1 10 Tf 54 258 Td (date, type, size, and validity status. The admin can download a backup through the) Tj ET
+BT /F1 10 Tf 54 244 Td (controller. Delete Backup is not included in the current implemented code, so I will present) Tj ET
+BT /F1 10 Tf 54 230 Td (it as a missing or future improvement, not as a working feature.) Tj ET
+BT /F2 12 Tf 54 204 Td (Automatic Backup Statement) Tj ET
+BT /F1 10 Tf 54 184 Td (Automatic Backup is not included in this reviewer because the requested scope is the manual) Tj ET
+BT /F1 10 Tf 54 170 Td (Backup and Recovery module. I will not present it as part of the implemented workflow.) Tj ET
+BT /F2 12 Tf 54 144 Td (Panelist Answer Tips) Tj ET
+BT /F1 10 Tf 54 124 Td (- If asked why backup is needed: It protects the database from accidental data loss or) Tj ET
+BT /F1 10 Tf 54 110 Td (wrong changes.) Tj ET
+BT /F1 10 Tf 54 96 Td (- If asked where files are stored: They are stored locally in the project /backups) Tj ET
+BT /F1 10 Tf 54 82 Td (folder.) Tj ET
+BT /F1 10 Tf 54 68 Td (- If asked about delete: The current backup module has no delete endpoint yet; it is a) Tj ET
+BT /F1 10 Tf 54 54 Td (recommended improvement.) Tj ET
+endstream
+endobj
+22 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 21 0 R >>
+endobj
+23 0 obj
+<< /Length 5189 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F1 10 Tf 54 690 Td (- If asked about restore safety: The system creates a pre_restore safety backup before) Tj ET
+BT /F1 10 Tf 54 676 Td (applying restore.) Tj ET
+BT /F1 10 Tf 54 662 Td (- If asked about security: Login is required and paths are validated, but backups should) Tj ET
+BT /F1 10 Tf 54 648 Td (still be protected from public access.) Tj ET
+BT /F2 15 Tf 54 626 Td (11. Possible Questions and Answers) Tj ET
+0.85 w 54 607 m 558 607 l S
+BT /F3 8 Tf 54 589 Td (Question                            | Answer                                                      ) Tj ET
+BT /F3 8 Tf 54 577 Td ( ) Tj ET
+BT /F3 8 Tf 54 565 Td (----------------------------------------------------------------------------------------------------) Tj ET
+BT /F3 8 Tf 54 548 Td (What is the purpose of backup and   | To save the current database state and restore it later if    ) Tj ET
+BT /F3 8 Tf 54 536 Td (recovery?                           | data is lost, damaged, or changed incorrectly.                ) Tj ET
+BT /F3 8 Tf 54 521 Td (Why is backup important?            | The system stores important inventory records. A backup helps ) Tj ET
+BT /F3 8 Tf 54 509 Td (                                    | recover products, suppliers, stocks, and other records after  ) Tj ET
+BT /F3 8 Tf 54 497 Td (                                    | mistakes or failures.                                         ) Tj ET
+BT /F3 8 Tf 54 482 Td (What happens when backup fails?     | The controller returns an error JSON response and the frontend) Tj ET
+BT /F3 8 Tf 54 470 Td (                                    | shows a Backup failed SweetAlert message.                     ) Tj ET
+BT /F3 8 Tf 54 455 Td (What happens when restore fails?    | The system returns a restore error. If the safety backup was  ) Tj ET
+BT /F3 8 Tf 54 443 Td (                                    | created, the message includes its filename.                   ) Tj ET
+BT /F3 8 Tf 54 428 Td (Why should restore be restricted to | Restore can replace the entire database, so only trusted      ) Tj ET
+BT /F3 8 Tf 54 416 Td (admin?                              | administrators should be allowed to do it.                    ) Tj ET
+BT /F3 8 Tf 54 401 Td (Where are backup files stored?      | They are stored as .sql files in the local /backups folder.   ) Tj ET
+BT /F3 8 Tf 54 386 Td (How does the system know if backup  | BackupManager creates the SQL file, validates it, and returns ) Tj ET
+BT /F3 8 Tf 54 374 Td (is successful?                      | status=success with filename, size, and table count.          ) Tj ET
+BT /F3 8 Tf 54 359 Td (Why is automatic backup not         | It is not included in this reviewer because the requested     ) Tj ET
+BT /F3 8 Tf 54 347 Td (included?                           | module scope is manual Backup and Recovery only.              ) Tj ET
+BT /F3 8 Tf 54 332 Td (What are the risks of restore?      | A restore can overwrite current database data. A wrong or     ) Tj ET
+BT /F3 8 Tf 54 320 Td (                                    | malicious SQL file can damage records or structure.           ) Tj ET
+BT /F3 8 Tf 54 305 Td (How do you prevent invalid backup   | The code checks file existence, .sql extension, readability,  ) Tj ET
+BT /F3 8 Tf 54 293 Td (files?                              | non-empty size, and SQL-like content before restore.          ) Tj ET
+BT /F3 8 Tf 54 278 Td (Is Delete Backup working?           | No. Delete Backup is not implemented in the reviewed backup   ) Tj ET
+BT /F3 8 Tf 54 266 Td (                                    | code. It should be added before presenting it as a working    ) Tj ET
+BT /F3 8 Tf 54 254 Td (                                    | feature.                                                      ) Tj ET
+BT /F3 8 Tf 54 239 Td (What happens if a backup file is    | The controller returns HTTP 404 with File not found.          ) Tj ET
+BT /F3 8 Tf 54 227 Td (missing during download?            |                                                               ) Tj ET
+BT /F2 15 Tf 54 198 Td (12. Final Summary) Tj ET
+0.85 w 54 179 m 558 179 l S
+BT /F1 10 Tf 54 164 Td (The Backup and Recovery module is a practical protection feature for GrocerEaseIMS. The) Tj ET
+BT /F1 10 Tf 54 150 Td (admin can create a full SQL backup, view available backup files, download them, and restore) Tj ET
+BT /F1 10 Tf 54 136 Td (the database from a valid backup. The module uses BackupManager.php for the core database) Tj ET
+BT /F1 10 Tf 54 122 Td (export and restore logic, controllers/backup.php for authenticated backend actions, and) Tj ET
+BT /F1 10 Tf 54 108 Td (views/inventory/settings.php for the user interface.) Tj ET
+BT /F1 10 Tf 54 89 Td (The strongest safety feature is the pre_restore backup created before restore. The important) Tj ET
+BT /F1 10 Tf 54 75 Td (limitations are that Delete Backup is not implemented, backup audit logging is missing, and) Tj ET
+BT /F1 10 Tf 54 61 Td (the /backups folder should be protected from public access. For presentation, the module) Tj ET
+endstream
+endobj
+24 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 23 0 R >>
+endobj
+25 0 obj
+<< /Length 320 >>
+stream
+BT /F2 17 Tf 54 742 Td (Backup and Recovery Module Reviewer) Tj ET
+BT /F1 9 Tf 54 721 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 708 m 558 708 l S
+BT /F1 10 Tf 54 690 Td (should be explained as a manual backup and recovery workflow, not an automatic backup) Tj ET
+BT /F1 10 Tf 54 676 Td (system.) Tj ET
+endstream
+endobj
+26 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 25 0 R >>
+endobj
+27 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+xref
+0 28
+0000000000 65535 f 
+0000000009 00000 n 
+0000001124 00000 n 
+0000001251 00000 n 
+0000001321 00000 n 
+0000001396 00000 n 
+0000001464 00000 n 
+0000001610 00000 n 
+0000005375 00000 n 
+0000005521 00000 n 
+0000009497 00000 n 
+0000009644 00000 n 
+0000013310 00000 n 
+0000013458 00000 n 
+0000018684 00000 n 
+0000018832 00000 n 
+0000022984 00000 n 
+0000023132 00000 n 
+0000027883 00000 n 
+0000028031 00000 n 
+0000033988 00000 n 
+0000034136 00000 n 
+0000038282 00000 n 
+0000038430 00000 n 
+0000043671 00000 n 
+0000043819 00000 n 
+0000044190 00000 n 
+0000044338 00000 n 
+trailer
+<< /Size 28 /Root 27 0 R >>
+startxref
+44388
+%%EOF

@@ -163,6 +163,137 @@ class BackupManager
         return $backups;
     }
 
+    public function deleteBackup(string $filename): array
+    {
+        $filepath = $this->resolveBackupPath($filename);
+        if ($filepath === null || !is_file($filepath)) {
+            return [
+                'status' => 'error',
+                'message' => 'Invalid backup file selected.',
+            ];
+        }
+
+        if (!is_writable($filepath)) {
+            return [
+                'status' => 'error',
+                'message' => 'The selected backup file cannot be deleted.',
+            ];
+        }
+
+        if (!unlink($filepath)) {
+            return [
+                'status' => 'error',
+                'message' => 'Failed to delete backup file.',
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Backup deleted successfully.',
+            'filename' => basename($filepath),
+        ];
+    }
+
+    public function getBackupSettings(): array
+    {
+        $defaults = $this->defaultBackupSettings();
+        $path = $this->settingsPath();
+
+        if (!is_file($path)) {
+            return $defaults;
+        }
+
+        $settings = json_decode((string) file_get_contents($path), true);
+        if (!is_array($settings)) {
+            return $defaults;
+        }
+
+        return $this->normalizeBackupSettings(array_merge($defaults, $settings));
+    }
+
+    public function saveBackupSettings(array $settings): array
+    {
+        $normalized = $this->normalizeBackupSettings($settings);
+        $json = json_encode($normalized, JSON_PRETTY_PRINT);
+
+        if ($json === false || file_put_contents($this->settingsPath(), $json) === false) {
+            return [
+                'status' => 'error',
+                'message' => 'Backup settings could not be saved.',
+            ];
+        }
+
+        return [
+            'status' => 'success',
+            'message' => 'Backup settings saved successfully.',
+            'settings' => $normalized,
+        ];
+    }
+
+    public function shouldRunAutomaticBackup(?int $now = null): array
+    {
+        $now ??= time();
+        $settings = $this->getBackupSettings();
+
+        if (!$settings['auto_backup']) {
+            return [
+                'should_run' => false,
+                'reason' => 'Automatic backup is disabled.',
+                'settings' => $settings,
+            ];
+        }
+
+        $lastRun = $settings['last_run'] ?? null;
+        $today = date('Y-m-d', $now);
+
+        if ($settings['frequency'] === 'weekly') {
+            $currentDay = strtolower(date('l', $now));
+            if ($currentDay !== $settings['weekly_day']) {
+                return [
+                    'should_run' => false,
+                    'reason' => 'Today is not the selected weekly backup day.',
+                    'settings' => $settings,
+                ];
+            }
+
+            if ($lastRun && date('o-W', strtotime($lastRun)) === date('o-W', $now)) {
+                return [
+                    'should_run' => false,
+                    'reason' => 'Weekly automatic backup already ran this week.',
+                    'settings' => $settings,
+                ];
+            }
+
+            return [
+                'should_run' => true,
+                'reason' => 'Weekly automatic backup is due.',
+                'settings' => $settings,
+            ];
+        }
+
+        if ($lastRun && date('Y-m-d', strtotime($lastRun)) === $today) {
+            return [
+                'should_run' => false,
+                'reason' => 'Daily automatic backup already ran today.',
+                'settings' => $settings,
+            ];
+        }
+
+        return [
+            'should_run' => true,
+            'reason' => 'Daily automatic backup is due.',
+            'settings' => $settings,
+        ];
+    }
+
+    public function markAutomaticBackupRun(?int $time = null): array
+    {
+        $settings = $this->getBackupSettings();
+        $settings['last_run'] = date('Y-m-d H:i:s', $time ?? time());
+
+        return $this->saveBackupSettings($settings);
+    }
+
     public function resolveBackupPath(string $filename): ?string
     {
         $safeName = basename($filename);
@@ -397,6 +528,44 @@ class BackupManager
     {
         $safePrefix = preg_replace('/[^A-Za-z0-9_-]/', '', $prefix) ?: 'backup';
         return $safePrefix . '_' . date('Y-m-d_H-i-s') . '.sql';
+    }
+
+    private function settingsPath(): string
+    {
+        return $this->backupDir . 'backup_settings.json';
+    }
+
+    private function defaultBackupSettings(): array
+    {
+        return [
+            'auto_backup' => true,
+            'frequency' => 'daily',
+            'weekly_day' => 'monday',
+            'backup_location' => 'local',
+            'last_run' => null,
+        ];
+    }
+
+    private function normalizeBackupSettings(array $settings): array
+    {
+        $frequency = strtolower((string) ($settings['frequency'] ?? 'daily'));
+        if (!in_array($frequency, ['daily', 'weekly'], true)) {
+            $frequency = 'daily';
+        }
+
+        $weeklyDay = strtolower((string) ($settings['weekly_day'] ?? 'monday'));
+        $validDays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        if (!in_array($weeklyDay, $validDays, true)) {
+            $weeklyDay = 'monday';
+        }
+
+        return [
+            'auto_backup' => filter_var($settings['auto_backup'] ?? true, FILTER_VALIDATE_BOOLEAN),
+            'frequency' => $frequency,
+            'weekly_day' => $weeklyDay,
+            'backup_location' => 'local',
+            'last_run' => !empty($settings['last_run']) ? (string) $settings['last_run'] : null,
+        ];
     }
 
     private function formatBytes(int $bytes): string

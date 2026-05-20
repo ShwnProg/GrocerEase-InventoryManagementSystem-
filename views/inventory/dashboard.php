@@ -19,6 +19,10 @@ $total_suppliers = $supplier->GetTotalSupplier();
 $total_quantity = $stock->GetTotalStockQuantity();
 $low_stock = $stock->GetTotalLowStockItems();
 $out_of_stock = $stock->GetTotalOutOfStockItems();
+$backupManager = new BackupManager($db, __DIR__ . '/../../backups/');
+$backupList = $backupManager->getBackupList();
+$totalBackups = count($backupList);
+$latestBackup = $backupList[0]['date'] ?? 'No backup yet';
 
 // Chart data
 $stocks_per_category = $stock->GetTotalStockPerCategory();
@@ -99,6 +103,39 @@ if (!empty($inventory_logs)) {
                     <div class="card-icon"><i class="fas fa-ban"></i></div>
                     <span>Out of Stock Items</span>
                     <p><?= $out_of_stock == 0 ? '<small>No out of stock</small>' : $out_of_stock ?></p>
+                </div>
+            </div>
+
+            <div class="dashboard-backup-grid">
+                <div class="dashboard-backup-card">
+                    <div class="dashboard-backup-icon">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div>
+                        <span>Total Backups</span>
+                        <strong id="dashboard-total-backups"><?= $totalBackups ?></strong>
+                        <small>Available SQL backup files</small>
+                    </div>
+                </div>
+                <div class="dashboard-backup-card">
+                    <div class="dashboard-backup-icon">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div>
+                        <span>Latest Backup</span>
+                        <strong id="dashboard-latest-backup"><?= htmlspecialchars($latestBackup) ?></strong>
+                        <small>Most recent backup timestamp</small>
+                    </div>
+                </div>
+                <div class="dashboard-backup-card">
+                    <div class="dashboard-backup-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <span>Restore Protection</span>
+                        <strong>Safety backup enabled</strong>
+                        <small>Restore validates files and creates a safety copy first</small>
+                    </div>
                 </div>
             </div>
 
@@ -322,6 +359,7 @@ if (!empty($inventory_logs)) {
 
             if (data.status === 'success') {
                 Swal.fire('Backup created', `${data.filename} is ready in backup history.`, 'success');
+                loadDashboardBackupStats();
             } else {
                 Swal.fire('Backup failed', data.message || 'Unable to create backup.', 'error');
             }
@@ -329,112 +367,23 @@ if (!empty($inventory_logs)) {
             Swal.fire('Backup failed', 'The server returned an unexpected response.', 'error');
         }
     }
+
+    async function loadDashboardBackupStats() {
+        try {
+            const response = await fetch('../../controllers/backup.php?action=list');
+            const result = await response.json();
+
+            if (result.status !== 'success') {
+                return;
+            }
+
+            const backups = result.data || [];
+            document.getElementById('dashboard-total-backups').textContent = backups.length;
+            document.getElementById('dashboard-latest-backup').textContent = backups[0] ? backups[0].date : 'No backup yet';
+        } catch (error) {
+        }
+    }
 </script>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
-
-<style>
-    .quick-actions-panel {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        margin-top: 18px;
-        padding: 16px 18px;
-        background: #fff;
-        border: 1px solid rgba(0, 0, 0, 0.07);
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .quick-actions-title {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        min-width: 220px;
-    }
-
-    .quick-actions-title > i {
-        width: 32px;
-        height: 32px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 7px;
-        color: #1c5515;
-        background: rgba(28, 85, 21, 0.08);
-    }
-
-    .quick-actions-title h3 {
-        margin: 0 0 3px;
-        color: #111;
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    .quick-actions-title p {
-        margin: 0;
-        color: #9ca3af;
-        font-size: 11px;
-    }
-
-    .quick-actions {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        gap: 8px;
-    }
-
-    .quick-action {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        border: none;
-        border-radius: 8px;
-        padding: 9px 12px;
-        background: rgba(28, 85, 21, 0.06);
-        color: #1c5515;
-        font-size: 12px;
-        font-weight: 700;
-        line-height: 1;
-        text-decoration: none;
-        cursor: pointer;
-        white-space: nowrap;
-    }
-
-    .quick-action.primary {
-        background: #1c5515;
-        color: #fff;
-    }
-
-    .quick-action.danger {
-        background: rgba(200, 40, 40, 0.08);
-        color: #c82828;
-    }
-
-    .quick-action:hover {
-        transform: translateY(-1px);
-        color: inherit;
-    }
-
-    body.dark-mode .quick-actions-panel {
-        background: #1a2235;
-        border-color: #2a3a4a;
-    }
-
-    body.dark-mode .quick-actions-title h3 {
-        color: #d1d5db;
-    }
-
-    @media (max-width: 900px) {
-        .quick-actions-panel {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .quick-actions {
-            justify-content: flex-start;
-        }
-    }
-</style>
 
 </html>

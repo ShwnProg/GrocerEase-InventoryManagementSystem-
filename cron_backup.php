@@ -4,9 +4,17 @@
 require_once __DIR__ . '/autoload.php';
 
 $manager = new BackupManager($db, __DIR__ . '/backups/');
+$schedule = $manager->shouldRunAutomaticBackup();
+
+if (!$schedule['should_run']) {
+    echo $schedule['reason'] . PHP_EOL;
+    exit(0);
+}
+
 $result = $manager->createBackup('auto_backup');
 
 if ($result['status'] === 'success') {
+    $manager->markAutomaticBackupRun();
     echo 'Backup completed successfully: ' . $result['filename'] . PHP_EOL;
 } else {
     echo $result['message'] . PHP_EOL;

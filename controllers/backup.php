@@ -125,6 +125,33 @@ switch ($action) {
         ]);
         break;
 
+    case 'delete':
+        requireMethod('POST');
+
+        $filename = trim($_POST['filename'] ?? '');
+        if ($filename === '') {
+            respondJson([
+                'status' => 'error',
+                'message' => 'Backup filename is required.',
+            ], 400);
+        }
+
+        respondJson($manager->deleteBackup($filename));
+        break;
+
+    case 'settings':
+        requireMethod('GET');
+        respondJson([
+            'status' => 'success',
+            'settings' => $manager->getBackupSettings(),
+        ]);
+        break;
+
+    case 'save_settings':
+        requireMethod('POST');
+        respondJson($manager->saveBackupSettings($_POST));
+        break;
+
     case 'download':
         requireMethod('GET');
 
