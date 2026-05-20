@@ -1,0 +1,127 @@
+%PDF-1.4
+1 0 obj
+<< /Length 3232 >>
+stream
+BT /F2 18 Tf 54 742 Td (Backup and Recovery Integration Documentation) Tj ET
+BT /F1 9 Tf 54 720 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 707 m 558 707 l S
+BT /F2 16 Tf 54 679 Td (1. Integration Summary) Tj ET
+0.85 w 54 659 m 558 659 l S
+BT /F1 10 Tf 54 643 Td (The backup and recovery module was rebuilt around a reusable BackupManager class. The) Tj ET
+BT /F1 10 Tf 54 629 Td (controller, Settings page, Dashboard quick actions, and scheduled backup script now use the) Tj ET
+BT /F1 10 Tf 54 615 Td (same backup implementation for consistent behavior.) Tj ET
+BT /F2 16 Tf 54 588 Td (2. Files Integrated) Tj ET
+0.85 w 54 568 m 558 568 l S
+BT /F1 10 Tf 54 552 Td (- models/BackupManager.php: creates backups, validates backup files, lists history, and) Tj ET
+BT /F1 10 Tf 54 538 Td (restores SQL.) Tj ET
+BT /F1 10 Tf 54 524 Td (- controllers/backup.php: exposes authenticated JSON actions for backup, restore,) Tj ET
+BT /F1 10 Tf 54 510 Td (validation, listing, and download.) Tj ET
+BT /F1 10 Tf 54 496 Td (- views/inventory/settings.php: provides backup controls, restore validation, backup) Tj ET
+BT /F1 10 Tf 54 482 Td (history, and SweetAlert feedback.) Tj ET
+BT /F1 10 Tf 54 468 Td (- views/inventory/dashboard.php: adds quick actions for backup, recovery, products,) Tj ET
+BT /F1 10 Tf 54 454 Td (stock, and logs.) Tj ET
+BT /F1 10 Tf 54 440 Td (- cron_backup.php: uses BackupManager for automatic backups.) Tj ET
+BT /F1 10 Tf 54 426 Td (- autoload.php: supports CLI execution for scheduled backups.) Tj ET
+BT /F2 16 Tf 54 404 Td (3. Backup Flowchart) Tj ET
+0.85 w 54 384 m 558 384 l S
+BT /F3 8 Tf 54 365 Td ([Admin clicks Backup Now]) Tj ET
+BT /F3 8 Tf 54 353 Td (          |) Tj ET
+BT /F3 8 Tf 54 341 Td ([SweetAlert confirmation]) Tj ET
+BT /F3 8 Tf 54 329 Td (          |-- cancel --> [No change]) Tj ET
+BT /F3 8 Tf 54 317 Td (          |-- confirm -> [POST controllers/backup.php?action=backup]) Tj ET
+BT /F3 8 Tf 54 305 Td (                           |) Tj ET
+BT /F3 8 Tf 54 293 Td (                    [BackupManager reads tables]) Tj ET
+BT /F3 8 Tf 54 281 Td (                           |) Tj ET
+BT /F3 8 Tf 54 269 Td (                    [Write CREATE TABLE SQL]) Tj ET
+BT /F3 8 Tf 54 257 Td (                           |) Tj ET
+BT /F3 8 Tf 54 245 Td (                    [Write INSERT data SQL]) Tj ET
+BT /F3 8 Tf 54 233 Td (                           |) Tj ET
+BT /F3 8 Tf 54 221 Td (                    [Validate .sql file]) Tj ET
+BT /F3 8 Tf 54 209 Td (                           |-- fail --> [Show error alert]) Tj ET
+BT /F3 8 Tf 54 197 Td (                           |-- pass --> [Save in /backups]) Tj ET
+BT /F3 8 Tf 54 185 Td (                                           |) Tj ET
+BT /F3 8 Tf 54 173 Td (                                    [Refresh history]) Tj ET
+BT /F2 16 Tf 54 148 Td (4. Recovery Flowchart) Tj ET
+0.85 w 54 128 m 558 128 l S
+BT /F3 8 Tf 54 109 Td ([Admin selects backup]) Tj ET
+BT /F3 8 Tf 54 97 Td (          |) Tj ET
+BT /F3 8 Tf 54 85 Td ([Validate file extension, readability, size, SQL contents]) Tj ET
+BT /F3 8 Tf 54 73 Td (          |-- invalid --> [Show validation error]) Tj ET
+BT /F3 8 Tf 54 61 Td (          |-- valid ----> [SweetAlert restore confirmation]) Tj ET
+endstream
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 1 0 R >>
+endobj
+7 0 obj
+<< /Length 2447 >>
+stream
+BT /F2 18 Tf 54 742 Td (Backup and Recovery Integration Documentation) Tj ET
+BT /F1 9 Tf 54 720 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 707 m 558 707 l S
+BT /F3 8 Tf 54 687 Td (                           |) Tj ET
+BT /F3 8 Tf 54 675 Td (                    [Create pre_restore safety backup]) Tj ET
+BT /F3 8 Tf 54 663 Td (                           |) Tj ET
+BT /F3 8 Tf 54 651 Td (                    [Disable foreign key checks]) Tj ET
+BT /F3 8 Tf 54 639 Td (                           |) Tj ET
+BT /F3 8 Tf 54 627 Td (                    [Execute SQL statements]) Tj ET
+BT /F3 8 Tf 54 615 Td (                           |) Tj ET
+BT /F3 8 Tf 54 603 Td (                    [Enable foreign key checks]) Tj ET
+BT /F3 8 Tf 54 591 Td (                           |-- error --> [Show error + safety backup name]) Tj ET
+BT /F3 8 Tf 54 579 Td (                           |-- success -> [Show success + refresh history]) Tj ET
+BT /F2 16 Tf 54 554 Td (5. Validation Added) Tj ET
+0.85 w 54 534 m 558 534 l S
+BT /F1 10 Tf 54 518 Td (- User must be logged in before backup controller actions run.) Tj ET
+BT /F1 10 Tf 54 504 Td (- Only POST can create or restore backups; only GET can list or download.) Tj ET
+BT /F1 10 Tf 54 490 Td (- Restore files must be .sql, readable, non-empty, and SQL-like.) Tj ET
+BT /F1 10 Tf 54 476 Td (- Stored backup filenames are sanitized and resolved inside the backups folder only.) Tj ET
+BT /F1 10 Tf 54 462 Td (- Uploaded files are checked with is_uploaded_file before restore.) Tj ET
+BT /F1 10 Tf 54 448 Td (- A safety backup is created before every restore attempt.) Tj ET
+BT /F2 16 Tf 54 426 Td (6. Error Handling) Tj ET
+0.85 w 54 406 m 558 406 l S
+BT /F1 10 Tf 54 390 Td (All backup controller actions return JSON with a status and message. The interface now) Tj ET
+BT /F1 10 Tf 54 376 Td (checks data.status instead of data.success, so SweetAlert success and error messages match) Tj ET
+BT /F1 10 Tf 54 362 Td (the actual controller response.) Tj ET
+BT /F2 16 Tf 54 335 Td (7. Demonstration Notes) Tj ET
+0.85 w 54 315 m 558 315 l S
+BT /F1 10 Tf 54 299 Td (- Use Create Backup before changing records.) Tj ET
+BT /F1 10 Tf 54 285 Td (- Modify or archive a visible record, then show that the data changed.) Tj ET
+BT /F1 10 Tf 54 271 Td (- Use Recovery Module to restore the selected backup.) Tj ET
+BT /F1 10 Tf 54 257 Td (- Show restored products, suppliers, stock, or logs to prove effectiveness.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000003292 00000 n 
+0000003355 00000 n 
+0000003425 00000 n 
+0000003500 00000 n 
+0000003568 00000 n 
+0000003714 00000 n 
+0000006212 00000 n 
+0000006358 00000 n 
+trailer
+<< /Size 10 /Root 9 0 R >>
+startxref
+6407
+%%EOF

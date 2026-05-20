@@ -25,7 +25,7 @@
                                 : 'Uncategorized'
                         ) ?>
                     </td>
-                    <td><?= $prod['cost_price'] !== null ? '₱' .  number_format($prod['cost_price'], 2) : '<span style="color:#6b7280;">N/A</span>' ?></td>
+                    <td><?= $prod['cost_price'] !== null ? '₱' .  number_format($prod['cost_price'], 2) : '<span style="color:#6b7280;">no cost price</span>' ?></td>
                     <td>₱<?= number_format($prod['selling_price'], 2) ?></td>
                     <td><?= htmlspecialchars($prod['product_description'] == '' ? 'No description available' : $prod['product_description']) ?>
                     </td>

@@ -102,6 +102,38 @@ if (!empty($inventory_logs)) {
                 </div>
             </div>
 
+            <div class="quick-actions-panel">
+                <div class="quick-actions-title">
+                    <i class="fa-solid fa-bolt"></i>
+                    <div>
+                        <h3>Quick actions</h3>
+                        <p>Backup, recovery, and inventory tasks for live demonstration</p>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <button type="button" class="quick-action primary" onclick="backupFromDashboard()">
+                        <i class="fa-solid fa-database"></i>
+                        <span>Create Backup</span>
+                    </button>
+                    <a href="settings.php" class="quick-action danger">
+                        <i class="fa-solid fa-rotate-left"></i>
+                        <span>Recovery Module</span>
+                    </a>
+                    <a href="products.php" class="quick-action">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span>Products</span>
+                    </a>
+                    <a href="stock.php" class="quick-action">
+                        <i class="fa-solid fa-cubes"></i>
+                        <span>Stock Control</span>
+                    </a>
+                    <a href="inventory.php" class="quick-action">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Inventory Logs</span>
+                    </a>
+                </div>
+            </div>
+
             <!-- CHARTS ROW -->
             <div class="charts-row">
 
@@ -261,6 +293,148 @@ if (!empty($inventory_logs)) {
         }
     });
 </script>
+<script>
+    async function backupFromDashboard() {
+        const result = await Swal.fire({
+            title: 'Create database backup?',
+            text: 'A full SQL backup will be created before you modify records.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Create backup',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#1c5515',
+        });
+
+        if (!result.isConfirmed) {
+            return;
+        }
+
+        try {
+            Swal.fire({
+                title: 'Creating backup...',
+                text: 'Please wait while the database is exported.',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading(),
+            });
+
+            const response = await fetch('../../controllers/backup.php?action=backup', { method: 'POST' });
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                Swal.fire('Backup created', `${data.filename} is ready in backup history.`, 'success');
+            } else {
+                Swal.fire('Backup failed', data.message || 'Unable to create backup.', 'error');
+            }
+        } catch (error) {
+            Swal.fire('Backup failed', 'The server returned an unexpected response.', 'error');
+        }
+    }
+</script>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
+
+<style>
+    .quick-actions-panel {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 18px;
+        padding: 16px 18px;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.07);
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .quick-actions-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 220px;
+    }
+
+    .quick-actions-title > i {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        color: #1c5515;
+        background: rgba(28, 85, 21, 0.08);
+    }
+
+    .quick-actions-title h3 {
+        margin: 0 0 3px;
+        color: #111;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .quick-actions-title p {
+        margin: 0;
+        color: #9ca3af;
+        font-size: 11px;
+    }
+
+    .quick-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .quick-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border: none;
+        border-radius: 8px;
+        padding: 9px 12px;
+        background: rgba(28, 85, 21, 0.06);
+        color: #1c5515;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .quick-action.primary {
+        background: #1c5515;
+        color: #fff;
+    }
+
+    .quick-action.danger {
+        background: rgba(200, 40, 40, 0.08);
+        color: #c82828;
+    }
+
+    .quick-action:hover {
+        transform: translateY(-1px);
+        color: inherit;
+    }
+
+    body.dark-mode .quick-actions-panel {
+        background: #1a2235;
+        border-color: #2a3a4a;
+    }
+
+    body.dark-mode .quick-actions-title h3 {
+        color: #d1d5db;
+    }
+
+    @media (max-width: 900px) {
+        .quick-actions-panel {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .quick-actions {
+            justify-content: flex-start;
+        }
+    }
+</style>
 
 </html>

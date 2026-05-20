@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error["password"] = "Password is required";
 
     if (!empty($username) && !empty($password)) {
-        if (!$id =$user->AuthenticateUser($username, $password)) {
+        if (!$id=$user->AuthenticateUser($username, $password)) {
             $error["invalid"] = "Invalid username or password";
         }
     }
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
         header("Location: ../../index.php");
-
+        exit;
     }
     $_SESSION['logged_in'] = true;
     $_SESSION['id'] = $id;

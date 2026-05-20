@@ -91,7 +91,7 @@ $base_query = $search !== '' ? 'search=' . urlencode($search) : '';
                                     </span>
                                 </td>
                                 <td><?= htmlspecialchars($stocks['reference_id']) ?></td>
-                                <td><?= htmlspecialchars($stocks['reason'] == '' ? 'N/A' : $stocks['reason']) ?></td>
+                                <td><?= htmlspecialchars($stocks['reason'] == '' ? 'no remarks' : $stocks['reason']) ?></td>
                                 <td><?= htmlspecialchars($stocks['date']) ?></td>
 
                             </tr>

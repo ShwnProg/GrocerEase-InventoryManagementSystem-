@@ -1,0 +1,133 @@
+%PDF-1.4
+1 0 obj
+<< /Length 3382 >>
+stream
+BT /F2 18 Tf 54 742 Td (System Documentation) Tj ET
+BT /F1 9 Tf 54 720 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 707 m 558 707 l S
+BT /F2 16 Tf 54 679 Td (1. Introduction) Tj ET
+0.85 w 54 659 m 558 659 l S
+BT /F1 10 Tf 54 643 Td (GrocerEaseIMS is a PHP and MySQL inventory management system for grocery product control. It) Tj ET
+BT /F1 10 Tf 54 629 Td (supports authenticated admin access, product records, categories, suppliers,) Tj ET
+BT /F1 10 Tf 54 615 Td (product-supplier links, stock quantities, inventory movement logs, archived records,) Tj ET
+BT /F1 10 Tf 54 601 Td (reporting charts, and database backup and recovery.) Tj ET
+BT /F2 16 Tf 54 574 Td (2. Objectives) Tj ET
+0.85 w 54 554 m 558 554 l S
+BT /F1 10 Tf 54 538 Td (- Maintain accurate product, supplier, category, stock, and movement data.) Tj ET
+BT /F1 10 Tf 54 524 Td (- Allow administrators to add, update, archive, restore, and permanently delete records.) Tj ET
+BT /F1 10 Tf 54 510 Td (- Provide dashboard visibility for active products, categories, suppliers, stock, low) Tj ET
+BT /F1 10 Tf 54 496 Td (stock, and out-of-stock items.) Tj ET
+BT /F1 10 Tf 54 482 Td (- Protect system data through full SQL database backup and verified recovery.) Tj ET
+BT /F2 16 Tf 54 460 Td (3. Main Modules) Tj ET
+0.85 w 54 440 m 558 440 l S
+BT /F1 10 Tf 54 424 Td (- Authentication: validates admin login before allowing inventory access.) Tj ET
+BT /F1 10 Tf 54 410 Td (- Dashboard: displays KPIs, charts, inventory trends, and quick actions.) Tj ET
+BT /F1 10 Tf 54 396 Td (- Products and Categories: manages grocery product details and classification.) Tj ET
+BT /F1 10 Tf 54 382 Td (- Suppliers and Product Suppliers: tracks supplier information and preferred supplier) Tj ET
+BT /F1 10 Tf 54 368 Td (cost.) Tj ET
+BT /F1 10 Tf 54 354 Td (- Stock Control: records stock in and stock out transactions.) Tj ET
+BT /F1 10 Tf 54 340 Td (- Archived Records: supports recovery or hard deletion of archived products, categories,) Tj ET
+BT /F1 10 Tf 54 326 Td (and suppliers.) Tj ET
+BT /F1 10 Tf 54 312 Td (- Backup and Recovery: creates full SQL backups, validates restore files, and restores) Tj ET
+BT /F1 10 Tf 54 298 Td (the database.) Tj ET
+BT /F2 16 Tf 54 276 Td (4. System Flowchart) Tj ET
+0.85 w 54 256 m 558 256 l S
+BT /F3 8 Tf 54 237 Td ([Start]) Tj ET
+BT /F3 8 Tf 54 225 Td (   |) Tj ET
+BT /F3 8 Tf 54 213 Td ([Admin Login]) Tj ET
+BT /F3 8 Tf 54 201 Td (   |-- invalid --> [Show validation error] --> [Admin Login]) Tj ET
+BT /F3 8 Tf 54 189 Td (   |-- valid ----> [Dashboard]) Tj ET
+BT /F3 8 Tf 54 177 Td (                    |) Tj ET
+BT /F3 8 Tf 54 165 Td (     +--------------+--------------+--------------+) Tj ET
+BT /F3 8 Tf 54 153 Td (     |              |              |              |) Tj ET
+BT /F3 8 Tf 54 141 Td ([Products]   [Categories]   [Suppliers]   [Stock Control]) Tj ET
+BT /F3 8 Tf 54 129 Td (     |              |              |              |) Tj ET
+BT /F3 8 Tf 54 117 Td ([Add/Edit/Archive] [Add/Edit] [Add/Edit] [Stock In/Out]) Tj ET
+BT /F3 8 Tf 54 105 Td (     |              |              |              |) Tj ET
+BT /F3 8 Tf 54 93 Td (     +--------------+-------> [Database] <---------+) Tj ET
+BT /F3 8 Tf 54 81 Td (                            |) Tj ET
+BT /F3 8 Tf 54 69 Td (                    [Reports and Logs]) Tj ET
+BT /F3 8 Tf 54 57 Td (                            |) Tj ET
+endstream
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 1 0 R >>
+endobj
+7 0 obj
+<< /Length 2942 >>
+stream
+BT /F2 18 Tf 54 742 Td (System Documentation) Tj ET
+BT /F1 9 Tf 54 720 Td (GrocerEase Inventory Management System) Tj ET
+0.85 w 54 707 m 558 707 l S
+BT /F3 8 Tf 54 687 Td (                    [Backup / Recovery]) Tj ET
+BT /F3 8 Tf 54 675 Td (                            |) Tj ET
+BT /F3 8 Tf 54 663 Td (                          [End]) Tj ET
+BT /F2 16 Tf 54 638 Td (5. Database Tables) Tj ET
+0.85 w 54 618 m 558 618 l S
+BT /F1 10 Tf 54 602 Td (- users: administrator account details.) Tj ET
+BT /F1 10 Tf 54 588 Td (- categories: product category names, descriptions, status, and archive fields.) Tj ET
+BT /F1 10 Tf 54 574 Td (- products: product names, descriptions, category link, selling price, status, and) Tj ET
+BT /F1 10 Tf 54 560 Td (archive fields.) Tj ET
+BT /F1 10 Tf 54 546 Td (- suppliers: supplier contact, address, company, and archive fields.) Tj ET
+BT /F1 10 Tf 54 532 Td (- product_supplier: product and supplier link, cost price, and preferred supplier flag.) Tj ET
+BT /F1 10 Tf 54 518 Td (- stocks: current stock quantity for each product.) Tj ET
+BT /F1 10 Tf 54 504 Td (- stock_movements: stock in/out transaction records and references.) Tj ET
+BT /F2 16 Tf 54 482 Td (6. Backup Strategy) Tj ET
+0.85 w 54 462 m 558 462 l S
+BT /F1 10 Tf 54 446 Td (The system uses full database backups. Each backup exports table structures and table data) Tj ET
+BT /F1 10 Tf 54 432 Td (into a .sql file inside the backups folder. Full backup was selected because it is simple to) Tj ET
+BT /F1 10 Tf 54 418 Td (demonstrate, easy to restore, and appropriate for the current system size.) Tj ET
+BT /F2 16 Tf 54 391 Td (7. Recovery Procedure) Tj ET
+0.85 w 54 371 m 558 371 l S
+BT /F1 10 Tf 54 355 Td (- Open Settings, then use the Backup and Recovery module.) Tj ET
+BT /F1 10 Tf 54 341 Td (- Select an existing backup from backup history or upload a .sql backup file.) Tj ET
+BT /F1 10 Tf 54 327 Td (- The system validates file type, readability, file size, and SQL contents.) Tj ET
+BT /F1 10 Tf 54 313 Td (- Before restore, the current database is automatically backed up as a safety backup.) Tj ET
+BT /F1 10 Tf 54 299 Td (- The SQL statements are executed with foreign key checks disabled during restore and) Tj ET
+BT /F1 10 Tf 54 285 Td (enabled again after completion.) Tj ET
+BT /F1 10 Tf 54 271 Td (- SweetAlert feedback reports success, validation errors, or recovery errors.) Tj ET
+BT /F2 16 Tf 54 249 Td (8. Live Demonstration Script) Tj ET
+0.85 w 54 229 m 558 229 l S
+BT /F1 10 Tf 54 213 Td (- Show existing product, supplier, stock, or category records.) Tj ET
+BT /F1 10 Tf 54 199 Td (- Create a backup from Dashboard quick actions or Settings.) Tj ET
+BT /F1 10 Tf 54 185 Td (- Delete or modify selected records.) Tj ET
+BT /F1 10 Tf 54 171 Td (- Show that the records changed or disappeared.) Tj ET
+BT /F1 10 Tf 54 157 Td (- Restore the backup from Settings.) Tj ET
+BT /F1 10 Tf 54 143 Td (- Show that the original data returned.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000003442 00000 n 
+0000003505 00000 n 
+0000003575 00000 n 
+0000003650 00000 n 
+0000003718 00000 n 
+0000003864 00000 n 
+0000006857 00000 n 
+0000007003 00000 n 
+trailer
+<< /Size 10 /Root 9 0 R >>
+startxref
+7052
+%%EOF

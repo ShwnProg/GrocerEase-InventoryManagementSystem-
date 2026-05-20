@@ -3,7 +3,8 @@
 require_once __DIR__ . "/config/db.php";
 
 if (!defined('BASE_URL')) {
-    $documentRoot = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
+    $documentRootPath = $_SERVER['DOCUMENT_ROOT'] ?? '';
+    $documentRoot = $documentRootPath !== '' ? str_replace('\\', '/', realpath($documentRootPath)) : '';
     $projectRoot = str_replace('\\', '/', realpath(__DIR__));
     $baseUrl = '';
 
