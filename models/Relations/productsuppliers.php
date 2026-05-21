@@ -52,6 +52,7 @@ class ProductSuppliers
                 INNER JOIN products as p 
                     ON p.product_id_pk = ps.product_id_fk
                 WHERE ps.product_id_fk = :id
+                AND s.is_deleted = 0
             ");
 
             $stmt->execute([':id' => $id]);

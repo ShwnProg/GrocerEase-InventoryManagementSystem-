@@ -43,15 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         );
 
         if ($movement_result) {
-            // Log transaction
-            $transactionLog = new TransactionLog($db);
-            $transactionLog->logTransaction($product_id, $quantity, 'add');
-
-            $_SESSION['success'] = ['in' => ['form' => 'Stock updated successfully']];
-            $_SESSION['old'] = [
-                'product_id'   => $product_id,
-                'product_name' => $product_name,
-            ];
+            $_SESSION['success'] = ['in' => ['form' => 'Stock IN recorded successfully.']];
+        } else {
+            $_SESSION['error'] = ['in' => ['form' => 'Stock was updated, but the inventory log was not saved.']];
         }
     } else {
         $_SESSION['error'] = ['in' => ['form' => 'Something went wrong']];

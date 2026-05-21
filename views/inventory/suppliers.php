@@ -27,6 +27,7 @@ $open_modal = isset($_SESSION['add_supplier_error']);
 $error = $_SESSION['add_supplier_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
 $success_msg = $_SESSION['success_msg'] ?? '';
+$archived_duplicate = $_SESSION['archived_duplicate'] ?? null;
 
 $confirm_delete = false;
 $delete_supplier_id = '';
@@ -65,7 +66,7 @@ if (!empty($success['add'])) {
 
 
 // echo "hello $user_info[username]";
-unset($_SESSION['add_supplier_error'], $_SESSION['old_inputs'], $_SESSION['success_msg']);
+unset($_SESSION['add_supplier_error'], $_SESSION['old_inputs'], $_SESSION['success_msg'], $_SESSION['archived_duplicate']);
 unset($_SESSION['success'], $_SESSION['errors']);
 
 unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
@@ -116,8 +117,9 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                         <?php if (empty($suppliers)): ?>
                             <tr>
                                 <td colspan="8" style="text-align:center; color:#6b7280;">
-                                    No Supplier found
+                                    No suppliers found
                                 </td>
+                            </tr>
                             <?php else: ?>
                                 <?php foreach ($suppliers as $sup): ?>
                                     <?php if ($sup['is_deleted'] == 1)
@@ -259,5 +261,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
     </script>
 <?php endif; ?>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
+<?php if (!empty($archived_duplicate)): ?>
+    <script>
+        showArchivedDuplicatePrompt(<?= json_encode($archived_duplicate, JSON_UNESCAPED_SLASHES) ?>);
+    </script>
+<?php endif; ?>
 
 </html>

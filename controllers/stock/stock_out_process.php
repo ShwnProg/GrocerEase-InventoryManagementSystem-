@@ -1,17 +1,17 @@
 <?php
-require_once  __DIR__ . '/../../autoload.php';
+require_once __DIR__ . '/../../autoload.php';
 
 // session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $product_id   = $_POST['product_id']   ?? '';
+    $product_id = $_POST['product_id'] ?? '';
     $product_name = $_POST['product_name'] ?? '';
-    $quantity     = trim($_POST['quantity'] ?? '');
-    $reason       = trim(ucfirst($_POST['reason'] ?? ''));
+    $quantity = trim($_POST['quantity'] ?? '');
+    $reason = trim(ucfirst($_POST['reason'] ?? ''));
 
     $error = [];
-    $stock        = new Stocks($db);
+    $stock = new Stocks($db);
     $currentStock = $stock->GetQuantityByProductId($product_id);
 
     if (empty($quantity))
@@ -23,44 +23,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (!empty($error)) {
         $_SESSION['error'] = ['out' => $error];
-        $_SESSION['old']   = [
-            'product_id'   => $product_id,
+        $_SESSION['old'] = [
+            'product_id' => $product_id,
             'product_name' => $product_name,
-            'quantity'     => $quantity,
-            'reason'       => $reason,
+            'quantity' => $quantity,
+            'reason' => $reason,
         ];
-        header("Location: ../../../views/inventory/stock.php");
+        header("Location: ../../views/inventory/stock.php");
         exit;
     }
 
-    $date   = date("Y-m-d H:i:s");
+    $date = date("Y-m-d H:i:s");
     $result = $stock->StockOut($product_id, $quantity, $date);
 
     if ($result) {
-        $reference_id   = GeneratedUniqueId($db);
+        $reference_id = GeneratedUniqueId($db);
         $stock_movement = new StockMovements($db);
-        $date_movement  = date("Y-m-d");
+        $date_movement = date("Y-m-d");
 
         $movement_result = $stock_movement->AddStockMovements(
-            $quantity, "OUT", $reference_id, $reason, $date_movement, $product_id
+            $quantity,
+            "OUT",
+            $reference_id,
+            $reason,
+            $date_movement,
+            $product_id
         );
 
         if ($movement_result) {
-            // Log transaction
-            $transactionLog = new TransactionLog($db);
-            $transactionLog->logTransaction($product_id, -$quantity, 'sale'); // Negative for out
-
-            $_SESSION['success'] = ['out' => ['form' => 'Stock updated successfully']];
-            $_SESSION['old'] = [
-                'product_id'   => $product_id,
-                'product_name' => $product_name,
-            ];
+            $_SESSION['success'] = ['out' => ['form' => 'Stock OUT recorded successfully.']];
+        } else {
+            $_SESSION['error'] = ['out' => ['form' => 'Stock was updated, but the inventory log was not saved.']];
         }
     } else {
         $_SESSION['error'] = ['out' => ['form' => 'Something went wrong']];
     }
-
-    header("Location: ../../../views/inventory/stock.php");
+    header("Location: ../../views/inventory/stock.php");
     exit;
 }
 

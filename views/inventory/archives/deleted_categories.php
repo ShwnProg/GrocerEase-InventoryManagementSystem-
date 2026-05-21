@@ -11,7 +11,14 @@
         </thead>
         <tbody>
             <?php $no = (($page - 1) * $per_page) + 1; ?>
-            <?php foreach ($category as $cat): ?>
+            <?php if (empty($category)): ?>
+                <tr>
+                    <td colspan="5" style="text-align:center; color:#6b7280;">
+                        No archived categories found
+                    </td>
+                </tr>
+            <?php else: ?>
+                <?php foreach ($category as $cat): ?>
                 <tr>
                     <td><?= $no++ ?></td>
                     <td><?= htmlspecialchars($cat['category_name']) ?></td>
@@ -36,7 +43,8 @@
                         </div>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
     <!-- PAGINATION -->

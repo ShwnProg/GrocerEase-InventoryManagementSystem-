@@ -66,25 +66,11 @@ class Supplier
     public function SoftDeleteSupplier($id)
     {
         try {
-            $this->conn->beginTransaction();
-
-            $stmt0 = $this->conn->prepare("SELECT 1 FROM product_supplier WHERE supplier_id_fk = :id");
-
-            $stmt0->execute([':id' => $id]);
-
-            if ($stmt0->fetch()) {
-                $stmt1 = $this->conn->prepare("UPDATE product_supplier SET supplier_id_fk = NULL WHERE supplier_id_fk = :id");
-                $stmt1->execute([':id' => $id]);
-            }
             $stmt = $this->conn->prepare("UPDATE suppliers SET is_deleted = 1,deleted_at = NOW() WHERE supplier_id_pk = :id");
             $stmt->execute([':id' => $id]);
 
-            $this->conn->commit();
             return $stmt->rowCount() > 0;
-            
-
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             return false;
         }
     }
@@ -118,9 +104,22 @@ class Supplier
 
     public function CheckDuplicateSupplier($supplier_name)
     {
-        $stmt = $this->conn->prepare('SELECT COUNT(*) FROM suppliers WHERE supplier_name = :name AND is_deleted = 0');
+        $stmt = $this->conn->prepare('SELECT COUNT(*) FROM suppliers 
+                                      WHERE LOWER(TRIM(supplier_name)) = LOWER(TRIM(:name)) 
+                                      AND is_deleted = 0');
         $stmt->execute([':name' => $supplier_name]);
         return $stmt->fetchColumn() > 0;
+    }
+
+    public function FindDeletedSupplierByName($supplier_name)
+    {
+        $stmt = $this->conn->prepare('SELECT supplier_id_pk, supplier_name FROM suppliers
+                                      WHERE LOWER(TRIM(supplier_name)) = LOWER(TRIM(:name))
+                                      AND is_deleted = 1
+                                      ORDER BY deleted_at DESC
+                                      LIMIT 1');
+        $stmt->execute([':name' => $supplier_name]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     public function EditSupplier($id, $name, $contact_person, $phone_number, $email, $address, $company_name)
     {
@@ -160,10 +159,21 @@ class Supplier
 
     public function HardDeleteSupplier($id)
     {
-        $stmt = $this->conn->prepare("DELETE FROM suppliers WHERE supplier_id_pk = :id");
-        $stmt->execute([':id' => $id]);
+        try {
+            $this->conn->beginTransaction();
 
-        return $stmt->rowCount() > 0;
+            $stmt0 = $this->conn->prepare("DELETE FROM product_supplier WHERE supplier_id_fk = :id");
+            $stmt0->execute([':id' => $id]);
+
+            $stmt = $this->conn->prepare("DELETE FROM suppliers WHERE supplier_id_pk = :id");
+            $stmt->execute([':id' => $id]);
+
+            $this->conn->commit();
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            $this->conn->rollBack();
+            return false;
+        }
     }
     public function SearchSupplier($search)
     {

@@ -30,6 +30,7 @@ $error = $_SESSION['add_category_error'] ?? [];
 $old_inputs = $_SESSION['old_inputs'] ?? [];
 $success_msg = $_SESSION['success_msg'] ?? '';
 $failure_msg = $_SESSION['error_msg'] ?? '';
+$archived_duplicate = $_SESSION['archived_duplicate'] ?? null;
 $alert = null;
 
 if (!empty($success_msg)) {
@@ -58,7 +59,7 @@ $delete_category_id = '';
 $delete_category_name = '';
 
 // echo "hello $user_info[username]";
-unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg'], $_SESSION['error_msg']);
+unset($_SESSION['add_category_error'], $_SESSION['old_inputs'], $_SESSION['success_msg'], $_SESSION['error_msg'], $_SESSION['archived_duplicate']);
 unset($_SESSION['success'], $_SESSION['errors']);
 
 ?>
@@ -103,10 +104,11 @@ unset($_SESSION['success'], $_SESSION['errors']);
                     <tbody>
                         <?php $num = ($page - 1) * $limit + 1;?>
                         <?php if (empty($categories)): ?>
-                            
+                            <tr>
                                 <td colspan="5" style="text-align:center; color:#6b7280;">
-                                    No Categories found
+                                    No categories found
                                 </td>
+                            </tr>
                             <?php else: ?>
                                 <?php foreach ($categories as $categ): ?>
                             <tr>
@@ -215,5 +217,10 @@ unset($_SESSION['success'], $_SESSION['errors']);
     </script>
 <?php endif; ?>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
+<?php if (!empty($archived_duplicate)): ?>
+    <script>
+        showArchivedDuplicatePrompt(<?= json_encode($archived_duplicate, JSON_UNESCAPED_SLASHES) ?>);
+    </script>
+<?php endif; ?>
 
 </html>

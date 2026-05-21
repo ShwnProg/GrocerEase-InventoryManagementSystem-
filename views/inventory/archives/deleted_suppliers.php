@@ -14,7 +14,14 @@
         </thead>
         <tbody>
             <?php $no = (($page - 1) * $per_page) + 1; ?>
-            <?php foreach ($supplier as $sup): ?>
+            <?php if (empty($supplier)): ?>
+                <tr>
+                    <td colspan="8" style="text-align:center; color:#6b7280;">
+                        No archived suppliers found
+                    </td>
+                </tr>
+            <?php else: ?>
+                <?php foreach ($supplier as $sup): ?>
                 <tr>
                     <td><?= $no++ ?></td>
                     <td><?= htmlspecialchars($sup['supplier_name']) ?></td>
@@ -38,7 +45,8 @@
                         </div>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
     <!-- PAGINATION -->

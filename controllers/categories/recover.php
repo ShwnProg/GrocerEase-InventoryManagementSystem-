@@ -17,17 +17,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $category = new Category($db);
+    $category_info = $category->GetCategoryById($category_id);
+
+    if ($category_info && $category->CheckDuplicateCategory($category_info['category_name'])) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Cannot restore because an active category with the same name already exists."
+        ]);
+        exit;
+    }
+
     $result = $category->RestoreCategory($category_id);
 
     if ($result) {
         echo json_encode([
             "status" => "success",
-            "message" => "Product restored successfully."
+            "message" => "Category restored successfully."
         ]);
     } else {
         echo json_encode([
             "status" => "error",
-            "message" => "Failed to restore product."
+            "message" => "Failed to restore category."
         ]);
     }
 

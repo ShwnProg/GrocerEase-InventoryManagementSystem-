@@ -17,6 +17,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $product = new Product($db);
+    $product_info = $product->GetProductInfoById($product_id);
+
+    if (
+        $product_info
+        && $product->CheckDuplicateProduct($product_info['product_name'], $product_info['category_id_fk'])
+    ) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Cannot restore because an active product with the same name already exists in this category."
+        ]);
+        exit;
+    }
+
     $result = $product->RestoreProduct($product_id);
 
     if ($result) {

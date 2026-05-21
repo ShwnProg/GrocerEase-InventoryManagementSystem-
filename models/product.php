@@ -16,7 +16,7 @@ class Product
         $stmt = $this->conn->prepare("SELECT p.product_id_pk,
                                              p.product_name,
                                              c.category_name,
-                                             ps.cost_price,
+                                             CASE WHEN s.supplier_id_pk IS NULL THEN NULL ELSE ps.cost_price END AS cost_price,
                                              p.selling_price,
                                              p.product_description,
                                              p.status,
@@ -26,7 +26,7 @@ class Product
                                              FROM products p
                                              LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk AND c.is_deleted = 0
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
-                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
+                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk AND s.is_deleted = 0
                                              ORDER BY p.product_id_pk DESC");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -38,7 +38,7 @@ class Product
         $stmt = $this->conn->prepare("SELECT p.product_id_pk,
                                              p.product_name,
                                              c.category_name,
-                                             ps.cost_price,
+                                             CASE WHEN s.supplier_id_pk IS NULL THEN NULL ELSE ps.cost_price END AS cost_price,
                                              p.selling_price,
                                              p.product_description,
                                              p.status,
@@ -48,7 +48,7 @@ class Product
                                              FROM products p
                                              LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk AND c.is_deleted = 0
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
-                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
+                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk AND s.is_deleted = 0
                                              WHERE p.is_deleted = 0
                                              ORDER BY p.product_id_pk DESC
                                              LIMIT :limit OFFSET :offset");
@@ -84,7 +84,7 @@ class Product
     public function CheckDuplicateProduct($name, $category)
     {
         $stmt = $this->conn->prepare("SELECT product_name FROM products 
-                                      WHERE product_name = :name 
+                                      WHERE LOWER(TRIM(product_name)) = LOWER(TRIM(:name)) 
                                       AND category_id_fk = :category 
                                       AND is_deleted = 0");
         $stmt->execute([
@@ -93,6 +93,22 @@ class Product
         ]);
 
         return $stmt->rowCount() > 0;
+    }
+
+    public function FindDeletedProductByNameAndCategory($name, $category)
+    {
+        $stmt = $this->conn->prepare("SELECT product_id_pk, product_name FROM products
+                                      WHERE LOWER(TRIM(product_name)) = LOWER(TRIM(:name))
+                                      AND category_id_fk = :category
+                                      AND is_deleted = 1
+                                      ORDER BY deleted_at DESC
+                                      LIMIT 1");
+        $stmt->execute([
+            ':name' => $name,
+            ':category' => $category
+        ]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
 
@@ -205,7 +221,7 @@ class Product
 
     public function RestoreProduct($id)
     {
-        $stmt = $this->conn->prepare("UPDATE products SET is_deleted = 0 WHERE product_id_pk = :id");
+        $stmt = $this->conn->prepare("UPDATE products SET is_deleted = 0, deleted_at = NULL WHERE product_id_pk = :id");
         $stmt->execute([':id' => $id]);
 
         return $stmt->rowCount() > 0;
@@ -238,7 +254,7 @@ class Product
         $stmt = $this->conn->prepare("SELECT p.product_id_pk,
                                              p.product_name,
                                              c.category_name,
-                                             ps.cost_price,
+                                             CASE WHEN s.supplier_id_pk IS NULL THEN NULL ELSE ps.cost_price END AS cost_price,
                                              p.selling_price,
                                              p.product_description,
                                              p.status,
@@ -248,7 +264,7 @@ class Product
                                              FROM products p
                                              LEFT JOIN categories c ON c.category_id_pk = p.category_id_fk AND c.is_deleted = 0
                                              LEFT JOIN product_supplier ps ON ps.product_id_fk = p.product_id_pk AND ps.preferred = 1
-                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk
+                                             LEFT JOIN suppliers s ON s.supplier_id_pk = ps.supplier_id_fk AND s.is_deleted = 0
                                              WHERE product_name LIKE :search AND is_deleted = 0
                                              ORDER BY product_id_pk DESC");
 

@@ -27,6 +27,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($product->CheckDuplicateProduct($product_name, $category))
             $errors['product_name'] = "Product already exists in the selected category.";
 
+    if (empty($errors['product_name']) && empty($errors['category'])) {
+        $deleted_product = $product->FindDeletedProductByNameAndCategory($product_name, $category);
+        if ($deleted_product) {
+            $_SESSION['archived_duplicate'] = [
+                'type' => 'product',
+                'id' => $deleted_product['product_id_pk'],
+                'name' => $deleted_product['product_name'],
+                'message' => 'A product named "' . $deleted_product['product_name'] . '" is already in the archive for the selected category.'
+            ];
+            $_SESSION['old'] = $_POST;
+            header("Location: ../../views/inventory/products.php");
+            exit;
+        }
+    }
+
     if (!empty($selling_price) ) {
         if (!is_numeric($selling_price))
             $errors['selling_price'] = "Selling price must be a valid number.";

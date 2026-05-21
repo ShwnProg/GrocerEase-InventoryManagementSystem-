@@ -19,6 +19,21 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $error['category_name'] = 'Category name already exists.';
     }
 
+    if (empty($error['category_name']) && !empty($category_name)) {
+        $deleted_category = $Category->FindDeletedCategoryByName($category_name);
+        if ($deleted_category) {
+            $_SESSION['archived_duplicate'] = [
+                'type' => 'category',
+                'id' => $deleted_category['category_id_pk'],
+                'name' => $deleted_category['category_name'],
+                'message' => 'A category named "' . $deleted_category['category_name'] . '" is already in the archive.'
+            ];
+            $_SESSION['old_inputs'] = $_POST;
+            header('Location: ../../views/inventory/category.php');
+            exit;
+        }
+    }
+
      if(!empty($category_description) && strlen($category_description) > 255){
         $error['category_description'] = 'Category description must not exceed 255 characters.';
     }

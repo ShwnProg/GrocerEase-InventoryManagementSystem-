@@ -31,6 +31,7 @@ $open_modal = isset($_SESSION['errors']['add']);
 $errors = $_SESSION['errors']['add'] ?? [];
 $old = $_SESSION['old'] ?? [];
 $success = $_SESSION['success']['add'] ?? '';
+$archived_duplicate = $_SESSION['archived_duplicate'] ?? null;
 $alert = null;
 
 if (!empty($success)) {
@@ -47,7 +48,7 @@ if (!empty($success)) {
     ];
 }
 
-unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
+unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success'], $_SESSION['archived_duplicate']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,6 +101,7 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
                                 <td colspan="9" style="text-align:center; color:#6b7280;">
                                     No products found
                                 </td>
+                            </tr>
                             <?php else: ?>
                                 <?php foreach ($products as $prod): ?>
                                     <?php if ($prod['is_deleted'] == 1)
@@ -293,5 +295,10 @@ unset($_SESSION['errors'], $_SESSION['old'], $_SESSION['success']);
     </script>
 <?php endif; ?>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
+<?php if (!empty($archived_duplicate)): ?>
+    <script>
+        showArchivedDuplicatePrompt(<?= json_encode($archived_duplicate, JSON_UNESCAPED_SLASHES) ?>);
+    </script>
+<?php endif; ?>
 
 </html>

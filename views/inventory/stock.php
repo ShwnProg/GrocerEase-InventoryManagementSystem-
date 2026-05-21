@@ -46,6 +46,33 @@ $msg_error_in = extractMsg($error_in);
 $msg_error_out = extractMsg($error_out);
 $msg_error_in_qty = is_array($error_in) ? ($error_in['quantity'] ?? '') : '';
 $msg_error_out_qty = is_array($error_out) ? ($error_out['quantity'] ?? '') : '';
+$stock_alert = null;
+
+if ($msg_success_in !== '') {
+    $stock_alert = [
+        'icon' => 'success',
+        'title' => 'Stock IN saved',
+        'text' => $msg_success_in,
+    ];
+} elseif ($msg_success_out !== '') {
+    $stock_alert = [
+        'icon' => 'success',
+        'title' => 'Stock OUT saved',
+        'text' => $msg_success_out,
+    ];
+} elseif ($msg_error_in !== '' || $msg_error_in_qty !== '') {
+    $stock_alert = [
+        'icon' => 'error',
+        'title' => 'Stock IN not saved',
+        'html' => implode('<br>', array_map('htmlspecialchars', array_filter([$msg_error_in, $msg_error_in_qty]))),
+    ];
+} elseif ($msg_error_out !== '' || $msg_error_out_qty !== '') {
+    $stock_alert = [
+        'icon' => 'error',
+        'title' => 'Stock OUT not saved',
+        'html' => implode('<br>', array_map('htmlspecialchars', array_filter([$msg_error_out, $msg_error_out_qty]))),
+    ];
+}
 
 // Recover product name if the validation script didn't include it in $old.
 $old_product_name = $old['product_name'] ?? '';
@@ -108,9 +135,10 @@ unset(
                         <?php $no = ($page - 1) * $limit + 1; ?>
                         <?php if (empty($all_stocks)): ?>
                             <tr>
-                                <td colspan="9" style="text-align:center; color:#6b7280;">
-                                    No Stock found
+                                <td colspan="6" style="text-align:center; color:#6b7280;">
+                                    No stocks found
                                 </td>
+                            </tr>
                             <?php else: ?>
                                 <?php foreach ($all_stocks as $stock): ?>
                                     <!-- <?php if ($stock['is_deleted'] == 1 || $stock['status'] == 0)
@@ -191,24 +219,12 @@ unset(
                         <input type="hidden" name="product_name" id="stock-in-product-name-input"
                             value="<?= htmlspecialchars($open_modal_stockin ? $old_product_name : '') ?>">
 
-                        <?php if ($msg_success_in !== ''): ?>
-                            <div class="success-message"><?= htmlspecialchars($msg_success_in) ?></div>
-                        <?php endif; ?>
-
-                        <?php if ($msg_error_in !== ''): ?>
-                            <div class="error-message"><?= htmlspecialchars($msg_error_in) ?></div>
-                        <?php endif; ?>
-
                         <div class="input">
                             <label>Quantity</label>
                             <i class="fa-solid fa-boxes-stacked"></i>
                             <input type="number" name="quantity" placeholder="Enter quantity" min="1"
                                 value="<?= htmlspecialchars($old['quantity'] ?? '') ?>">
                         </div>
-
-                        <?php if ($msg_error_in_qty !== ''): ?>
-                            <div class="error-message"><?= htmlspecialchars($msg_error_in_qty) ?></div>
-                        <?php endif; ?>
 
                         <div class="input">
                             <label>Remarks (Optional)</label>
@@ -239,24 +255,12 @@ unset(
                         <input type="hidden" name="product_name" id="stock-out-product-name-input"
                             value="<?= htmlspecialchars($open_modal_stockout ? $old_product_name : '') ?>">
 
-                        <?php if ($msg_success_out !== ''): ?>
-                            <div class="success-message"><?= htmlspecialchars($msg_success_out) ?></div>
-                        <?php endif; ?>
-
-                        <?php if ($msg_error_out !== ''): ?>
-                            <div class="error-message"><?= htmlspecialchars($msg_error_out) ?></div>
-                        <?php endif; ?>
-
                         <div class="input">
                             <label>Quantity</label>
                             <i class="fa-solid fa-boxes-stacked"></i>
                             <input type="number" name="quantity" placeholder="Enter quantity" min="1"
                                 value="<?= htmlspecialchars($old['quantity'] ?? '') ?>">
                         </div>
-
-                        <?php if ($msg_error_out_qty !== ''): ?>
-                            <div class="error-message"><?= htmlspecialchars($msg_error_out_qty) ?></div>
-                        <?php endif; ?>
 
                         <div class="input">
                             <label>Remarks (Optional)</label>
@@ -274,6 +278,11 @@ unset(
         </section>
     </main>
 </body>
+<?php if (!empty($stock_alert)): ?>
+    <script>
+        Swal.fire(<?= json_encode($stock_alert, JSON_UNESCAPED_SLASHES) ?>);
+    </script>
+<?php endif; ?>
 <script src="<?= ASSET_URL ?>/js/pages.js"></script>
 
 </html>

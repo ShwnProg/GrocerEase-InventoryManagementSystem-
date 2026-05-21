@@ -17,6 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $supplier = new Supplier($db);
+    $supplier_info = $supplier->GetSupplierById($supplier_id);
+
+    if ($supplier_info && $supplier->CheckDuplicateSupplier($supplier_info['supplier_name'])) {
+        echo json_encode([
+            "status" => "error",
+            "message" => "Cannot restore because an active supplier with the same name already exists."
+        ]);
+        exit;
+    }
+
     $result = $supplier->RestoreSupplier($supplier_id);
 
     if ($result) {

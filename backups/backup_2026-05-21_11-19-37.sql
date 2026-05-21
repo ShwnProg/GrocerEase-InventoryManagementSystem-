@@ -1,6 +1,6 @@
 -- GrocerEaseIMS Backup
 -- Database: grocer_easedb
--- Created at: 2026-05-21 01:48:53
+-- Created at: 2026-05-21 11:19:37
 -- Backup type: Full database backup
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -48,7 +48,7 @@ CREATE TABLE `product_supplier` (
   KEY `idx_ps_supplier` (`supplier_id_fk`),
   CONSTRAINT `product_supplier_ibfk_1` FOREIGN KEY (`product_id_fk`) REFERENCES `products` (`product_id_pk`),
   CONSTRAINT `product_supplier_ibfk_2` FOREIGN KEY (`supplier_id_fk`) REFERENCES `suppliers` (`supplier_id_pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=123 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Data for `product_supplier`
@@ -83,7 +83,11 @@ INSERT INTO `product_supplier` (`product_supplier_id_pk`,`product_id_fk`,`suppli
 (107,121,65,'200.00',0),
 (108,121,NULL,'23.00',0),
 (109,121,64,'250.00',0),
-(112,121,NULL,'250.00',0);
+(112,121,NULL,'250.00',0),
+(119,129,64,'200.00',0),
+(120,129,63,'200.00',1),
+(121,129,61,'200.00',0),
+(122,129,60,'100.00',0);
 
 --
 -- Table structure for `products`
@@ -102,7 +106,7 @@ CREATE TABLE `products` (
   KEY `category_id_fk` (`category_id_fk`),
   KEY `idx_product_name` (`product_name`),
   CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id_fk`) REFERENCES `categories` (`category_id_pk`)
-) ENGINE=InnoDB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Data for `products`
@@ -121,9 +125,13 @@ INSERT INTO `products` (`product_id_pk`,`product_name`,`product_description`,`se
 (112,'Chicken Breast 1kg','Fresh poultry meat','180.00',1,0,NULL,NULL),
 (113,'Pork Belly 1kg','Fresh pork cut','250.00',1,0,NULL,NULL),
 (114,'Soy Sauce 1L','All-purpose seasoning sauce','60.00',1,0,90,NULL),
-(115,'Vinegar 1L','Distilled white vinegar','55.00',1,1,NULL,'2026-05-21 00:49:37'),
+(115,'Vinegar 1L','Distilled white vinegar','55.00',1,0,NULL,'2026-05-21 00:49:37'),
 (116,'Toothpaste 100ml','Mint flavored toothpaste','75.00',1,1,NULL,'2026-05-21 00:49:33'),
-(121,'Frozen Nuggets 500g','Chicken nuggets pack','160.00',1,1,NULL,'2026-05-21 00:49:28');
+(121,'Frozen Nuggets 500g','Chicken nuggets pack','160.00',1,1,NULL,'2026-05-21 00:49:28'),
+(127,'Oreo','','140.00',1,0,91,NULL),
+(128,'Apple','','120.00',1,1,90,'2026-05-21 02:02:17'),
+(129,'Oatmeal 2','','120.00',1,0,91,NULL),
+(130,'Oreo','','120.00',1,1,90,'2026-05-21 02:05:40');
 
 --
 -- Table structure for `stock_movements`
@@ -139,7 +147,7 @@ CREATE TABLE `stock_movements` (
   `product_id` int DEFAULT NULL,
   PRIMARY KEY (`movement_id_pk`),
   KEY `idx_inentory_product` (`product_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=164 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Data for `stock_movements`
@@ -208,7 +216,15 @@ INSERT INTO `stock_movements` (`movement_id_pk`,`quantity`,`reference_type`,`ref
 (152,2,'OUT','STK031','2026-05-07','',124),
 (153,2,'IN','STK086','2026-05-07','',119),
 (154,2,'IN','STK868','2026-05-07','',119),
-(155,100,'IN','STK925','2026-05-07','',126);
+(155,100,'IN','STK925','2026-05-07','',126),
+(156,5,'IN','STK394','2026-05-21','',129),
+(157,5,'IN','STK391','2026-05-21','',129),
+(158,1,'IN','STK022','2026-05-21','',129),
+(159,1,'IN','STK978','2026-05-21','',129),
+(160,2,'IN','STK239','2026-05-21','',129),
+(161,4,'OUT','STK312','2026-05-21','',129),
+(162,2,'IN','STK789','2026-05-21','',129),
+(163,2,'OUT','STK721','2026-05-21','',129);
 
 --
 -- Table structure for `stocks`
@@ -221,51 +237,55 @@ CREATE TABLE `stocks` (
   `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`stock_id_pk`),
   KEY `idx_stock_product` (`product_id_fk`)
-) ENGINE=InnoDB AUTO_INCREMENT=128 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Data for `stocks`
 --
 INSERT INTO `stocks` (`stock_id_pk`,`product_id_fk`,`quantity`,`last_updated`) VALUES
-(37,34,2,'2026-04-28 11:06:44'),
-(51,52,0,'2026-04-23 10:41:27'),
-(58,59,104,'2026-04-28 11:06:51'),
-(61,82,50,'2026-04-28 08:00:00'),
-(62,83,50,'2026-04-28 08:00:00'),
-(63,84,50,'2026-04-28 08:00:00'),
-(64,85,50,'2026-04-28 08:00:00'),
-(65,86,50,'2026-04-28 08:00:00'),
-(66,87,50,'2026-04-28 08:00:00'),
-(67,88,50,'2026-04-28 08:00:00'),
-(68,89,50,'2026-04-28 08:00:00'),
-(69,90,50,'2026-04-28 08:00:00'),
-(70,91,50,'2026-04-28 08:00:00'),
-(71,92,50,'2026-04-28 08:00:00'),
-(72,93,50,'2026-04-28 08:00:00'),
-(73,94,50,'2026-04-28 08:00:00'),
-(74,95,50,'2026-04-28 08:00:00'),
-(75,96,50,'2026-04-28 08:00:00'),
-(76,97,50,'2026-04-28 08:00:00'),
-(77,98,50,'2026-04-28 08:00:00'),
-(78,99,50,'2026-04-28 08:00:00'),
-(79,100,50,'2026-04-28 08:00:00'),
-(80,101,50,'2026-04-28 08:00:00'),
-(92,102,50,'2026-04-28 08:00:00'),
-(93,103,50,'2026-04-28 08:00:00'),
-(94,104,50,'2026-04-28 08:00:00'),
-(95,105,38,'2026-04-29 12:14:05'),
-(96,106,50,'2026-04-28 08:00:00'),
-(97,107,0,'2026-04-29 11:45:39'),
-(98,108,50,'2026-04-28 08:00:00'),
-(99,109,50,'2026-04-28 08:00:00'),
-(100,110,20,'2026-04-29 22:20:04'),
-(101,111,50,'2026-04-28 08:00:00'),
-(102,112,30,'2026-04-29 12:33:38'),
-(103,113,50,'2026-04-28 08:00:00'),
-(104,114,0,'2026-04-29 11:45:18'),
-(105,115,50,'2026-04-28 08:00:00'),
-(106,116,50,'2026-04-28 08:00:00'),
-(111,121,201,'2026-04-29 00:09:56');
+(37,34,2,'2026-04-29 03:06:44'),
+(51,52,0,'2026-04-24 02:41:27'),
+(58,59,104,'2026-04-29 03:06:51'),
+(61,82,50,'2026-04-29 00:00:00'),
+(62,83,50,'2026-04-29 00:00:00'),
+(63,84,50,'2026-04-29 00:00:00'),
+(64,85,50,'2026-04-29 00:00:00'),
+(65,86,50,'2026-04-29 00:00:00'),
+(66,87,50,'2026-04-29 00:00:00'),
+(67,88,50,'2026-04-29 00:00:00'),
+(68,89,50,'2026-04-29 00:00:00'),
+(69,90,50,'2026-04-29 00:00:00'),
+(70,91,50,'2026-04-29 00:00:00'),
+(71,92,50,'2026-04-29 00:00:00'),
+(72,93,50,'2026-04-29 00:00:00'),
+(73,94,50,'2026-04-29 00:00:00'),
+(74,95,50,'2026-04-29 00:00:00'),
+(75,96,50,'2026-04-29 00:00:00'),
+(76,97,50,'2026-04-29 00:00:00'),
+(77,98,50,'2026-04-29 00:00:00'),
+(78,99,50,'2026-04-29 00:00:00'),
+(79,100,50,'2026-04-29 00:00:00'),
+(80,101,50,'2026-04-29 00:00:00'),
+(92,102,50,'2026-04-29 00:00:00'),
+(93,103,50,'2026-04-29 00:00:00'),
+(94,104,50,'2026-04-29 00:00:00'),
+(95,105,38,'2026-04-30 04:14:05'),
+(96,106,50,'2026-04-29 00:00:00'),
+(97,107,0,'2026-04-30 03:45:39'),
+(98,108,50,'2026-04-29 00:00:00'),
+(99,109,50,'2026-04-29 00:00:00'),
+(100,110,20,'2026-04-30 14:20:04'),
+(101,111,50,'2026-04-29 00:00:00'),
+(102,112,30,'2026-04-30 04:33:38'),
+(103,113,50,'2026-04-29 00:00:00'),
+(104,114,0,'2026-04-30 03:45:18'),
+(105,115,50,'2026-04-29 00:00:00'),
+(106,116,50,'2026-04-29 00:00:00'),
+(111,121,201,'2026-04-29 16:09:56'),
+(128,127,0,'2026-05-21 18:01:16'),
+(129,128,0,'2026-05-21 18:01:38'),
+(130,129,10,'2026-05-21 11:13:29'),
+(131,130,0,'2026-05-21 18:05:34');
 
 --
 -- Table structure for `suppliers`
@@ -294,8 +314,8 @@ INSERT INTO `suppliers` (`supplier_id_pk`,`supplier_name`,`contact_person`,`phon
 (62,'FreshMart Distributors','Pedro Reyes','09192345678','freshmart@gmail.com','Davao, Philippines','FreshMart Distributors',0,NULL),
 (63,'Sunrise Wholesale','Ana Lim','09201234567','sunrise@gmail.com','Quezon City, Philippines','Sunrise Wholesale',0,NULL),
 (64,'Pacific Goods Inc','Jose Tan','09212345678','pacificgoods@gmail.com','Iloilo, Philippines','Pacific Goods Inc',0,NULL),
-(65,'Golden Harvest Supplies','Liza Gomez','09223456789','goldenharvest@gmail.com','Bacolod, Philippines','Golden Harvest Supplies',0,NULL),
-(66,'Prime Select Trading','Mark Villanueva','09234567890','primeselect@gmail.com','Laguna, Philippines','Prime Select Trading',0,NULL),
+(65,'Golden Harvest Supplies','Liza Gomez','09223456788','goldenharvestsupplies@gmail.com','Bacolod, Philippines','Golden Harvest Supplies',0,NULL),
+(66,'Prime Select Trading','Mark Villanueva','09234567890','primeselect@gmail.com','Laguna, Philippines','Prime Select Trading',1,'2026-05-21 11:11:01'),
 (67,'Evergreen Distribution','Carla Ramos','09245678901','evergreen@gmail.com','Pampanga, Philippines','Evergreen Distribution',1,'2026-04-27 00:15:44'),
 (68,'Blue Ocean Supplies','Eric Bautista','09256789012','sdf@gmail.com','Batangas, Philippines','Blue Ocean Supplies',1,'2026-04-27 00:04:58'),
 (69,'Sunset Traders','Ramon Diaz','09267890123','sunset@gmail.com','Bohol, Philippines','Sunset Traders',1,'2026-04-26 23:46:24'),

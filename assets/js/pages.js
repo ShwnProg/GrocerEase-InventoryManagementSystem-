@@ -21,6 +21,60 @@ function clearFeedback(containerId) {
     if (el) el.innerHTML = '';
 }
 
+function showArchivedDuplicatePrompt(item) {
+    const endpoints = {
+        product: {
+            url: '../../controllers/products/recover.php',
+            idKey: 'product_id',
+            label: 'product',
+        },
+        category: {
+            url: '../../controllers/categories/recover.php',
+            idKey: 'category_id',
+            label: 'category',
+        },
+        supplier: {
+            url: '../../controllers/suppliers/recover.php',
+            idKey: 'supplier_id',
+            label: 'supplier',
+        },
+    };
+    const config = endpoints[item?.type];
+
+    if (!config) return;
+
+    Swal.fire({
+        title: 'Duplicate found in archive',
+        text: `${item.message} Do you want to recover it instead?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Recover instead',
+        cancelButtonText: 'Keep archived',
+        confirmButtonColor: '#1c5515',
+        cancelButtonColor: '#6b7280',
+    }).then(result => {
+        if (!result.isConfirmed) return;
+
+        $.ajax({
+            url: config.url,
+            type: 'POST',
+            dataType: 'json',
+            data: { [config.idKey]: item.id },
+            success(res) {
+                if (res.status === 'success') {
+                    Swal.fire('Recovered!', res.message || `The archived ${config.label} was recovered.`, 'success')
+                        .then(() => location.reload());
+                } else {
+                    Swal.fire('Recover failed', res.message || `Unable to recover ${config.label}.`, 'error');
+                }
+            },
+            error() {
+                Swal.fire('Server Error', `Unable to recover ${config.label}.`, 'error');
+            },
+        });
+    });
+}
+
 //  ADD MODAL
 const addModal = document.getElementById('add-modal');
 const addBtn = document.getElementById('addbtn');
@@ -204,8 +258,19 @@ function deleteSupplier(id, name) {
 function restoreProduct(id, name) {
     Swal.fire({ title: `Restore ${name}?`, icon: 'question', showCancelButton: true }).then(result => {
         if (!result.isConfirmed) return;
-        $.post('../../controllers/products/recover.php', { product_id: id }, () => {
-            Swal.fire('Restored!', 'Success', 'success').then(() => location.reload());
+        $.ajax({
+            url: '../../controllers/products/recover.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { product_id: id },
+            success(res) {
+                if (res.status === 'success') {
+                    Swal.fire('Restored!', res.message, 'success').then(() => location.reload());
+                } else {
+                    Swal.fire('Error', res.message, 'error');
+                }
+            },
+            error() { Swal.fire('Error', 'Server error occurred', 'error'); },
         });
     });
 }
@@ -235,8 +300,19 @@ function hardDeleteProduct(id, name) {
 function restoreCategory(id, name) {
     Swal.fire({ title: `Restore ${name}?`, icon: 'question', showCancelButton: true }).then(result => {
         if (!result.isConfirmed) return;
-        $.post('../../controllers/categories/recover.php', { category_id: id }, () => {
-            Swal.fire('Restored!', 'Success', 'success').then(() => location.reload());
+        $.ajax({
+            url: '../../controllers/categories/recover.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { category_id: id },
+            success(res) {
+                if (res.status === 'success') {
+                    Swal.fire('Restored!', res.message, 'success').then(() => location.reload());
+                } else {
+                    Swal.fire('Error', res.message, 'error');
+                }
+            },
+            error() { Swal.fire('Error', 'Server error occurred', 'error'); },
         });
     });
 }
@@ -266,8 +342,19 @@ function hardDeleteCategory(id, name) {
 function restoreSupplier(id, name) {
     Swal.fire({ title: `Restore ${name}?`, icon: 'question', showCancelButton: true }).then(result => {
         if (!result.isConfirmed) return;
-        $.post('../../controllers/suppliers/recover.php', { supplier_id: id }, () => {
-            Swal.fire('Restored!', 'Success', 'success').then(() => location.reload());
+        $.ajax({
+            url: '../../controllers/suppliers/recover.php',
+            type: 'POST',
+            dataType: 'json',
+            data: { supplier_id: id },
+            success(res) {
+                if (res.status === 'success') {
+                    Swal.fire('Restored!', res.message, 'success').then(() => location.reload());
+                } else {
+                    Swal.fire('Error', res.message, 'error');
+                }
+            },
+            error() { Swal.fire('Error', 'Server error occurred', 'error'); },
         });
     });
 }

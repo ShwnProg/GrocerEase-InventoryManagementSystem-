@@ -37,6 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    $deleted_supplier = $supplier->FindDeletedSupplierByName($name);
+    if ($deleted_supplier) {
+        $_SESSION['archived_duplicate'] = [
+            'type' => 'supplier',
+            'id' => $deleted_supplier['supplier_id_pk'],
+            'name' => $deleted_supplier['supplier_name'],
+            'message' => 'A supplier named "' . $deleted_supplier['supplier_name'] . '" is already in the archive.'
+        ];
+        $_SESSION['old'] = $_POST;
+        header("Location: ../../views/inventory/suppliers.php");
+        exit;
+    }
+
     // INSERT
     $result = $supplier->AddSupplier($name, $person, $number, $email, $address, $company);
 

@@ -26,9 +26,21 @@ class Category
     public function CheckDuplicateCategory($category_name)
     {
         $stmt = $this->conn->prepare("SELECT COUNT(*) FROM categories 
-                                      WHERE category_name = :name AND is_deleted = 0");
+                                      WHERE LOWER(TRIM(category_name)) = LOWER(TRIM(:name)) 
+                                      AND is_deleted = 0");
         $stmt->execute([':name' => $category_name]);
         return $stmt->fetchColumn() > 0;
+    }
+
+    public function FindDeletedCategoryByName($category_name)
+    {
+        $stmt = $this->conn->prepare("SELECT category_id_pk, category_name FROM categories
+                                      WHERE LOWER(TRIM(category_name)) = LOWER(TRIM(:name))
+                                      AND is_deleted = 1
+                                      ORDER BY deleted_at DESC
+                                      LIMIT 1");
+        $stmt->execute([':name' => $category_name]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function GetAllCategories()
@@ -66,20 +78,11 @@ class Category
     public function SoftDeleteCategory($id)
     {
         try {
-            $this->conn->beginTransaction();
-
-            $stmt0 = $this->conn->prepare("UPDATE products SET category_id_fk = NULL 
-                                           WHERE category_id_fk = :id");
-            $stmt0->execute([':id' => $id]);
-
             $stmt = $this->conn->prepare("UPDATE categories SET is_deleted = 1, deleted_at = NOW() 
                                           WHERE category_id_pk = :id");
             $stmt->execute([':id' => $id]);
-
-            $this->conn->commit();
-            return true;
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            $this->conn->rollBack();
             return false;
         }
     }
@@ -170,10 +173,19 @@ class Category
     public function HardDeleteCategory($id)
     {
         try {
+            $this->conn->beginTransaction();
+
+            $stmt0 = $this->conn->prepare("UPDATE products SET category_id_fk = NULL 
+                                           WHERE category_id_fk = :id");
+            $stmt0->execute([':id' => $id]);
+
             $stmt = $this->conn->prepare("DELETE FROM categories WHERE category_id_pk = :id");
             $stmt->execute([':id' => $id]);
+
+            $this->conn->commit();
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
+            $this->conn->rollBack();
             return false;
         }
     }

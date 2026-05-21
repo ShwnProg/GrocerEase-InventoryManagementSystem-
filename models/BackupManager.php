@@ -650,7 +650,11 @@ class BackupManager
             return 'Automatic Backup';
         }
 
-        return 'Manual Backup';
+        if (str_starts_with($filename, 'fullbackup_') || str_starts_with($filename, 'backup_')) {
+            return 'Full Backup';
+        }
+
+        return 'Full Backup';
     }
 
     private function currentScheduledTimestamp(array $settings, ?int $now = null): ?int

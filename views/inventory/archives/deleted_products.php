@@ -14,7 +14,14 @@
         </thead>
         <tbody>
             <?php $no = (($page - 1) * $per_page) + 1; ?>
-            <?php foreach ($products as $prod): ?>
+            <?php if (empty($products)): ?>
+                <tr>
+                    <td colspan="8" style="text-align:center; color:#6b7280;">
+                        No archived products found
+                    </td>
+                </tr>
+            <?php else: ?>
+                <?php foreach ($products as $prod): ?>
                 <tr>
                     <td><?= $no++ ?></td>
                     <td><?= htmlspecialchars($prod['product_name']) ?></td>
@@ -50,7 +57,8 @@
                         </div>
                     </td>
                 </tr>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
     </table>
     <!-- PAGINATION -->

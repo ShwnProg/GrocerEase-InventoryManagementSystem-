@@ -70,7 +70,14 @@ $base_query = $search !== '' ? 'search=' . urlencode($search) : '';
                     </thead>
                     <tbody>
                         <?php $count = ($page - 1) * $limit + 1; ?>
-                        <?php foreach ($stock_movements as $stocks): ?>
+                        <?php if (empty($stock_movements)): ?>
+                            <tr>
+                                <td colspan="7" style="text-align:center; color:#6b7280;">
+                                    No inventory logs found
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($stock_movements as $stocks): ?>
                             <tr>
                                 <td><?= $count++ ?></td>
                                 <td><?= htmlspecialchars($stocks['product_name'] ?? 'Deleted Product') ?></td>
@@ -95,7 +102,8 @@ $base_query = $search !== '' ? 'search=' . urlencode($search) : '';
                                 <td><?= htmlspecialchars($stocks['date']) ?></td>
 
                             </tr>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
                 <?php

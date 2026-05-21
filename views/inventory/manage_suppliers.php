@@ -82,7 +82,14 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                     </thead>
                     <tbody>
                         <?php $num = 0; ?>
-                        <?php foreach ($product_suppliers as $sup): ?>
+                        <?php if (empty($product_suppliers)): ?>
+                            <tr>
+                                <td colspan="9" style="text-align:center; color:#6b7280;">
+                                    No suppliers assigned
+                                </td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($product_suppliers as $sup): ?>
                             <tr>
                                 <td><?= ++$num ?></td>
                                 <td style="word-break: break-word; white-space: normal;"><?= htmlspecialchars($sup['supplier_name']) ?></td>
@@ -131,7 +138,8 @@ unset($_SESSION["error"], $_SESSION["success"], $_SESSION["old"]);
                                     </div>
                                 </td>
                             </tr>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
